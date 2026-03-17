@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" class="h-full">
+<html lang="en">
  <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,1006 +7,600 @@
   <script src="https://cdn.tailwindcss.com/3.4.17"></script>
   <script src="https://cdn.jsdelivr.net/npm/lucide@0.263.0/dist/umd/lucide.min.js"></script>
   <script src="/_sdk/element_sdk.js"></script>
-  <script src="/_sdk/data_sdk.js"></script>
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Poppins:wght@300;400;600;700;800&display=swap');
-    
+    @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+
     * {
-      font-family: 'Poppins', sans-serif;
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
     }
-    
-    body {
-      background: linear-gradient(135deg, #0f0f1e 0%, #1a0a2e 50%, #16213e 100%);
-      color: #e0e0e0;
+
+    html, body {
+      height: 100%;
+      background: #0a0e27;
+      font-family: 'Space Grotesk', sans-serif;
+      color: #e5e7eb;
+      overflow-x: hidden;
     }
-    
-    .glass-effect {
-      background: rgba(255, 255, 255, 0.05);
+
+    .app-wrapper {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Glassmorphism effect */
+    .glass {
+      background: rgba(15, 23, 42, 0.7);
       backdrop-filter: blur(10px);
-      border: 1px solid rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(148, 163, 184, 0.1);
     }
-    
-    .gradient-text {
-      background: linear-gradient(135deg, #00d4ff 0%, #a855f7 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
+
+    /* Gradient animations */
+    @keyframes gradient-shift {
+      0%, 100% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
     }
-    
-    .neon-glow {
-      box-shadow: 0 0 20px rgba(0, 212, 255, 0.3);
+
+    .gradient-animate {
+      background-size: 200% 200%;
+      animation: gradient-shift 8s ease infinite;
     }
-    
-    .neon-glow-pink {
-      box-shadow: 0 0 20px rgba(255, 107, 107, 0.3);
+
+    /* Glow effect for buttons */
+    @keyframes neon-glow {
+      0%, 100% { text-shadow: 0 0 10px rgba(59, 130, 246, 0.5); }
+      50% { text-shadow: 0 0 20px rgba(59, 130, 246, 0.8); }
     }
-    
+
+    .neon-text {
+      animation: neon-glow 2s ease-in-out infinite;
+    }
+
+    /* Smooth transitions */
+    button, a {
+      transition: all 0.3s ease;
+    }
+
     .btn-primary {
-      background: linear-gradient(135deg, #00d4ff 0%, #a855f7 100%);
-      color: #000;
-      font-weight: 700;
-      transition: all 0.3s ease;
-      box-shadow: 0 0 20px rgba(0, 212, 255, 0.2);
-    }
-    
-    .btn-primary:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 0 30px rgba(0, 212, 255, 0.4);
-    }
-    
-    .btn-secondary {
-      background: rgba(255, 255, 255, 0.1);
-      border: 1px solid rgba(0, 212, 255, 0.5);
-      color: #00d4ff;
-      transition: all 0.3s ease;
-    }
-    
-    .btn-secondary:hover {
-      background: rgba(0, 212, 255, 0.1);
-      box-shadow: 0 0 15px rgba(0, 212, 255, 0.2);
-    }
-    
-    .card-glass {
-      background: rgba(30, 30, 50, 0.6);
-      border: 1px solid rgba(0, 212, 255, 0.1);
-      backdrop-filter: blur(8px);
-      transition: all 0.3s ease;
-    }
-    
-    .card-glass:hover {
-      border: 1px solid rgba(0, 212, 255, 0.3);
-      transform: translateY(-4px);
-    }
-    
-    .tier-badge {
-      display: inline-block;
-      padding: 4px 12px;
-      border-radius: 20px;
-      font-size: 12px;
+      background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+      color: white;
+      padding: 12px 28px;
+      border-radius: 8px;
       font-weight: 600;
-      text-transform: uppercase;
+      border: none;
+      cursor: pointer;
+      box-shadow: 0 0 20px rgba(59, 130, 246, 0.3);
     }
-    
-    .tier-newcomer { background: rgba(100, 116, 139, 0.3); color: #94a3b8; }
-    .tier-explorer { background: rgba(59, 130, 246, 0.3); color: #60a5fa; }
-    .tier-apprentice { background: rgba(139, 92, 246, 0.3); color: #a78bfa; }
-    .tier-artisan { background: rgba(236, 72, 153, 0.3); color: #f472b6; }
-    .tier-master { background: rgba(168, 85, 247, 0.3); color: #d8b4fe; }
-    
-    @keyframes slideDown {
+
+    .btn-primary:hover {
+      box-shadow: 0 0 30px rgba(59, 130, 246, 0.6);
+      transform: translateY(-2px);
+    }
+
+    .btn-secondary {
+      background: rgba(148, 163, 184, 0.1);
+      color: #3b82f6;
+      padding: 12px 28px;
+      border-radius: 8px;
+      font-weight: 600;
+      border: 1px solid #3b82f6;
+      cursor: pointer;
+    }
+
+    .btn-secondary:hover {
+      background: rgba(59, 130, 246, 0.1);
+      box-shadow: 0 0 20px rgba(59, 130, 246, 0.3);
+    }
+
+    /* Scroll animation */
+    @keyframes slide-in {
       from {
         opacity: 0;
-        transform: translateY(-20px);
+        transform: translateY(20px);
       }
       to {
         opacity: 1;
         transform: translateY(0);
       }
     }
-    
-    @keyframes fadeIn {
-      from { opacity: 0; }
-      to { opacity: 1; }
+
+    .animate-in {
+      animation: slide-in 0.6s ease-out forwards;
     }
-    
-    @keyframes pulse-glow {
-      0%, 100% { box-shadow: 0 0 20px rgba(0, 212, 255, 0.3); }
-      50% { box-shadow: 0 0 30px rgba(0, 212, 255, 0.5); }
-    }
-    
-    .animate-slide-down {
-      animation: slideDown 0.5s ease-out;
-    }
-    
-    .animate-fade-in {
-      animation: fadeIn 0.6s ease-out;
-    }
-    
-    .animate-pulse-glow {
-      animation: pulse-glow 2s ease-in-out infinite;
+
+    .section-divider {
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(59, 130, 246, 0.3), transparent);
     }
   </style>
   <style>body { box-sizing: border-box; }</style>
+  <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
  </head>
- <body class="h-full">
-  <div id="app" class="h-full w-full overflow-auto flex flex-col"><!-- Navigation -->
-   <nav id="navbar" class="fixed top-0 w-full glass-effect z-50 border-b border-cyan-500/20">
-    <div class="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
+ <body>
+  <div class="app-wrapper">
+   <!-- Header/Navigation -->
+   <header class="glass fixed w-full top-0 z-50 border-b border-blue-900/30">
+    <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
      <div class="flex items-center gap-2">
-      <div class="text-2xl font-bold gradient-text">
-       🍩
-      </div><span class="text-xl font-bold gradient-text">Cyber Donuts</span>
+      <div class="w-10 h-10 rounded-full bg-gradient-to-br from-orange-400 to-pink-500 flex items-center justify-center">
+       <span class="text-lg font-bold text-white">🍩</span>
+      </div><span class="text-xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">Cyber Donuts</span>
      </div>
-     <div class="hidden md:flex items-center gap-6">
-      <nav class="flex gap-6"><button onclick="navigateTo('home')" class="nav-link text-sm hover:text-cyan-400 transition">Home</button> <button onclick="navigateTo('menu')" class="nav-link text-sm hover:text-cyan-400 transition">Menu</button> <button onclick="navigateTo('services')" class="nav-link text-sm hover:text-cyan-400 transition">Services</button> <button onclick="navigateTo('earn')" class="nav-link text-sm hover:text-cyan-400 transition">Earn</button> <button onclick="navigateTo('community')" class="nav-link text-sm hover:text-cyan-400 transition">Community</button> <button onclick="navigateTo('dashboard')" class="nav-link text-sm hover:text-cyan-400 transition">Dashboard</button>
-      </nav>
-     </div><button id="menu-toggle" onclick="toggleMobileMenu()" class="md:hidden"> <i data-lucide="menu" class="w-6 h-6"></i> </button>
-    </div><!-- Mobile Menu -->
-    <div id="mobile-menu" class="hidden md:hidden glass-effect border-t border-cyan-500/20 p-4"><button onclick="navigateTo('home')" class="block w-full text-left py-2 hover:text-cyan-400">Home</button> <button onclick="navigateTo('menu')" class="block w-full text-left py-2 hover:text-cyan-400">Menu</button> <button onclick="navigateTo('services')" class="block w-full text-left py-2 hover:text-cyan-400">Services</button> <button onclick="navigateTo('earn')" class="block w-full text-left py-2 hover:text-cyan-400">Earn</button> <button onclick="navigateTo('community')" class="block w-full text-left py-2 hover:text-cyan-400">Community</button> <button onclick="navigateTo('dashboard')" class="block w-full text-left py-2 hover:text-cyan-400">Dashboard</button>
-    </div>
-   </nav><!-- Main Content -->
-   <main id="main-content" class="pt-20 pb-20 w-full flex-1"><!-- HOME PAGE -->
-    <section id="home-page" class="page-section"><!-- Hero Section -->
-     <div class="relative min-h-screen flex items-center justify-center px-4">
-      <div class="absolute inset-0 opacity-20">
-       <div class="absolute top-20 left-10 w-72 h-72 bg-cyan-500/20 rounded-full filter blur-3xl"></div>
-       <div class="absolute bottom-20 right-10 w-96 h-96 bg-purple-500/20 rounded-full filter blur-3xl"></div>
+     <div class="hidden md:flex gap-8">
+      <a href="#menu" class="hover:text-blue-400 transition">Menu</a> <a href="#services" class="hover:text-blue-400 transition">Services</a> <a href="#earn" class="hover:text-blue-400 transition">Earn</a> <a href="#community" class="hover:text-blue-400 transition">Community</a>
+     </div><button class="btn-primary" id="headerCTA">Join Now</button>
+    </nav>
+   </header><!-- Main Content -->
+   <main class="flex-1 overflow-auto">
+    <!-- Hero Section -->
+    <section class="relative min-h-screen w-full flex items-center justify-center pt-20 pb-20 px-4 sm:px-6 lg:px-8">
+     <div class="absolute inset-0 opacity-30">
+      <div class="absolute top-20 left-10 w-72 h-72 bg-blue-500 rounded-full blur-3xl"></div>
+      <div class="absolute bottom-20 right-10 w-72 h-72 bg-purple-500 rounded-full blur-3xl"></div>
+     </div>
+     <div class="relative z-10 text-center max-w-4xl mx-auto">
+      <div class="mb-6 animate-in">
+       <span class="inline-block px-4 py-2 rounded-full glass text-blue-400 text-sm font-mono">Web3 • Community • Earning</span>
       </div>
-      <div class="relative z-10 text-center max-w-4xl mx-auto animate-slide-down">
-       <div class="text-6xl md:text-7xl font-bold mb-6"><span class="gradient-text">Eat.</span> <span class="gradient-text">Earn.</span> <span class="gradient-text">Grow.</span>
-       </div>
-       <p id="hero-tagline" class="text-xl md:text-2xl text-cyan-300 mb-8">A global digital-physical platform combining food, services, Web3, and community</p>
-       <div class="flex flex-col md:flex-row gap-4 justify-center mb-12"><button onclick="navigateTo('menu')" class="btn-primary px-8 py-4 rounded-lg font-bold text-lg">Order Now 🍩</button> <button onclick="navigateTo('earn')" class="btn-secondary px-8 py-4 rounded-lg font-bold text-lg">Start Earning 📈</button> <button onclick="navigateTo('dashboard')" class="btn-secondary px-8 py-4 rounded-lg font-bold text-lg">Join Community 👥</button>
-       </div><!-- Impact Stats -->
-       <div class="grid grid-cols-3 gap-4 mt-16">
-        <div class="card-glass p-6 rounded-lg">
-         <div class="text-3xl font-bold gradient-text">
-          10K+
-         </div>
-         <p class="text-sm text-gray-400">Active Users</p>
+      <h1 id="heroTitle" class="text-5xl md:text-7xl font-black mb-6 leading-tight"><span class="bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">Eat. Earn. Grow.</span></h1>
+      <p id="heroTagline" class="text-xl md:text-2xl text-gray-300 mb-8 leading-relaxed">A global platform combining food, services, Web3, and community to create income, opportunity, and impact for everyone.</p>
+      <div class="flex flex-col sm:flex-row gap-4 justify-center mb-12">
+       <button id="ctaButton" class="btn-primary text-lg">Order Now</button> <button class="btn-secondary text-lg">Explore Earn</button> <button class="btn-secondary text-lg">Join Community</button>
+      </div><!-- Stats -->
+      <div class="grid grid-cols-3 gap-6 mt-16">
+       <div class="glass p-6 rounded-lg">
+        <div class="text-3xl font-bold text-blue-400">
+         50K+
         </div>
-        <div class="card-glass p-6 rounded-lg">
-         <div class="text-3xl font-bold gradient-text">
-          $500K
-         </div>
-         <p class="text-sm text-gray-400">Total Earned</p>
-        </div>
-        <div class="card-glass p-6 rounded-lg">
-         <div class="text-3xl font-bold gradient-text">
-          50+
-         </div>
-         <p class="text-sm text-gray-400">Cities Live</p>
+        <div class="text-sm text-gray-400">
+         Active Members
         </div>
        </div>
+       <div class="glass p-6 rounded-lg">
+        <div class="text-3xl font-bold text-purple-400">
+         $500K+
+        </div>
+        <div class="text-sm text-gray-400">
+         Earned by Users
+        </div>
+       </div>
+       <div class="glass p-6 rounded-lg">
+        <div class="text-3xl font-bold text-pink-400">
+         24/7
+        </div>
+        <div class="text-sm text-gray-400">
+         Service Available
+        </div>
+       </div>
       </div>
-     </div><!-- What is Cyber Donuts -->
-     <div class="max-w-6xl mx-auto px-4 py-20">
-      <h2 class="text-4xl font-bold mb-12 text-center gradient-text">What is Cyber Donuts?</h2>
+     </div>
+    </section><!-- What is Cyber Donuts -->
+    <section class="w-full py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-blue-900/10 to-transparent">
+     <div class="max-w-6xl mx-auto">
+      <h2 class="text-4xl font-bold mb-12 text-center">What is Cyber Donuts?</h2>
       <div class="grid md:grid-cols-3 gap-8">
-       <div class="card-glass p-8 rounded-xl">
-        <div class="text-4xl mb-4">
+       <div class="glass p-8 rounded-lg hover:border-blue-500/50 transition">
+        <div class="w-12 h-12 rounded-lg bg-blue-500/20 flex items-center justify-center mb-4">
+         <i data-lucide="utensils" class="text-blue-400" style="width: 24px; height: 24px;"></i>
+        </div>
+        <h3 class="text-xl font-bold mb-3">Delicious Food</h3>
+        <p class="text-gray-400">Fresh donuts, meals, and drinks delivered locally or for pickup</p>
+       </div>
+       <div class="glass p-8 rounded-lg hover:border-purple-500/50 transition">
+        <div class="w-12 h-12 rounded-lg bg-purple-500/20 flex items-center justify-center mb-4">
+         <i data-lucide="zap" class="text-purple-400" style="width: 24px; height: 24px;"></i>
+        </div>
+        <h3 class="text-xl font-bold mb-3">Cyber Services</h3>
+        <p class="text-gray-400">Digital services, printing, and government assistance in one place</p>
+       </div>
+       <div class="glass p-8 rounded-lg hover:border-pink-500/50 transition">
+        <div class="w-12 h-12 rounded-lg bg-pink-500/20 flex items-center justify-center mb-4">
+         <i data-lucide="coins" class="text-pink-400" style="width: 24px; height: 24px;"></i>
+        </div>
+        <h3 class="text-xl font-bold mb-3">Earn CBD Tokens</h3>
+        <p class="text-gray-400">Complete missions, refer friends, and unlock Web3 rewards</p>
+       </div>
+      </div>
+     </div>
+    </section><!-- Involve-to-Unlock System -->
+    <section class="w-full py-20 px-4 sm:px-6 lg:px-8">
+     <div class="max-w-6xl mx-auto">
+      <h2 class="text-4xl font-bold mb-12 text-center">Involve-to-Unlock</h2>
+      <div class="glass p-12 rounded-lg border-2 border-blue-500/30 mb-12">
+       <p class="text-xl text-gray-300 mb-8">The more involved you are, the more you unlock.</p>
+       <div class="grid md:grid-cols-2 gap-8">
+        <div>
+         <h3 class="text-lg font-bold mb-4 text-blue-400">Activities</h3>
+         <ul class="space-y-3">
+          <li class="flex gap-3"><span class="text-green-400">✓</span> Daily login &amp; missions</li>
+          <li class="flex gap-3"><span class="text-green-400">✓</span> Refer users &amp; earn</li>
+          <li class="flex gap-3"><span class="text-green-400">✓</span> Submit content</li>
+          <li class="flex gap-3"><span class="text-green-400">✓</span> Use cyber services</li>
+          <li class="flex gap-3"><span class="text-green-400">✓</span> Community participation</li>
+         </ul>
+        </div>
+        <div>
+         <h3 class="text-lg font-bold mb-4 text-purple-400">Rewards</h3>
+         <ul class="space-y-3">
+          <li class="flex gap-3"><span class="text-green-400">✓</span> CBD Tokens</li>
+          <li class="flex gap-3"><span class="text-green-400">✓</span> XP Points &amp; Levels</li>
+          <li class="flex gap-3"><span class="text-green-400">✓</span> NFT Badges</li>
+          <li class="flex gap-3"><span class="text-green-400">✓</span> Tier Upgrades</li>
+          <li class="flex gap-3"><span class="text-green-400">✓</span> Premium Features</li>
+         </ul>
+        </div>
+       </div>
+      </div><!-- Tier System -->
+      <div class="grid md:grid-cols-5 gap-4">
+       <div class="glass p-6 rounded-lg text-center hover:border-blue-500/50 transition">
+        <div class="text-4xl mb-2">
+         🌱
+        </div>
+        <h4 class="font-bold">Newcomer</h4>
+        <p class="text-xs text-gray-400 mt-2">Get started</p>
+       </div>
+       <div class="glass p-6 rounded-lg text-center hover:border-blue-500/50 transition">
+        <div class="text-4xl mb-2">
+         🔍
+        </div>
+        <h4 class="font-bold">Explorer</h4>
+        <p class="text-xs text-gray-400 mt-2">500 XP</p>
+       </div>
+       <div class="glass p-6 rounded-lg text-center hover:border-purple-500/50 transition border-purple-500/50">
+        <div class="text-4xl mb-2">
+         ⚙️
+        </div>
+        <h4 class="font-bold">Apprentice</h4>
+        <p class="text-xs text-gray-400 mt-2">2,500 XP</p>
+       </div>
+       <div class="glass p-6 rounded-lg text-center hover:border-pink-500/50 transition">
+        <div class="text-4xl mb-2">
+         🎨
+        </div>
+        <h4 class="font-bold">Artisan</h4>
+        <p class="text-xs text-gray-400 mt-2">7,500 XP</p>
+       </div>
+       <div class="glass p-6 rounded-lg text-center hover:border-blue-500/50 transition">
+        <div class="text-4xl mb-2">
+         👑
+        </div>
+        <h4 class="font-bold">Master</h4>
+        <p class="text-xs text-gray-400 mt-2">15K+ XP</p>
+       </div>
+      </div>
+     </div>
+    </section><!-- Menu Preview Section -->
+    <section id="menu" class="w-full py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-purple-900/10 to-transparent">
+     <div class="max-w-6xl mx-auto">
+      <h2 class="text-4xl font-bold mb-12 text-center">Explore Our Menu</h2>
+      <div class="grid md:grid-cols-3 gap-6">
+       <div class="glass p-6 rounded-lg hover:border-blue-500/50 transition cursor-pointer group">
+        <div class="text-5xl mb-4">
          🍩
         </div>
-        <h3 class="text-xl font-bold mb-4">Delicious Food</h3>
-        <p class="text-gray-300">Fresh donuts, chapati, rice dishes, and more delivered to your doorstep</p>
-       </div>
-       <div class="card-glass p-8 rounded-xl">
-        <div class="text-4xl mb-4">
-         💼
+        <h3 class="text-xl font-bold mb-2">Fresh Donuts</h3>
+        <p class="text-gray-400 text-sm mb-4">Classic and creative flavors</p>
+        <div class="flex justify-between items-center">
+         <span class="text-blue-400 font-bold">From KSh 50</span> <button class="btn-secondary text-sm py-2 px-3">Order</button>
         </div>
-        <h3 class="text-xl font-bold mb-4">Digital Services</h3>
-        <p class="text-gray-300">Government services, printing, web design, and cyber café all in one place</p>
        </div>
-       <div class="card-glass p-8 rounded-xl">
-        <div class="text-4xl mb-4">
-         🚀
+       <div class="glass p-6 rounded-lg hover:border-purple-500/50 transition cursor-pointer group">
+        <div class="text-5xl mb-4">
+         🍽️
         </div>
-        <h3 class="text-xl font-bold mb-4">Earn &amp; Grow</h3>
-        <p class="text-gray-300">Earn CBD tokens, NFTs, and unlock opportunities through involvement</p>
+        <h3 class="text-xl font-bold mb-2">Meals</h3>
+        <p class="text-gray-400 text-sm mb-4">Chapati, Rice, Ugali &amp; more</p>
+        <div class="flex justify-between items-center">
+         <span class="text-purple-400 font-bold">From KSh 150</span> <button class="btn-secondary text-sm py-2 px-3">Order</button>
+        </div>
+       </div>
+       <div class="glass p-6 rounded-lg hover:border-pink-500/50 transition cursor-pointer group">
+        <div class="text-5xl mb-4">
+         🥤
+        </div>
+        <h3 class="text-xl font-bold mb-2">Drinks</h3>
+        <p class="text-gray-400 text-sm mb-4">Chai, Mala, Juice &amp; smoothies</p>
+        <div class="flex justify-between items-center">
+         <span class="text-pink-400 font-bold">From KSh 30</span> <button class="btn-secondary text-sm py-2 px-3">Order</button>
+        </div>
        </div>
       </div>
-     </div><!-- Involve-to-Unlock Section -->
-     <div class="max-w-6xl mx-auto px-4 py-20 bg-gradient-to-r from-cyan-500/10 to-purple-500/10 rounded-2xl">
-      <h2 class="text-4xl font-bold mb-8 text-center gradient-text">Involve-to-Unlock Philosophy</h2>
-      <p class="text-center text-lg mb-12 text-gray-300">The more involved you are, the more you unlock. Every action creates opportunity.</p>
-      <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-       <div class="text-center">
-        <div class="text-5xl mb-4">
-         📱
-        </div>
-        <h4 class="font-bold mb-2">Daily Login</h4>
-        <p class="text-sm text-gray-400">+10 XP daily</p>
-       </div>
-       <div class="text-center">
-        <div class="text-5xl mb-4">
-         ✅
-        </div>
-        <h4 class="font-bold mb-2">Missions</h4>
-        <p class="text-sm text-gray-400">+100 XP per task</p>
-       </div>
-       <div class="text-center">
-        <div class="text-5xl mb-4">
-         🤝
-        </div>
-        <h4 class="font-bold mb-2">Referrals</h4>
-        <p class="text-sm text-gray-400">+500 XP per friend</p>
-       </div>
-       <div class="text-center">
-        <div class="text-5xl mb-4">
-         👥
-        </div>
-        <h4 class="font-bold mb-2">Community</h4>
-        <p class="text-sm text-gray-400">Unlock exclusive perks</p>
-       </div>
-      </div>
-     </div><!-- Testimonials -->
-     <div class="max-w-6xl mx-auto px-4 py-20">
-      <h2 class="text-4xl font-bold mb-12 text-center gradient-text">What Users Say</h2>
+     </div>
+    </section><!-- Services Section -->
+    <section id="services" class="w-full py-20 px-4 sm:px-6 lg:px-8">
+     <div class="max-w-6xl mx-auto">
+      <h2 class="text-4xl font-bold mb-12 text-center">Cyber Services Hub</h2>
       <div class="grid md:grid-cols-3 gap-8">
-       <div class="card-glass p-8 rounded-xl">
-        <p class="text-gray-300 mb-4">"Cyber Donuts changed my life! I earn while enjoying amazing donuts and services. Best platform ever!"</p>
-        <div class="flex items-center gap-4">
-         <div class="w-10 h-10 rounded-full bg-gradient-to-r from-cyan-500 to-purple-500"></div>
-         <div>
-          <p class="font-bold">Sarah</p>
-          <p class="text-xs text-gray-400">Student, Nairobi</p>
+       <div class="glass p-8 rounded-lg">
+        <h3 class="text-2xl font-bold mb-6 text-blue-400">🏛️ Gov Services</h3>
+        <ul class="space-y-3 text-gray-300">
+         <li class="flex gap-2"><span>→</span> KRA Tax Services</li>
+         <li class="flex gap-2"><span>→</span> HELB Applications</li>
+         <li class="flex gap-2"><span>→</span> eCitizen Services</li>
+         <li class="flex gap-2"><span>→</span> Passport Assistance</li>
+        </ul>
+       </div>
+       <div class="glass p-8 rounded-lg">
+        <h3 class="text-2xl font-bold mb-6 text-purple-400">🖨️ Printing</h3>
+        <ul class="space-y-3 text-gray-300">
+         <li class="flex gap-2"><span>→</span> Document Printing</li>
+         <li class="flex gap-2"><span>→</span> Photocopying</li>
+         <li class="flex gap-2"><span>→</span> Scanning Services</li>
+         <li class="flex gap-2"><span>→</span> CV Creation</li>
+        </ul>
+       </div>
+       <div class="glass p-8 rounded-lg">
+        <h3 class="text-2xl font-bold mb-6 text-pink-400">💻 Digital</h3>
+        <ul class="space-y-3 text-gray-300">
+         <li class="flex gap-2"><span>→</span> Web Development</li>
+         <li class="flex gap-2"><span>→</span> Logo Design</li>
+         <li class="flex gap-2"><span>→</span> Social Media Setup</li>
+         <li class="flex gap-2"><span>→</span> Branding Services</li>
+        </ul>
+       </div>
+      </div>
+     </div>
+    </section><!-- Earn Section -->
+    <section id="earn" class="w-full py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-blue-900/10 to-transparent">
+     <div class="max-w-6xl mx-auto">
+      <h2 class="text-4xl font-bold mb-12 text-center">Earn With Cyber Donuts</h2>
+      <div class="glass p-12 rounded-lg border-2 border-blue-500/30 mb-12">
+       <div class="grid md:grid-cols-2 gap-12">
+        <div>
+         <h3 class="text-2xl font-bold mb-6">Mission System</h3>
+         <div class="space-y-4">
+          <div class="p-4 bg-blue-500/10 rounded border border-blue-500/30">
+           <div class="font-bold text-blue-400 mb-1">
+            Daily Missions
+           </div>
+           <div class="text-sm text-gray-400">
+            +10 CBD, +50 XP
+           </div>
+          </div>
+          <div class="p-4 bg-purple-500/10 rounded border border-purple-500/30">
+           <div class="font-bold text-purple-400 mb-1">
+            Weekly Challenges
+           </div>
+           <div class="text-sm text-gray-400">
+            +100 CBD, +500 XP
+           </div>
+          </div>
+          <div class="p-4 bg-pink-500/10 rounded border border-pink-500/30">
+           <div class="font-bold text-pink-400 mb-1">
+            Referral Rewards
+           </div>
+           <div class="text-sm text-gray-400">
+            +5% commission per ref
+           </div>
+          </div>
+         </div>
+        </div>
+        <div>
+         <h3 class="text-2xl font-bold mb-6">Future Features</h3>
+         <div class="space-y-4">
+          <div class="p-4 bg-yellow-500/10 rounded border border-yellow-500/30">
+           <div class="font-bold text-yellow-400 mb-1">
+            Staking System
+           </div>
+           <div class="text-sm text-gray-400">
+            Earn passive income on CBD
+           </div>
+          </div>
+          <div class="p-4 bg-green-500/10 rounded border border-green-500/30">
+           <div class="font-bold text-green-400 mb-1">
+            NFT Rewards
+           </div>
+           <div class="text-sm text-gray-400">
+            Exclusive collectible badges
+           </div>
+          </div>
+          <div class="p-4 bg-indigo-500/10 rounded border border-indigo-500/30">
+           <div class="font-bold text-indigo-400 mb-1">
+            DAO Governance
+           </div>
+           <div class="text-sm text-gray-400">
+            Vote on platform decisions
+           </div>
+          </div>
          </div>
         </div>
        </div>
-       <div class="card-glass p-8 rounded-xl">
-        <p class="text-gray-300 mb-4">"The services hub saves me time and the earning potential is incredible. Finally a platform that pays!"</p>
-        <div class="flex items-center gap-4">
-         <div class="w-10 h-10 rounded-full bg-gradient-to-r from-purple-500 to-pink-500"></div>
-         <div>
-          <p class="font-bold">James</p>
-          <p class="text-xs text-gray-400">Entrepreneur, Lagos</p>
+      </div>
+      <div class="grid md:grid-cols-2 gap-8">
+       <button class="btn-primary text-lg py-4">View All Missions</button> <button class="btn-secondary text-lg py-4">Learn About CBD Token</button>
+      </div>
+     </div>
+    </section><!-- Community Section -->
+    <section id="community" class="w-full py-20 px-4 sm:px-6 lg:px-8">
+     <div class="max-w-6xl mx-auto">
+      <h2 class="text-4xl font-bold mb-12 text-center">Join Our Community</h2>
+      <div class="grid md:grid-cols-2 gap-8 mb-12">
+       <div class="glass p-8 rounded-lg">
+        <h3 class="text-2xl font-bold mb-6">Connect With Us</h3>
+        <div class="space-y-4">
+         <a href="#" target="_blank" class="flex items-center gap-3 p-4 hover:bg-blue-500/10 rounded transition"> <i data-lucide="message-circle" style="width: 24px; height: 24px;"></i>
+          <div>
+           <div class="font-bold">
+            WhatsApp Group
+           </div>
+           <div class="text-sm text-gray-400">
+            Daily updates &amp; support
+           </div>
+          </div></a> <a href="#" target="_blank" class="flex items-center gap-3 p-4 hover:bg-purple-500/10 rounded transition"> <i data-lucide="send" style="width: 24px; height: 24px;"></i>
+          <div>
+           <div class="font-bold">
+            Telegram Channel
+           </div>
+           <div class="text-sm text-gray-400">
+            Latest news &amp; announcements
+           </div>
+          </div></a> <a href="#" target="_blank" class="flex items-center gap-3 p-4 hover:bg-pink-500/10 rounded transition"> <i data-lucide="heart" style="width: 24px; height: 24px;"></i>
+          <div>
+           <div class="font-bold">
+            Instagram
+           </div>
+           <div class="text-sm text-gray-400">
+            Behind the scenes &amp; vibes
+           </div>
+          </div></a>
+        </div>
+       </div>
+       <div class="glass p-8 rounded-lg">
+        <h3 class="text-2xl font-bold mb-6">Leaderboards</h3>
+        <div class="space-y-3">
+         <div class="flex justify-between items-center p-3 bg-blue-500/10 rounded">
+          <div>
+           <div class="font-bold">
+            🥇 Alex
+           </div>
+           <div class="text-xs text-gray-400">
+            Master Tier
+           </div>
+          </div>
+          <div class="text-blue-400 font-bold">
+           45,280 XP
+          </div>
+         </div>
+         <div class="flex justify-between items-center p-3 bg-purple-500/10 rounded">
+          <div>
+           <div class="font-bold">
+            🥈 Maria
+           </div>
+           <div class="text-xs text-gray-400">
+            Artisan Tier
+           </div>
+          </div>
+          <div class="text-purple-400 font-bold">
+           38,150 XP
+          </div>
+         </div>
+         <div class="flex justify-between items-center p-3 bg-pink-500/10 rounded">
+          <div>
+           <div class="font-bold">
+            🥉 Kevin
+           </div>
+           <div class="text-xs text-gray-400">
+            Apprentice Tier
+           </div>
+          </div>
+          <div class="text-pink-400 font-bold">
+           27,890 XP
+          </div>
          </div>
         </div>
        </div>
-       <div class="card-glass p-8 rounded-xl">
-        <p class="text-gray-300 mb-4">"The Web3 integration and NFT rewards make this so exciting. I'm part of something bigger!"</p>
-        <div class="flex items-center gap-4">
-         <div class="w-10 h-10 rounded-full bg-gradient-to-r from-pink-500 to-cyan-500"></div>
-         <div>
-          <p class="font-bold">Maria</p>
-          <p class="text-xs text-gray-400">Crypto Enthusiast, Kampala</p>
-         </div>
-        </div>
-       </div>
       </div>
-     </div><!-- Final CTA -->
-     <div class="max-w-4xl mx-auto px-4 py-20 text-center">
-      <h2 class="text-4xl font-bold mb-6 gradient-text">Ready to Change Your Life?</h2>
-      <p class="text-xl text-gray-300 mb-8">Join thousands of users earning, growing, and building community with Cyber Donuts</p><button onclick="navigateTo('dashboard')" class="btn-primary px-10 py-4 rounded-lg font-bold text-lg">Get Started Now →</button>
-     </div>
-    </section><!-- MENU PAGE -->
-    <section id="menu-page" class="page-section hidden max-w-6xl mx-auto px-4 py-20">
-     <h1 class="text-4xl font-bold mb-12 gradient-text">🍩 Menu</h1>
-     <div class="mb-8 flex gap-4 overflow-x-auto pb-4"><button onclick="filterMenu('all')" class="category-btn btn-primary px-6 py-2 rounded-lg whitespace-nowrap" data-category="all">All</button> <button onclick="filterMenu('donuts')" class="category-btn btn-secondary px-6 py-2 rounded-lg whitespace-nowrap" data-category="donuts">Donuts</button> <button onclick="filterMenu('meals')" class="category-btn btn-secondary px-6 py-2 rounded-lg whitespace-nowrap" data-category="meals">Meals</button> <button onclick="filterMenu('drinks')" class="category-btn btn-secondary px-6 py-2 rounded-lg whitespace-nowrap" data-category="drinks">Drinks</button>
-     </div>
-     <div id="menu-grid" class="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12"><!-- Menu items populated by JS -->
-     </div><!-- Cart Section -->
-     <div class="card-glass p-8 rounded-xl">
-      <h2 class="text-2xl font-bold mb-6 gradient-text">🛒 Your Cart</h2>
-      <div id="cart-items" class="space-y-4 mb-6">
-       <p class="text-gray-400">Your cart is empty</p>
-      </div>
-      <div class="border-t border-cyan-500/20 pt-6">
-       <div class="flex justify-between items-center mb-6"><span class="text-lg font-bold">Total:</span> <span id="cart-total" class="text-2xl font-bold gradient-text">KES 0</span>
-       </div><button onclick="checkout()" class="btn-primary w-full py-3 rounded-lg font-bold">Checkout →</button> <button onclick="clearCart()" class="btn-secondary w-full py-3 rounded-lg font-bold mt-3">Clear Cart</button>
+      <div class="glass p-12 rounded-lg border-2 border-green-500/30 text-center">
+       <h3 class="text-2xl font-bold mb-4">Ready to Join?</h3>
+       <p class="text-gray-300 mb-6">Start your journey with Cyber Donuts today and unlock amazing rewards!</p><button class="btn-primary text-lg">Start Your Journey</button>
       </div>
      </div>
-    </section><!-- SERVICES PAGE -->
-    <section id="services-page" class="page-section hidden max-w-6xl mx-auto px-4 py-20">
-     <h1 class="text-4xl font-bold mb-12 gradient-text">💼 Cyber Services</h1>
-     <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8"><!-- Government Services -->
-      <div class="card-glass p-8 rounded-xl">
-       <div class="text-4xl mb-4">
-        🏛️
-       </div>
-       <h3 class="text-2xl font-bold mb-4">Government Services</h3>
-       <ul class="space-y-3 text-gray-300">
-        <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-cyan-400"></i> KRA Services</li>
-        <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-cyan-400"></i> HELB Applications</li>
-        <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-cyan-400"></i> eCitizen Services</li>
-        <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-cyan-400"></i> Passport Assistance</li>
-       </ul><button onclick="bookService('government')" class="btn-primary w-full py-2 rounded-lg mt-6 font-bold">Book Now</button>
-      </div><!-- Printing Services -->
-      <div class="card-glass p-8 rounded-xl">
-       <div class="text-4xl mb-4">
-        🖨️
-       </div>
-       <h3 class="text-2xl font-bold mb-4">Printing Services</h3>
-       <ul class="space-y-3 text-gray-300">
-        <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-cyan-400"></i> Printing</li>
-        <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-cyan-400"></i> Photocopy</li>
-        <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-cyan-400"></i> Scanning</li>
-        <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-cyan-400"></i> CV Creation</li>
-       </ul><button onclick="bookService('printing')" class="btn-primary w-full py-2 rounded-lg mt-6 font-bold">Book Now</button>
-      </div><!-- Digital Services -->
-      <div class="card-glass p-8 rounded-xl">
-       <div class="text-4xl mb-4">
-        💻
-       </div>
-       <h3 class="text-2xl font-bold mb-4">Digital Services</h3>
-       <ul class="space-y-3 text-gray-300">
-        <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-cyan-400"></i> Website Development</li>
-        <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-cyan-400"></i> Logo Design</li>
-        <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-cyan-400"></i> Social Media Setup</li>
-        <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-cyan-400"></i> Branding Services</li>
-       </ul><button onclick="bookService('digital')" class="btn-primary w-full py-2 rounded-lg mt-6 font-bold">Book Now</button>
-      </div>
-     </div><!-- Service Booking Modal -->
-     <div id="service-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur">
-      <div class="card-glass p-8 rounded-xl max-w-md mx-4">
-       <div class="flex justify-between items-center mb-6">
-        <h3 id="service-title" class="text-2xl font-bold gradient-text">Book Service</h3><button onclick="closeServiceModal()" class="text-gray-400 hover:text-white"> <i data-lucide="x" class="w-6 h-6"></i> </button>
-       </div><input type="email" id="service-email" placeholder="Your email" class="w-full bg-gray-900 border border-cyan-500/30 rounded p-3 mb-4 text-white placeholder-gray-500"> <input type="text" id="service-description" placeholder="Service details" class="w-full bg-gray-900 border border-cyan-500/30 rounded p-3 mb-4 text-white placeholder-gray-500"> <button onclick="submitServiceBooking()" class="btn-primary w-full py-2 rounded-lg font-bold">Confirm Booking</button>
-      </div>
-     </div>
-    </section><!-- EARN PAGE -->
-    <section id="earn-page" class="page-section hidden max-w-6xl mx-auto px-4 py-20">
-     <h1 class="text-4xl font-bold mb-12 gradient-text">📈 Earn &amp; Grow</h1><!-- User Stats -->
-     <div class="grid md:grid-cols-4 gap-6 mb-12">
-      <div class="card-glass p-6 rounded-xl text-center">
-       <div class="text-3xl font-bold gradient-text mb-2" id="user-xp">
-        0
-       </div>
-       <p class="text-gray-400">Total XP</p>
-      </div>
-      <div class="card-glass p-6 rounded-xl text-center">
-       <div class="text-3xl font-bold gradient-text mb-2" id="user-cbd">
-        0
-       </div>
-       <p class="text-gray-400">CBD Tokens</p>
-      </div>
-      <div class="card-glass p-6 rounded-xl text-center">
-       <div id="user-tier" class="text-2xl font-bold mb-2 tier-newcomer px-3 py-1 rounded-full inline-block">
-        Newcomer
-       </div>
-       <p class="text-gray-400">Current Tier</p>
-      </div>
-      <div class="card-glass p-6 rounded-xl text-center">
-       <div class="text-3xl font-bold gradient-text mb-2" id="user-nfts">
-        0
-       </div>
-       <p class="text-gray-400">NFT Badges</p>
-      </div>
-     </div><!-- Tier Progression -->
-     <div class="card-glass p-8 rounded-xl mb-12">
-      <h2 class="text-2xl font-bold mb-6 gradient-text">Tier Progression</h2>
-      <div class="space-y-4">
-       <div class="tier-item">
-        <div class="flex justify-between mb-2"><span class="tier-badge tier-newcomer">Newcomer</span> <span class="text-sm">0 XP</span>
-        </div>
-        <div class="w-full bg-gray-800 rounded-full h-2" id="tier-0"></div>
-       </div>
-       <div class="tier-item">
-        <div class="flex justify-between mb-2"><span class="tier-badge tier-explorer">Explorer</span> <span class="text-sm">500 XP</span>
-        </div>
-        <div class="w-full bg-gray-800 rounded-full h-2" id="tier-1"></div>
-       </div>
-       <div class="tier-item">
-        <div class="flex justify-between mb-2"><span class="tier-badge tier-apprentice">Apprentice</span> <span class="text-sm">1,500 XP</span>
-        </div>
-        <div class="w-full bg-gray-800 rounded-full h-2" id="tier-2"></div>
-       </div>
-       <div class="tier-item">
-        <div class="flex justify-between mb-2"><span class="tier-badge tier-artisan">Artisan</span> <span class="text-sm">3,500 XP</span>
-        </div>
-        <div class="w-full bg-gray-800 rounded-full h-2" id="tier-3"></div>
-       </div>
-       <div class="tier-item">
-        <div class="flex justify-between mb-2"><span class="tier-badge tier-master">Master</span> <span class="text-sm">7,000+ XP</span>
-        </div>
-        <div class="w-full bg-gray-800 rounded-full h-2" id="tier-4"></div>
-       </div>
-      </div>
-     </div><!-- Missions -->
-     <div class="card-glass p-8 rounded-xl mb-12">
-      <div class="flex justify-between items-center mb-6">
-       <h2 class="text-2xl font-bold gradient-text">Daily Missions</h2><button onclick="completeRandomMission()" class="btn-primary px-4 py-2 rounded-lg text-sm font-bold">Complete Mission</button>
-      </div>
-      <div id="missions-list" class="space-y-4"><!-- Missions populated by JS -->
-      </div>
-     </div><!-- Rewards -->
-     <div class="grid md:grid-cols-2 gap-8">
-      <div class="card-glass p-8 rounded-xl">
-       <h3 class="text-2xl font-bold mb-6 gradient-text">🎁 Available Rewards</h3>
-       <div class="space-y-4">
-        <div class="flex items-center justify-between p-4 bg-gray-900 rounded-lg">
-         <div>
-          <p class="font-bold">CBD Token Pack</p>
-          <p class="text-sm text-gray-400">1,000 XP</p>
-         </div><button onclick="claimReward('cbd')" class="btn-primary px-4 py-2 rounded text-sm">Claim</button>
-        </div>
-        <div class="flex items-center justify-between p-4 bg-gray-900 rounded-lg">
-         <div>
-          <p class="font-bold">NFT Badge</p>
-          <p class="text-sm text-gray-400">2,500 XP</p>
-         </div><button onclick="claimReward('nft')" class="btn-primary px-4 py-2 rounded text-sm">Claim</button>
-        </div>
-        <div class="flex items-center justify-between p-4 bg-gray-900 rounded-lg">
-         <div>
-          <p class="font-bold">Premium Access</p>
-          <p class="text-sm text-gray-400">5,000 XP</p>
-         </div><button onclick="claimReward('premium')" class="btn-primary px-4 py-2 rounded text-sm">Claim</button>
-        </div>
-       </div>
-      </div>
-      <div class="card-glass p-8 rounded-xl">
-       <h3 class="text-2xl font-bold mb-6 gradient-text">📊 Leaderboard</h3>
-       <div id="leaderboard" class="space-y-3"><!-- Leaderboard populated by JS -->
-       </div>
-      </div>
-     </div>
-    </section><!-- COMMUNITY PAGE -->
-    <section id="community-page" class="page-section hidden max-w-6xl mx-auto px-4 py-20">
-     <h1 class="text-4xl font-bold mb-12 gradient-text">👥 Community</h1><!-- Social Links -->
-     <div class="grid md:grid-cols-4 gap-6 mb-12"><a href="#" target="_blank" rel="noopener noreferrer" class="card-glass p-8 rounded-xl text-center hover:border-cyan-400 transition">
-       <div class="text-4xl mb-4">
-        💬
-       </div><h3 class="font-bold mb-2">WhatsApp Group</h3><p class="text-sm text-gray-400">Join our community</p></a> <a href="#" target="_blank" rel="noopener noreferrer" class="card-glass p-8 rounded-xl text-center hover:border-cyan-400 transition">
-       <div class="text-4xl mb-4">
-        ✈️
-       </div><h3 class="font-bold mb-2">Telegram Channel</h3><p class="text-sm text-gray-400">Stay updated with news</p></a> <a href="#" target="_blank" rel="noopener noreferrer" class="card-glass p-8 rounded-xl text-center hover:border-cyan-400 transition">
-       <div class="text-4xl mb-4">
-        𝕏
-       </div><h3 class="font-bold mb-2">Twitter</h3><p class="text-sm text-gray-400">Follow our updates</p></a> <a href="#" target="_blank" rel="noopener noreferrer" class="card-glass p-8 rounded-xl text-center hover:border-cyan-400 transition">
-       <div class="text-4xl mb-4">
-        📷
-       </div><h3 class="font-bold mb-2">Instagram</h3><p class="text-sm text-gray-400">See our stories</p></a>
-     </div><!-- Crews Section -->
-     <div class="card-glass p-8 rounded-xl mb-12">
-      <h2 class="text-2xl font-bold mb-6 gradient-text">👾 Crews &amp; Guilds</h2>
-      <p class="text-gray-300 mb-6">Join or create a crew to collaborate, earn together, and unlock exclusive benefits</p>
-      <div class="grid md:grid-cols-3 gap-6 mb-6">
-       <div class="p-6 bg-gray-900 rounded-lg border border-cyan-500/20">
-        <h4 class="font-bold mb-2">Tech Innovators</h4>
-        <p class="text-sm text-gray-400 mb-4">Member count: 42</p><button onclick="joinCrew('tech')" class="btn-secondary w-full py-2 rounded text-sm">Join Crew</button>
-       </div>
-       <div class="p-6 bg-gray-900 rounded-lg border border-cyan-500/20">
-        <h4 class="font-bold mb-2">Crypto Enthusiasts</h4>
-        <p class="text-sm text-gray-400 mb-4">Member count: 58</p><button onclick="joinCrew('crypto')" class="btn-secondary w-full py-2 rounded text-sm">Join Crew</button>
-       </div>
-       <div class="p-6 bg-gray-900 rounded-lg border border-cyan-500/20">
-        <h4 class="font-bold mb-2">Food Lovers</h4>
-        <p class="text-sm text-gray-400 mb-4">Member count: 73</p><button onclick="joinCrew('food')" class="btn-secondary w-full py-2 rounded text-sm">Join Crew</button>
-       </div>
-      </div><button onclick="createCrewModal()" class="btn-primary px-6 py-3 rounded-lg font-bold">+ Create New Crew</button>
-     </div><!-- Referral System -->
-     <div class="card-glass p-8 rounded-xl">
-      <h2 class="text-2xl font-bold mb-6 gradient-text">🎯 Referral Program</h2>
-      <div class="mb-6">
-       <p class="text-gray-300 mb-4">Invite friends and earn rewards for each successful referral</p>
-       <div class="p-4 bg-gray-900 rounded-lg">
-        <p class="text-sm text-gray-400 mb-2">Your Referral Link:</p>
-        <div class="flex gap-2"><input type="text" id="referral-link" value="https://cyberdonuts.com/ref/user123" readonly class="flex-1 bg-gray-800 border border-cyan-500/20 rounded p-2 text-white text-sm"> <button onclick="copyReferralLink()" class="btn-primary px-4 py-2 rounded text-sm">Copy</button>
-        </div>
-       </div>
-      </div>
-      <div class="grid md:grid-cols-3 gap-4">
-       <div class="text-center p-4 bg-gray-900 rounded-lg">
-        <p class="text-2xl font-bold gradient-text mb-1">5</p>
-        <p class="text-sm text-gray-400">Total Referrals</p>
-       </div>
-       <div class="text-center p-4 bg-gray-900 rounded-lg">
-        <p class="text-2xl font-bold gradient-text mb-1">2,500</p>
-        <p class="text-sm text-gray-400">XP Earned</p>
-       </div>
-       <div class="text-center p-4 bg-gray-900 rounded-lg">
-        <p class="text-2xl font-bold gradient-text mb-1">50</p>
-        <p class="text-sm text-gray-400">CBD Tokens</p>
-       </div>
-      </div>
-     </div>
-    </section><!-- DASHBOARD PAGE -->
-    <section id="dashboard-page" class="page-section hidden max-w-6xl mx-auto px-4 py-20">
-     <h1 class="text-4xl font-bold mb-12 gradient-text">📊 Personal Dashboard</h1><!-- Profile Section -->
-     <div class="card-glass p-8 rounded-xl mb-12">
-      <div class="flex items-center gap-6 mb-8">
-       <div class="w-20 h-20 rounded-full bg-gradient-to-r from-cyan-500 to-purple-500"></div>
+    </section><!-- Footer -->
+    <footer class="w-full py-12 px-4 sm:px-6 lg:px-8 border-t border-blue-900/30 bg-blue-950/20">
+     <div class="max-w-6xl mx-auto">
+      <div class="grid md:grid-cols-4 gap-8 mb-8">
        <div>
-        <h2 id="profile-name" class="text-3xl font-bold mb-2">Cyber Adventurer</h2>
-        <p id="profile-tier" class="tier-badge tier-newcomer inline-block mb-2">Newcomer</p>
-        <p class="text-gray-400">Member since Jan 2024</p>
+        <div class="flex items-center gap-2 mb-4">
+         <span class="text-lg font-bold text-blue-400">Cyber Donuts</span>
+        </div>
+        <p class="text-sm text-gray-400">Eat. Earn. Grow.</p>
+       </div>
+       <div>
+        <h4 class="font-bold mb-4">Platform</h4>
+        <ul class="space-y-2 text-sm text-gray-400">
+         <li><a href="#menu" class="hover:text-blue-400">Menu</a></li>
+         <li><a href="#services" class="hover:text-blue-400">Services</a></li>
+         <li><a href="#earn" class="hover:text-blue-400">Earn</a></li>
+        </ul>
+       </div>
+       <div>
+        <h4 class="font-bold mb-4">Community</h4>
+        <ul class="space-y-2 text-sm text-gray-400">
+         <li><a href="#" class="hover:text-blue-400">WhatsApp</a></li>
+         <li><a href="#" class="hover:text-blue-400">Telegram</a></li>
+         <li><a href="#" class="hover:text-blue-400">Twitter</a></li>
+        </ul>
+       </div>
+       <div>
+        <h4 class="font-bold mb-4">About</h4>
+        <ul class="space-y-2 text-sm text-gray-400">
+         <li><a href="#" class="hover:text-blue-400">Our Story</a></li>
+         <li><a href="#" class="hover:text-blue-400">Privacy Policy</a></li>
+         <li><a href="#" class="hover:text-blue-400">Terms</a></li>
+        </ul>
        </div>
       </div>
-      <div class="grid md:grid-cols-4 gap-4">
-       <div class="p-4 bg-gray-900 rounded-lg">
-        <p class="text-gray-400 text-sm mb-1">XP Progress</p>
-        <p class="text-2xl font-bold gradient-text">125/500</p>
-       </div>
-       <div class="p-4 bg-gray-900 rounded-lg">
-        <p class="text-gray-400 text-sm mb-1">CBD Balance</p>
-        <p class="text-2xl font-bold gradient-text">2,500</p>
-       </div>
-       <div class="p-4 bg-gray-900 rounded-lg">
-        <p class="text-gray-400 text-sm mb-1">NFT Collection</p>
-        <p class="text-2xl font-bold gradient-text">3</p>
-       </div>
-       <div class="p-4 bg-gray-900 rounded-lg">
-        <p class="text-gray-400 text-sm mb-1">Missions Done</p>
-        <p class="text-2xl font-bold gradient-text">12</p>
-       </div>
-      </div>
-     </div><!-- Activity History -->
-     <div class="grid lg:grid-cols-3 gap-8">
-      <div class="lg:col-span-2">
-       <div class="card-glass p-8 rounded-xl">
-        <h3 class="text-2xl font-bold mb-6 gradient-text">📋 Activity History</h3>
-        <div id="activity-feed" class="space-y-4"><!-- Activity populated by JS -->
-        </div>
-       </div>
-      </div><!-- Quick Stats -->
-      <div class="space-y-6">
-       <div class="card-glass p-6 rounded-xl">
-        <h4 class="font-bold mb-4 gradient-text">🔥 Streak</h4>
-        <p class="text-3xl font-bold mb-2">7 days</p>
-        <p class="text-sm text-gray-400">Keep it up!</p>
-       </div>
-       <div class="card-glass p-6 rounded-xl">
-        <h4 class="font-bold mb-4 gradient-text">🏆 Achievements</h4>
-        <div class="space-y-2">
-         <p class="text-sm">✨ First Order</p>
-         <p class="text-sm">🔥 Week Warrior</p>
-         <p class="text-sm">💰 100 CBD Collector</p>
-        </div>
-       </div>
-       <div class="card-glass p-6 rounded-xl">
-        <h4 class="font-bold mb-4 gradient-text">📈 Level Up</h4>
-        <div class="w-full bg-gray-800 rounded-full h-3 mb-2">
-         <div class="bg-gradient-to-r from-cyan-500 to-purple-500 h-3 rounded-full" style="width: 25%"></div>
-        </div>
-        <p class="text-xs text-gray-400">375 XP to next level</p>
-       </div>
+      <div class="border-t border-blue-900/30 pt-8 text-center text-sm text-gray-500">
+       <p>© 2024 Cyber Donuts 2.0. All rights reserved. | Built for a global community</p>
       </div>
      </div>
-    </section>
-   </main><!-- Footer -->
-   <footer class="glass-effect border-t border-cyan-500/20 mt-20 py-12">
-    <div class="max-w-6xl mx-auto px-4">
-     <div class="grid md:grid-cols-4 gap-8 mb-8">
-      <div>
-       <h4 class="font-bold mb-4 gradient-text">Cyber Donuts</h4>
-       <p class="text-sm text-gray-400">Eat. Earn. Grow. A platform for everyone.</p>
-      </div>
-      <div>
-       <h4 class="font-bold mb-4">Quick Links</h4>
-       <ul class="space-y-2 text-sm">
-        <li><button onclick="navigateTo('home')" class="text-gray-400 hover:text-cyan-400">Home</button></li>
-        <li><button onclick="navigateTo('menu')" class="text-gray-400 hover:text-cyan-400">Menu</button></li>
-        <li><button onclick="navigateTo('earn')" class="text-gray-400 hover:text-cyan-400">Earn</button></li>
-       </ul>
-      </div>
-      <div>
-       <h4 class="font-bold mb-4">Community</h4>
-       <ul class="space-y-2 text-sm">
-        <li><a href="#" class="text-gray-400 hover:text-cyan-400">Twitter</a></li>
-        <li><a href="#" class="text-gray-400 hover:text-cyan-400">Telegram</a></li>
-        <li><a href="#" class="text-gray-400 hover:text-cyan-400">Discord</a></li>
-       </ul>
-      </div>
-      <div>
-       <h4 class="font-bold mb-4">Legal</h4>
-       <ul class="space-y-2 text-sm">
-        <li><a href="#" class="text-gray-400 hover:text-cyan-400">Privacy</a></li>
-        <li><a href="#" class="text-gray-400 hover:text-cyan-400">Terms</a></li>
-        <li><a href="#" class="text-gray-400 hover:text-cyan-400">Contact</a></li>
-       </ul>
-      </div>
-     </div>
-     <div class="border-t border-cyan-500/20 pt-8 text-center text-gray-400 text-sm">
-      <p>© 2024 Cyber Donuts. Powered by Community. Secured by Web3.</p>
-     </div>
-    </div>
-   </footer>
+    </footer>
+   </main>
   </div>
   <script>
-    let currentPage = 'home';
-    let currentUser = {
-      xp: 125,
-      cbd: 2500,
-      nfts: 3,
-      tier: 'newcomer',
-      name: 'Cyber Adventurer',
-      joinDate: 'Jan 2024',
-      streak: 7,
-      missionsCompleted: 12
+    // Initialize Lucide icons
+    lucide.createIcons();
+
+    // Element SDK initialization
+    const defaultConfig = {
+      hero_title: "Eat. Earn. Grow.",
+      hero_tagline: "A global platform combining food, services, Web3, and community to create income, opportunity, and impact for everyone.",
+      cta_button_text: "Order Now"
     };
 
-    let cart = [];
-    let currentCrew = null;
+    const config = { ...defaultConfig };
 
-    const menuItems = [
-      { id: 1, name: 'Classic Donut', category: 'donuts', price: 150, description: 'Our signature glazed donut' },
-      { id: 2, name: 'Chocolate Donut', category: 'donuts', price: 180, description: 'Rich chocolate goodness' },
-      { id: 3, name: 'Strawberry Dream', category: 'donuts', price: 200, description: 'Fresh strawberry filling' },
-      { id: 4, name: 'Chapati & Beans', category: 'meals', price: 250, description: 'Traditional and delicious' },
-      { id: 5, name: 'Ugali & Sukuma', category: 'meals', price: 200, description: 'Local favorite' },
-      { id: 6, name: 'Rice & Nyama', category: 'meals', price: 350, description: 'Perfectly cooked meat' },
-      { id: 7, name: 'Chai (Milk Tea)', category: 'drinks', price: 50, description: 'Hot and comforting' },
-      { id: 8, name: 'Fresh Juice', category: 'drinks', price: 100, description: 'Orange or passion fruit' }
-    ];
+    const elementHandler = {
+      onConfigChange: async (updatedConfig) => {
+        const titleEl = document.getElementById('heroTitle');
+        const taglineEl = document.getElementById('heroTagline');
+        const ctaBtn = document.getElementById('ctaButton');
 
-    const missions = [
-      { id: 1, name: 'Daily Login', xp: 10, description: 'Log in today', completed: false },
-      { id: 2, name: 'Order Food', xp: 50, description: 'Place your first order', completed: false },
-      { id: 3, name: 'Invite Friend', xp: 100, description: 'Refer a friend successfully', completed: false },
-      { id: 4, name: 'Join Community', xp: 25, description: 'Join a crew', completed: false },
-      { id: 5, name: 'Use Services', xp: 75, description: 'Book a cyber service', completed: false }
-    ];
-
-    const leaderboard = [
-      { rank: 1, name: 'CyberNinja', xp: 5420, tier: 'master' },
-      { rank: 2, name: 'TokenHunter', xp: 4250, tier: 'artisan' },
-      { rank: 3, name: 'DonuthMan', xp: 3890, tier: 'artisan' },
-      { rank: 4, name: 'GrowthSeeker', xp: 2125, tier: 'apprentice' }
-    ];
-
-    const activities = [
-      { time: '2 hours ago', action: 'Earned XP', amount: '+50 XP' },
-      { time: '5 hours ago', action: 'Completed Mission', amount: 'Daily Login' },
-      { time: '1 day ago', action: 'Ordered Food', amount: 'Donut Pack' },
-      { time: '2 days ago', action: 'Invited Friend', amount: '+100 XP' },
-      { time: '3 days ago', action: 'Tier Unlocked', amount: 'Explorer' }
-    ];
-
-    // Initialize SDK
-    let config = {
-      app_title: 'Cyber Donuts 2.0',
-      tagline: 'Eat. Earn. Grow.',
-      hero_description: 'A global digital-physical platform combining food, services, Web3, and community'
+        if (titleEl) {
+          titleEl.innerHTML = `<span class="bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">${updatedConfig.hero_title || defaultConfig.hero_title}</span>`;
+        }
+        if (taglineEl) {
+          taglineEl.textContent = updatedConfig.hero_tagline || defaultConfig.hero_tagline;
+        }
+        if (ctaBtn) {
+          ctaBtn.textContent = updatedConfig.cta_button_text || defaultConfig.cta_button_text;
+        }
+      }
     };
 
-    window.elementSdk.init({
-      defaultConfig: config,
-      onConfigChange: (newConfig) => {
-        config = newConfig;
-        document.getElementById('hero-tagline').textContent = config.hero_description || config.hero_description;
-      },
-      mapToCapabilities: (cfg) => ({
-        recolorables: [],
-        borderables: [],
-        fontEditable: undefined,
-        fontSizeable: undefined
-      }),
-      mapToEditPanelValues: (cfg) => new Map([
-        ['app_title', cfg.app_title || 'Cyber Donuts 2.0'],
-        ['tagline', cfg.tagline || 'Eat. Earn. Grow.'],
-        ['hero_description', cfg.hero_description || 'A global digital-physical platform...']
-      ])
+    const capabilities = {
+      recolorables: [],
+      fontEditable: undefined,
+      fontSizeable: undefined
+    };
+
+    const mapToEditPanelValues = (cfg) => new Map([
+      ["hero_title", cfg.hero_title || defaultConfig.hero_title],
+      ["hero_tagline", cfg.hero_tagline || defaultConfig.hero_tagline],
+      ["cta_button_text", cfg.cta_button_text || defaultConfig.cta_button_text]
+    ]);
+
+    // Initialize Element SDK
+    if (window.elementSdk) {
+      window.elementSdk.init({
+        defaultConfig,
+        onConfigChange: elementHandler.onConfigChange,
+        mapToCapabilities: () => capabilities,
+        mapToEditPanelValues
+      });
+    }
+
+    // Button interactions
+    document.getElementById('headerCTA')?.addEventListener('click', () => {
+      document.getElementById('community').scrollIntoView({ behavior: 'smooth' });
     });
 
-    // Data SDK Handler
-    const dataHandler = {
-      onDataChanged(data) {
-        // Update UI with cart/order data
-        if (data && data.length > 0) {
-          updateCartDisplay();
-        }
-      }
-    };
-
-    // Initialize Data SDK
-    window.dataSdk.init(dataHandler);
-
-    function navigateTo(page) {
-      // Hide all pages
-      document.querySelectorAll('.page-section').forEach(el => el.classList.add('hidden'));
-      
-      // Show selected page
-      document.getElementById(page + '-page').classList.remove('hidden');
-      currentPage = page;
-      
-      // Close mobile menu
-      document.getElementById('mobile-menu').classList.add('hidden');
-      
-      // Scroll to top
-      window.scrollTo(0, 0);
-      
-      // Update highlights
-      document.querySelectorAll('.nav-link').forEach(el => el.classList.remove('text-cyan-400'));
-      document.querySelector(`button[onclick="navigateTo('${page}')"]`)?.classList.add('text-cyan-400');
-
-      // Initialize page-specific content
-      if (page === 'menu') renderMenu('all');
-      else if (page === 'earn') renderEarnPage();
-      else if (page === 'dashboard') renderDashboard();
-    }
-
-    function toggleMobileMenu() {
-      const menu = document.getElementById('mobile-menu');
-      menu.classList.toggle('hidden');
-    }
-
-    // Menu functions
-    function renderMenu(category) {
-      const grid = document.getElementById('menu-grid');
-      const items = category === 'all' ? menuItems : menuItems.filter(item => item.category === category);
-      
-      grid.innerHTML = items.map(item => `
-        <div class="card-glass p-6 rounded-xl">
-          <div class="text-4xl mb-4">${getCategoryEmoji(item.category)}</div>
-          <h3 class="text-xl font-bold mb-2">${item.name}</h3>
-          <p class="text-sm text-gray-400 mb-4">${item.description}</p>
-          <div class="flex justify-between items-center">
-            <span class="text-lg font-bold gradient-text">KES ${item.price}</span>
-            <button onclick="addToCart(${item.id})" class="btn-primary px-3 py-2 rounded text-sm">Add</button>
-          </div>
-        </div>
-      `).join('');
-
-      document.querySelectorAll('.category-btn').forEach(btn => {
-        btn.classList.remove('btn-primary');
-        btn.classList.add('btn-secondary');
-        if (btn.dataset.category === category) {
-          btn.classList.add('btn-primary');
-          btn.classList.remove('btn-secondary');
-        }
-      });
-    }
-
-    function getCategoryEmoji(category) {
-      return {donuts: '🍩', meals: '🍽️', drinks: '☕'}[category] || '🍴';
-    }
-
-    function addToCart(itemId) {
-      const item = menuItems.find(i => i.id === itemId);
-      const existing = cart.find(i => i.id === itemId);
-      if (existing) {
-        existing.quantity++;
-      } else {
-        cart.push({...item, quantity: 1});
-      }
-      updateCartDisplay();
-    }
-
-    function updateCartDisplay() {
-      const cartItemsEl = document.getElementById('cart-items');
-      const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-      
-      if (cart.length === 0) {
-        cartItemsEl.innerHTML = '<p class="text-gray-400">Your cart is empty</p>';
-      } else {
-        cartItemsEl.innerHTML = cart.map(item => `
-          <div class="flex justify-between items-center p-3 bg-gray-900 rounded">
-            <div>
-              <p class="font-bold">${item.name}</p>
-              <p class="text-sm text-gray-400">x${item.quantity}</p>
-            </div>
-            <div class="flex items-center gap-3">
-              <span class="font-bold">KES ${item.price * item.quantity}</span>
-              <button onclick="removeFromCart(${item.id})" class="text-red-400 hover:text-red-300">
-                <i data-lucide="trash-2" class="w-4 h-4"></i>
-              </button>
-            </div>
-          </div>
-        `).join('');
-      }
-      
-      document.getElementById('cart-total').textContent = `KES ${total}`;
-    }
-
-    function removeFromCart(itemId) {
-      cart = cart.filter(item => item.id !== itemId);
-      updateCartDisplay();
-    }
-
-    function clearCart() {
-      cart = [];
-      updateCartDisplay();
-    }
-
-    async function checkout() {
-      if (cart.length === 0) return;
-      
-      const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-      
-      // Save order to sheet
-      const orderResult = await window.dataSdk.create({
-        type: 'order',
-        name: 'Food Order',
-        description: cart.map(i => `${i.name} x${i.quantity}`).join(', '),
-        price: total,
-        quantity: 1,
-        createdAt: new Date().toISOString()
-      });
-
-      if (orderResult.isOk) {
-        currentUser.xp += 50;
-        currentUser.cbd += 10;
-        alert('Order placed successfully! +50 XP +10 CBD');
-        clearCart();
-      } else {
-        alert('Error placing order. Please try again.');
-      }
-    }
-
-    function filterMenu(category) {
-      renderMenu(category);
-    }
-
-    // Services functions
-    let currentService = '';
-
-    function bookService(service) {
-      currentService = service;
-      const titles = {
-        government: '🏛️ Government Services',
-        printing: '🖨️ Printing Services',
-        digital: '💻 Digital Services'
-      };
-      document.getElementById('service-title').textContent = titles[service];
-      document.getElementById('service-modal').classList.remove('hidden');
-    }
-
-    function closeServiceModal() {
-      document.getElementById('service-modal').classList.add('hidden');
-    }
-
-    async function submitServiceBooking() {
-      const email = document.getElementById('service-email').value;
-      const description = document.getElementById('service-description').value;
-      
-      if (!email || !description) {
-        alert('Please fill in all fields');
-        return;
-      }
-
-      const result = await window.dataSdk.create({
-        type: 'service',
-        name: `${currentService} Service`,
-        description: description,
-        price: 0,
-        quantity: 1,
-        createdAt: new Date().toISOString()
-      });
-
-      if (result.isOk) {
-        currentUser.xp += 25;
-        alert('Service booking confirmed! +25 XP');
-        closeServiceModal();
-        document.getElementById('service-email').value = '';
-        document.getElementById('service-description').value = '';
-      }
-    }
-
-    // Earn page functions
-    function renderEarnPage() {
-      // Render missions
-      const missionsHtml = missions.map(mission => `
-        <div class="p-4 bg-gray-900 rounded-lg flex justify-between items-center">
-          <div>
-            <p class="font-bold">${mission.name}</p>
-            <p class="text-sm text-gray-400">${mission.description}</p>
-          </div>
-          <div class="text-right">
-            <p class="font-bold gradient-text">+${mission.xp} XP</p>
-            <button onclick="completeMission(${mission.id})" class="btn-secondary px-3 py-1 rounded text-xs mt-1">Complete</button>
-          </div>
-        </div>
-      `).join('');
-      document.getElementById('missions-list').innerHTML = missionsHtml;
-
-      // Render leaderboard
-      const leaderboardHtml = leaderboard.map(user => `
-        <div class="flex justify-between items-center p-3 bg-gray-900 rounded-lg">
-          <div class="flex items-center gap-3">
-            <span class="font-bold text-cyan-400">#${user.rank}</span>
-            <div>
-              <p class="font-bold">${user.name}</p>
-              <span class="tier-badge tier-${user.tier} inline-block">${user.tier}</span>
-            </div>
-          </div>
-          <span class="font-bold gradient-text">${user.xp} XP</span>
-        </div>
-      `).join('');
-      document.getElementById('leaderboard').innerHTML = leaderboardHtml;
-
-      updateUserStats();
-    }
-
-    function completeMission(missionId) {
-      const mission = missions.find(m => m.id === missionId);
-      if (mission && !mission.completed) {
-        mission.completed = true;
-        currentUser.xp += mission.xp;
-        updateUserStats();
-        renderEarnPage();
-      }
-    }
-
-    function completeRandomMission() {
-      const incompleteMissions = missions.filter(m => !m.completed);
-      if (incompleteMissions.length > 0) {
-        const random = incompleteMissions[Math.floor(Math.random() * incompleteMissions.length)];
-        completeMission(random.id);
-      }
-    }
-
-    function updateUserStats() {
-      document.getElementById('user-xp').textContent = currentUser.xp;
-      document.getElementById('user-cbd').textContent = currentUser.cbd;
-      document.getElementById('user-nfts').textContent = currentUser.nfts;
-      
-      const tierThresholds = {newcomer: 0, explorer: 500, apprentice: 1500, artisan: 3500, master: 7000};
-      let newTier = 'newcomer';
-      for (const [tier, xp] of Object.entries(tierThresholds)) {
-        if (currentUser.xp >= xp) newTier = tier;
-      }
-      currentUser.tier = newTier;
-      
-      const tierEl = document.getElementById('user-tier');
-      tierEl.textContent = newTier.charAt(0).toUpperCase() + newTier.slice(1);
-      tierEl.className = `text-2xl font-bold mb-2 tier-${newTier} px-3 py-1 rounded-full inline-block`;
-    }
-
-    function claimReward(type) {
-      const rewards = {
-        cbd: { xp: 1000, cbd: 100 },
-        nft: { xp: 2500, nfts: 1 },
-        premium: { xp: 5000, cbd: 50 }
-      };
-      
-      if (currentUser.xp >= (rewards[type].xp || 0)) {
-        currentUser.xp -= rewards[type].xp || 0;
-        if (rewards[type].cbd) currentUser.cbd += rewards[type].cbd;
-        if (rewards[type].nfts) currentUser.nfts += rewards[type].nfts;
-        updateUserStats();
-        alert('Reward claimed!');
-      } else {
-        alert('Not enough XP to claim this reward');
-      }
-    }
-
-    // Community functions
-    function joinCrew(crew) {
-      currentCrew = crew;
-      alert(`You joined the ${crew.charAt(0).toUpperCase() + crew.slice(1)} crew! +25 XP`);
-      currentUser.xp += 25;
-      updateUserStats();
-    }
-
-    function createCrewModal() {
-      const name = prompt('Enter crew name:');
-      if (name) {
-        alert(`Crew "${name}" created! You are the captain. +50 XP`);
-        currentUser.xp += 50;
-        updateUserStats();
-      }
-    }
-
-    function copyReferralLink() {
-      const link = document.getElementById('referral-link').value;
-      navigator.clipboard.writeText(link);
-      alert('Referral link copied!');
-    }
-
-    // Dashboard functions
-    function renderDashboard() {
-      document.getElementById('profile-name').textContent = currentUser.name;
-      const tierEl = document.getElementById('profile-tier');
-      tierEl.textContent = currentUser.tier.charAt(0).toUpperCase() + currentUser.tier.slice(1);
-      tierEl.className = `tier-badge tier-${currentUser.tier} inline-block mb-2`;
-
-      const activityHtml = activities.map(activity => `
-        <div class="p-4 bg-gray-900 rounded-lg">
-          <div class="flex justify-between items-start">
-            <div>
-              <p class="font-bold">${activity.action}</p>
-              <p class="text-sm text-gray-400">${activity.time}</p>
-            </div>
-            <span class="text-cyan-400 font-bold">${activity.amount}</span>
-          </div>
-        </div>
-      `).join('');
-      document.getElementById('activity-feed').innerHTML = activityHtml;
-    }
-
-    // Initialize
-    navigateTo('home');
-    lucide.createIcons();
+    document.getElementById('ctaButton')?.addEventListener('click', () => {
+      document.getElementById('menu').scrollIntoView({ behavior: 'smooth' });
+    });
   </script>
- <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9dd9958190aa8a6d',t:'MTc3MzcyNTE5OS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
- </html>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9dd9b88e57b48a6d',t:'MTc3MzcyNjYzNS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+      </html>
