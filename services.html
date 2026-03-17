@@ -1,0 +1,591 @@
+<!doctype html>
+<html lang="en" class="h-full">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Services — Cyber Donuts</title>
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <script src="https://cdn.jsdelivr.net/npm/lucide@0.263.0/dist/umd/lucide.min.js"></script>
+  <script src="/_sdk/element_sdk.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&amp;family=Exo+2:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            orbitron: ['Orbitron', 'sans-serif'],
+            exo: ['Exo 2', 'sans-serif'],
+          },
+          colors: {
+            neon: {
+              pink: '#ff2d7b',
+              cyan: '#00f0ff',
+              purple: '#b44dff',
+              green: '#39ff14',
+              yellow: '#ffe600',
+            },
+            cyber: {
+              dark: '#0a0a1a',
+              card: '#12122a',
+              surface: '#1a1a3e',
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    html, body { height: 100%; margin: 0; }
+
+    .glass-card {
+      background: rgba(18, 18, 42, 0.6);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(0, 240, 255, 0.15);
+    }
+
+    .glass-nav {
+      background: rgba(10, 10, 26, 0.85);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-bottom: 1px solid rgba(0, 240, 255, 0.1);
+    }
+
+    .neon-glow {
+      text-shadow: 0 0 10px rgba(0, 240, 255, 0.5), 0 0 40px rgba(0, 240, 255, 0.2);
+    }
+
+    .btn-neon {
+      position: relative;
+      overflow: hidden;
+      transition: all 0.3s ease;
+    }
+    .btn-neon::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+      transform: translateX(-100%);
+      transition: transform 0.5s ease;
+    }
+    .btn-neon:hover::before {
+      transform: translateX(100%);
+    }
+
+    .grid-bg {
+      background-image:
+        linear-gradient(rgba(0, 240, 255, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 240, 255, 0.03) 1px, transparent 1px);
+      background-size: 60px 60px;
+    }
+
+    .card-hover {
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .card-hover:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 0 30px rgba(0, 240, 255, 0.15);
+    }
+
+    .service-icon {
+      width: 48px;
+      height: 48px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 12px;
+      transition: transform 0.3s ease;
+    }
+
+    .card-hover:hover .service-icon {
+      transform: scale(1.1) rotate(5deg);
+    }
+
+    .filter-btn {
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+    .filter-btn.active {
+      background: linear-gradient(135deg, rgba(0, 240, 255, 0.3), rgba(180, 77, 255, 0.2));
+      border-color: rgba(0, 240, 255, 0.5);
+    }
+
+    .scrollbar-hide::-webkit-scrollbar { display: none; }
+    .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+
+    .fade-in {
+      animation: fadeInUp 0.6s ease forwards;
+    }
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .service-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 1.5rem;
+    }
+
+    @media (max-width: 768px) {
+      .service-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+  <style>body { box-sizing: border-box; }</style>
+  <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
+ </head>
+ <body class="h-full bg-cyber-dark text-white font-exo overflow-auto scrollbar-hide">
+  <div id="app-wrapper" class="w-full h-full overflow-auto scrollbar-hide grid-bg"><!-- NAVBAR -->
+   <nav class="glass-nav fixed top-0 left-0 w-full z-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+     <div class="flex items-center justify-between h-16"><a href="/" class="flex items-center gap-2"> <span class="text-2xl">🍩</span> <span class="font-orbitron font-bold text-lg neon-glow">Cyber Donuts</span> </a>
+      <div class="hidden md:flex items-center gap-6"><a href="/" class="text-gray-400 text-sm hover:text-neon-cyan transition-colors">Home</a> <a href="/pages/earn.html" class="text-gray-400 text-sm hover:text-neon-cyan transition-colors">Earn</a> <a href="/pages/services.html" class="text-neon-cyan text-sm font-medium">Services</a> <a href="/pages/community.html" target="_blank" rel="noopener noreferrer" class="text-gray-400 text-sm hover:text-neon-cyan transition-colors">Community</a> <a href="/pages/cbd-token.html" target="_blank" rel="noopener noreferrer" class="text-gray-400 text-sm hover:text-neon-cyan transition-colors">CBD Token</a> <a href="/pages/missions.html" target="_blank" rel="noopener noreferrer" class="text-gray-400 text-sm hover:text-neon-cyan transition-colors">Missions</a>
+      </div><button id="mobile-menu-btn" class="md:hidden text-neon-cyan p-2" aria-label="Toggle menu"> <i data-lucide="menu" class="w-6 h-6"></i> </button>
+     </div>
+    </div><!-- Mobile Menu -->
+    <div id="mobile-menu" class="hidden md:hidden glass-card border-t border-neon-cyan/10">
+     <div class="px-4 py-4 flex flex-col gap-3"><a href="/" class="text-gray-400 text-sm py-2 hover:text-neon-cyan transition-colors">Home</a> <a href="/pages/earn.html" class="text-gray-400 text-sm py-2 hover:text-neon-cyan transition-colors">Earn</a> <a href="/pages/services.html" class="text-neon-cyan text-sm font-medium py-2">Services</a> <a href="/pages/community.html" target="_blank" rel="noopener noreferrer" class="text-gray-400 text-sm py-2 hover:text-neon-cyan transition-colors">Community</a> <a href="/pages/cbd-token.html" target="_blank" rel="noopener noreferrer" class="text-gray-400 text-sm py-2 hover:text-neon-cyan transition-colors">CBD Token</a> <a href="/pages/missions.html" target="_blank" rel="noopener noreferrer" class="text-gray-400 text-sm py-2 hover:text-neon-cyan transition-colors">Missions</a>
+     </div>
+    </div>
+   </nav><!-- HERO SECTION -->
+   <header class="relative pt-32 pb-12 px-4 overflow-hidden">
+    <div class="max-w-6xl mx-auto">
+     <div class="text-center fade-in">
+      <h1 id="page-title" class="font-orbitron font-black text-4xl sm:text-5xl lg:text-6xl mb-4 bg-gradient-to-r from-neon-green via-neon-cyan to-neon-purple bg-clip-text text-transparent">Our Services</h1>
+      <p id="page-subtitle" class="text-lg sm:text-xl text-gray-400 max-w-2xl mx-auto mb-8">Government, Digital, and Business Solutions</p>
+     </div>
+    </div>
+   </header><!-- SEARCH & FILTER -->
+   <section class="px-4 py-8 sticky top-20 z-40 glass-nav border-b border-neon-cyan/10">
+    <div class="max-w-6xl mx-auto">
+     <div class="flex flex-col gap-4"><!-- Search -->
+      <div class="relative"><input type="text" id="search-input" placeholder="Search services..." class="w-full bg-cyber-card border border-neon-cyan/20 rounded-lg px-4 py-3 text-white placeholder-gray-600 focus:outline-none focus:border-neon-cyan/50 transition-colors"> <i data-lucide="search" class="absolute right-4 top-3.5 w-5 h-5 text-gray-500"></i>
+      </div><!-- Filters -->
+      <div class="flex flex-wrap gap-2"><button class="filter-btn active glass-card px-4 py-2 rounded-lg text-xs font-semibold border border-neon-cyan/30" data-filter="all">All Services</button> <button class="filter-btn glass-card px-4 py-2 rounded-lg text-xs font-semibold border border-neon-cyan/10 hover:border-neon-cyan/30 transition-colors" data-filter="government">Government</button> <button class="filter-btn glass-card px-4 py-2 rounded-lg text-xs font-semibold border border-neon-cyan/10 hover:border-neon-cyan/30 transition-colors" data-filter="printing">Printing</button> <button class="filter-btn glass-card px-4 py-2 rounded-lg text-xs font-semibold border border-neon-cyan/10 hover:border-neon-cyan/30 transition-colors" data-filter="digital">Digital</button> <button class="filter-btn glass-card px-4 py-2 rounded-lg text-xs font-semibold border border-neon-cyan/10 hover:border-neon-cyan/30 transition-colors" data-filter="business">Business</button>
+      </div>
+     </div>
+    </div>
+   </section><!-- SERVICES GRID -->
+   <section class="px-4 py-12">
+    <div class="max-w-6xl mx-auto"><!-- Government Services -->
+     <div class="mb-16" data-category="government">
+      <h2 id="govt-services-title" class="font-orbitron font-bold text-3xl mb-8 flex items-center gap-3">
+       <div class="w-10 h-10 rounded-lg bg-gradient-to-br from-neon-cyan/20 to-neon-blue/20 flex items-center justify-center"><i data-lucide="building-2" class="w-5 h-5 text-neon-cyan"></i>
+       </div>Government Services</h2>
+      <div class="service-grid" data-services="government"><!-- KRA Services -->
+       <div class="glass-card rounded-xl p-6 card-hover fade-in" data-service="government" style="animation-delay: 0.1s;">
+        <div class="service-icon bg-neon-cyan/10 mb-4"><i data-lucide="file-text" class="w-6 h-6 text-neon-cyan"></i>
+        </div>
+        <h3 class="font-orbitron font-bold text-lg mb-2">KRA Tax Filing</h3>
+        <p class="text-sm text-gray-400 mb-4">Professional tax return preparation and filing with KRA</p>
+        <div class="flex items-end justify-between">
+         <div>
+          <p class="text-xs text-gray-600 mb-1">Starting from</p>
+          <p class="font-orbitron font-bold text-neon-green text-lg">KES 2,500</p>
+         </div><button class="btn-neon cta-btn bg-neon-cyan/20 text-neon-cyan px-3 py-2 rounded-lg hover:bg-neon-cyan/30 text-xs font-bold transition-colors" data-service-name="KRA Tax Filing"> <i data-lucide="message-circle" class="w-4 h-4"></i> </button>
+        </div>
+       </div><!-- HELB Application -->
+       <div class="glass-card rounded-xl p-6 card-hover fade-in" data-service="government" style="animation-delay: 0.15s;">
+        <div class="service-icon bg-neon-purple/10 mb-4"><i data-lucide="graduation-cap" class="w-6 h-6 text-neon-purple"></i>
+        </div>
+        <h3 class="font-orbitron font-bold text-lg mb-2">HELB Loan Application</h3>
+        <p class="text-sm text-gray-400 mb-4">Complete HELB application process and document preparation</p>
+        <div class="flex items-end justify-between">
+         <div>
+          <p class="text-xs text-gray-600 mb-1">Starting from</p>
+          <p class="font-orbitron font-bold text-neon-green text-lg">KES 1,500</p>
+         </div><button class="btn-neon cta-btn bg-neon-cyan/20 text-neon-cyan px-3 py-2 rounded-lg hover:bg-neon-cyan/30 text-xs font-bold transition-colors" data-service-name="HELB Loan Application"> <i data-lucide="message-circle" class="w-4 h-4"></i> </button>
+        </div>
+       </div><!-- eCitizen Services -->
+       <div class="glass-card rounded-xl p-6 card-hover fade-in" data-service="government" style="animation-delay: 0.2s;">
+        <div class="service-icon bg-neon-yellow/10 mb-4"><i data-lucide="smartphone" class="w-6 h-6 text-neon-yellow"></i>
+        </div>
+        <h3 class="font-orbitron font-bold text-lg mb-2">eCitizen Services</h3>
+        <p class="text-sm text-gray-400 mb-4">Birth certificates, IDs, and other government e-services</p>
+        <div class="flex items-end justify-between">
+         <div>
+          <p class="text-xs text-gray-600 mb-1">Starting from</p>
+          <p class="font-orbitron font-bold text-neon-green text-lg">KES 500</p>
+         </div><button class="btn-neon cta-btn bg-neon-cyan/20 text-neon-cyan px-3 py-2 rounded-lg hover:bg-neon-cyan/30 text-xs font-bold transition-colors" data-service-name="eCitizen Services"> <i data-lucide="message-circle" class="w-4 h-4"></i> </button>
+        </div>
+       </div><!-- Passport Application -->
+       <div class="glass-card rounded-xl p-6 card-hover fade-in" data-service="government" style="animation-delay: 0.25s;">
+        <div class="service-icon bg-neon-pink/10 mb-4"><i data-lucide="passport" class="w-6 h-6 text-neon-pink"></i>
+        </div>
+        <h3 class="font-orbitron font-bold text-lg mb-2">Passport Application</h3>
+        <p class="text-sm text-gray-400 mb-4">Complete passport application and document handling</p>
+        <div class="flex items-end justify-between">
+         <div>
+          <p class="text-xs text-gray-600 mb-1">Starting from</p>
+          <p class="font-orbitron font-bold text-neon-green text-lg">KES 2,000</p>
+         </div><button class="btn-neon cta-btn bg-neon-cyan/20 text-neon-cyan px-3 py-2 rounded-lg hover:bg-neon-cyan/30 text-xs font-bold transition-colors" data-service-name="Passport Application"> <i data-lucide="message-circle" class="w-4 h-4"></i> </button>
+        </div>
+       </div>
+      </div>
+     </div><!-- Printing Services -->
+     <div class="mb-16" data-category="printing">
+      <h2 id="printing-services-title" class="font-orbitron font-bold text-3xl mb-8 flex items-center gap-3">
+       <div class="w-10 h-10 rounded-lg bg-gradient-to-br from-neon-green/20 to-neon-cyan/20 flex items-center justify-center"><i data-lucide="printer" class="w-5 h-5 text-neon-green"></i>
+       </div>Printing &amp; Documents</h2>
+      <div class="service-grid" data-services="printing"><!-- Document Printing -->
+       <div class="glass-card rounded-xl p-6 card-hover fade-in" data-service="printing" style="animation-delay: 0.1s;">
+        <div class="service-icon bg-neon-cyan/10 mb-4"><i data-lucide="file" class="w-6 h-6 text-neon-cyan"></i>
+        </div>
+        <h3 class="font-orbitron font-bold text-lg mb-2">Document Printing</h3>
+        <p class="text-sm text-gray-400 mb-4">Professional printing for documents, flyers, and materials</p>
+        <div class="flex items-end justify-between">
+         <div>
+          <p class="text-xs text-gray-600 mb-1">Starting from</p>
+          <p class="font-orbitron font-bold text-neon-green text-lg">KES 100</p>
+         </div><button class="btn-neon cta-btn bg-neon-cyan/20 text-neon-cyan px-3 py-2 rounded-lg hover:bg-neon-cyan/30 text-xs font-bold transition-colors" data-service-name="Document Printing"> <i data-lucide="message-circle" class="w-4 h-4"></i> </button>
+        </div>
+       </div><!-- CV & Resume Creation -->
+       <div class="glass-card rounded-xl p-6 card-hover fade-in" data-service="printing" style="animation-delay: 0.15s;">
+        <div class="service-icon bg-neon-purple/10 mb-4"><i data-lucide="briefcase" class="w-6 h-6 text-neon-purple"></i>
+        </div>
+        <h3 class="font-orbitron font-bold text-lg mb-2">CV &amp; Resume</h3>
+        <p class="text-sm text-gray-400 mb-4">Professional CV writing and resume design services</p>
+        <div class="flex items-end justify-between">
+         <div>
+          <p class="text-xs text-gray-600 mb-1">Starting from</p>
+          <p class="font-orbitron font-bold text-neon-green text-lg">KES 1,500</p>
+         </div><button class="btn-neon cta-btn bg-neon-cyan/20 text-neon-cyan px-3 py-2 rounded-lg hover:bg-neon-cyan/30 text-xs font-bold transition-colors" data-service-name="CV &amp; Resume"> <i data-lucide="message-circle" class="w-4 h-4"></i> </button>
+        </div>
+       </div><!-- Document Scanning -->
+       <div class="glass-card rounded-xl p-6 card-hover fade-in" data-service="printing" style="animation-delay: 0.2s;">
+        <div class="service-icon bg-neon-yellow/10 mb-4"><i data-lucide="image" class="w-6 h-6 text-neon-yellow"></i>
+        </div>
+        <h3 class="font-orbitron font-bold text-lg mb-2">Document Scanning</h3>
+        <p class="text-sm text-gray-400 mb-4">High-quality scanning and digitization of documents</p>
+        <div class="flex items-end justify-between">
+         <div>
+          <p class="text-xs text-gray-600 mb-1">Starting from</p>
+          <p class="font-orbitron font-bold text-neon-green text-lg">KES 50</p>
+         </div><button class="btn-neon cta-btn bg-neon-cyan/20 text-neon-cyan px-3 py-2 rounded-lg hover:bg-neon-cyan/30 text-xs font-bold transition-colors" data-service-name="Document Scanning"> <i data-lucide="message-circle" class="w-4 h-4"></i> </button>
+        </div>
+       </div><!-- Banner & Poster -->
+       <div class="glass-card rounded-xl p-6 card-hover fade-in" data-service="printing" style="animation-delay: 0.25s;">
+        <div class="service-icon bg-neon-pink/10 mb-4"><i data-lucide="layout" class="w-6 h-6 text-neon-pink"></i>
+        </div>
+        <h3 class="font-orbitron font-bold text-lg mb-2">Banners &amp; Posters</h3>
+        <p class="text-sm text-gray-400 mb-4">Custom banner and poster design with printing</p>
+        <div class="flex items-end justify-between">
+         <div>
+          <p class="text-xs text-gray-600 mb-1">Starting from</p>
+          <p class="font-orbitron font-bold text-neon-green text-lg">KES 2,000</p>
+         </div><button class="btn-neon cta-btn bg-neon-cyan/20 text-neon-cyan px-3 py-2 rounded-lg hover:bg-neon-cyan/30 text-xs font-bold transition-colors" data-service-name="Banners &amp; Posters"> <i data-lucide="message-circle" class="w-4 h-4"></i> </button>
+        </div>
+       </div>
+      </div>
+     </div><!-- Digital Services -->
+     <div class="mb-16" data-category="digital">
+      <h2 id="digital-services-title" class="font-orbitron font-bold text-3xl mb-8 flex items-center gap-3">
+       <div class="w-10 h-10 rounded-lg bg-gradient-to-br from-neon-purple/20 to-neon-pink/20 flex items-center justify-center"><i data-lucide="code" class="w-5 h-5 text-neon-purple"></i>
+       </div>Digital Services</h2>
+      <div class="service-grid" data-services="digital"><!-- Web Development -->
+       <div class="glass-card rounded-xl p-6 card-hover fade-in" data-service="digital" style="animation-delay: 0.1s;">
+        <div class="service-icon bg-neon-cyan/10 mb-4"><i data-lucide="globe" class="w-6 h-6 text-neon-cyan"></i>
+        </div>
+        <h3 class="font-orbitron font-bold text-lg mb-2">Web Development</h3>
+        <p class="text-sm text-gray-400 mb-4">Responsive websites for businesses and portfolios</p>
+        <div class="flex items-end justify-between">
+         <div>
+          <p class="text-xs text-gray-600 mb-1">Starting from</p>
+          <p class="font-orbitron font-bold text-neon-green text-lg">KES 15,000</p>
+         </div><button class="btn-neon cta-btn bg-neon-cyan/20 text-neon-cyan px-3 py-2 rounded-lg hover:bg-neon-cyan/30 text-xs font-bold transition-colors" data-service-name="Web Development"> <i data-lucide="message-circle" class="w-4 h-4"></i> </button>
+        </div>
+       </div><!-- Logo Design -->
+       <div class="glass-card rounded-xl p-6 card-hover fade-in" data-service="digital" style="animation-delay: 0.15s;">
+        <div class="service-icon bg-neon-purple/10 mb-4"><i data-lucide="palette" class="w-6 h-6 text-neon-purple"></i>
+        </div>
+        <h3 class="font-orbitron font-bold text-lg mb-2">Logo Design</h3>
+        <p class="text-sm text-gray-400 mb-4">Professional logo creation and brand identity design</p>
+        <div class="flex items-end justify-between">
+         <div>
+          <p class="text-xs text-gray-600 mb-1">Starting from</p>
+          <p class="font-orbitron font-bold text-neon-green text-lg">KES 5,000</p>
+         </div><button class="btn-neon cta-btn bg-neon-cyan/20 text-neon-cyan px-3 py-2 rounded-lg hover:bg-neon-cyan/30 text-xs font-bold transition-colors" data-service-name="Logo Design"> <i data-lucide="message-circle" class="w-4 h-4"></i> </button>
+        </div>
+       </div><!-- Branding -->
+       <div class="glass-card rounded-xl p-6 card-hover fade-in" data-service="digital" style="animation-delay: 0.2s;">
+        <div class="service-icon bg-neon-yellow/10 mb-4"><i data-lucide="sparkles" class="w-6 h-6 text-neon-yellow"></i>
+        </div>
+        <h3 class="font-orbitron font-bold text-lg mb-2">Branding Package</h3>
+        <p class="text-sm text-gray-400 mb-4">Complete brand identity including guidelines and assets</p>
+        <div class="flex items-end justify-between">
+         <div>
+          <p class="text-xs text-gray-600 mb-1">Starting from</p>
+          <p class="font-orbitron font-bold text-neon-green text-lg">KES 12,000</p>
+         </div><button class="btn-neon cta-btn bg-neon-cyan/20 text-neon-cyan px-3 py-2 rounded-lg hover:bg-neon-cyan/30 text-xs font-bold transition-colors" data-service-name="Branding Package"> <i data-lucide="message-circle" class="w-4 h-4"></i> </button>
+        </div>
+       </div><!-- Social Media Setup -->
+       <div class="glass-card rounded-xl p-6 card-hover fade-in" data-service="digital" style="animation-delay: 0.25s;">
+        <div class="service-icon bg-neon-pink/10 mb-4"><i data-lucide="share-2" class="w-6 h-6 text-neon-pink"></i>
+        </div>
+        <h3 class="font-orbitron font-bold text-lg mb-2">Social Media Setup</h3>
+        <p class="text-sm text-gray-400 mb-4">Professional profile setup and content calendar planning</p>
+        <div class="flex items-end justify-between">
+         <div>
+          <p class="text-xs text-gray-600 mb-1">Starting from</p>
+          <p class="font-orbitron font-bold text-neon-green text-lg">KES 3,000</p>
+         </div><button class="btn-neon cta-btn bg-neon-cyan/20 text-neon-cyan px-3 py-2 rounded-lg hover:bg-neon-cyan/30 text-xs font-bold transition-colors" data-service-name="Social Media Setup"> <i data-lucide="message-circle" class="w-4 h-4"></i> </button>
+        </div>
+       </div>
+      </div>
+     </div><!-- Business Support Services -->
+     <div class="mb-16" data-category="business">
+      <h2 id="business-services-title" class="font-orbitron font-bold text-3xl mb-8 flex items-center gap-3">
+       <div class="w-10 h-10 rounded-lg bg-gradient-to-br from-neon-green/20 to-neon-purple/20 flex items-center justify-center"><i data-lucide="rocket" class="w-5 h-5 text-neon-green"></i>
+       </div>Business Support</h2>
+      <div class="service-grid" data-services="business"><!-- Startup Kit -->
+       <div class="glass-card rounded-xl p-6 card-hover fade-in" data-service="business" style="animation-delay: 0.1s;">
+        <div class="service-icon bg-neon-cyan/10 mb-4"><i data-lucide="briefcase" class="w-6 h-6 text-neon-cyan"></i>
+        </div>
+        <h3 class="font-orbitron font-bold text-lg mb-2">Startup Kit</h3>
+        <p class="text-sm text-gray-400 mb-4">Complete business setup with branding and legal docs</p>
+        <div class="flex items-end justify-between">
+         <div>
+          <p class="text-xs text-gray-600 mb-1">Starting from</p>
+          <p class="font-orbitron font-bold text-neon-green text-lg">KES 25,000</p>
+         </div><button class="btn-neon cta-btn bg-neon-cyan/20 text-neon-cyan px-3 py-2 rounded-lg hover:bg-neon-cyan/30 text-xs font-bold transition-colors" data-service-name="Startup Kit"> <i data-lucide="message-circle" class="w-4 h-4"></i> </button>
+        </div>
+       </div><!-- Website Package -->
+       <div class="glass-card rounded-xl p-6 card-hover fade-in" data-service="business" style="animation-delay: 0.15s;">
+        <div class="service-icon bg-neon-purple/10 mb-4"><i data-lucide="layout-grid" class="w-6 h-6 text-neon-purple"></i>
+        </div>
+        <h3 class="font-orbitron font-bold text-lg mb-2">Website Package</h3>
+        <p class="text-sm text-gray-400 mb-4">Website hosting, domain, and maintenance included</p>
+        <div class="flex items-end justify-between">
+         <div>
+          <p class="text-xs text-gray-600 mb-1">Starting from</p>
+          <p class="font-orbitron font-bold text-neon-green text-lg">KES 8,000/mo</p>
+         </div><button class="btn-neon cta-btn bg-neon-cyan/20 text-neon-cyan px-3 py-2 rounded-lg hover:bg-neon-cyan/30 text-xs font-bold transition-colors" data-service-name="Website Package"> <i data-lucide="message-circle" class="w-4 h-4"></i> </button>
+        </div>
+       </div><!-- Marketing Campaign -->
+       <div class="glass-card rounded-xl p-6 card-hover fade-in" data-service="business" style="animation-delay: 0.2s;">
+        <div class="service-icon bg-neon-yellow/10 mb-4"><i data-lucide="trending-up" class="w-6 h-6 text-neon-yellow"></i>
+        </div>
+        <h3 class="font-orbitron font-bold text-lg mb-2">Marketing Campaign</h3>
+        <p class="text-sm text-gray-400 mb-4">Social media marketing and promotional strategy</p>
+        <div class="flex items-end justify-between">
+         <div>
+          <p class="text-xs text-gray-600 mb-1">Starting from</p>
+          <p class="font-orbitron font-bold text-neon-green text-lg">KES 5,000/mo</p>
+         </div><button class="btn-neon cta-btn bg-neon-cyan/20 text-neon-cyan px-3 py-2 rounded-lg hover:bg-neon-cyan/30 text-xs font-bold transition-colors" data-service-name="Marketing Campaign"> <i data-lucide="message-circle" class="w-4 h-4"></i> </button>
+        </div>
+       </div><!-- Business Consulting -->
+       <div class="glass-card rounded-xl p-6 card-hover fade-in" data-service="business" style="animation-delay: 0.25s;">
+        <div class="service-icon bg-neon-pink/10 mb-4"><i data-lucide="lightbulb" class="w-6 h-6 text-neon-pink"></i>
+        </div>
+        <h3 class="font-orbitron font-bold text-lg mb-2">Business Consulting</h3>
+        <p class="text-sm text-gray-400 mb-4">Expert advice on business growth and strategy</p>
+        <div class="flex items-end justify-between">
+         <div>
+          <p class="text-xs text-gray-600 mb-1">Starting from</p>
+          <p class="font-orbitron font-bold text-neon-green text-lg">KES 10,000</p>
+         </div><button class="btn-neon cta-btn bg-neon-cyan/20 text-neon-cyan px-3 py-2 rounded-lg hover:bg-neon-cyan/30 text-xs font-bold transition-colors" data-service-name="Business Consulting"> <i data-lucide="message-circle" class="w-4 h-4"></i> </button>
+        </div>
+       </div>
+      </div>
+     </div>
+    </div>
+   </section><!-- WHATSAPP CTA -->
+   <section class="px-4 py-12">
+    <div class="max-w-4xl mx-auto">
+     <div class="glass-card rounded-2xl p-8 relative overflow-hidden">
+      <div class="absolute top-0 right-0 w-48 h-48 bg-neon-green/5 rounded-full blur-3xl pointer-events-none"></div>
+      <div class="relative z-10 text-center">
+       <div class="flex justify-center mb-6">
+        <div class="w-20 h-20 rounded-full bg-gradient-to-br from-neon-green/20 to-neon-cyan/20 flex items-center justify-center"><i data-lucide="message-circle" class="w-10 h-10 text-neon-green"></i>
+        </div>
+       </div>
+       <h2 class="font-orbitron font-bold text-3xl mb-4">Need Help Choosing a Service?</h2>
+       <p class="text-gray-400 mb-8 max-w-xl mx-auto">Chat with our team on WhatsApp for personalized recommendations and quick order placement</p><a href="https://wa.me/254798692443?text=Hi%20Cyber%20Donuts%21%20I%20need%20information%20about%20your%20services." target="_blank" rel="noopener noreferrer" class="btn-neon inline-flex items-center gap-2 bg-gradient-to-r from-neon-green to-neon-cyan px-8 py-3 rounded-full font-orbitron font-semibold text-sm tracking-wider text-cyber-dark hover:shadow-lg hover:shadow-neon-green/30 transition-all"> <i data-lucide="send" class="w-5 h-5"></i>Message on WhatsApp </a>
+      </div>
+     </div>
+    </div>
+   </section><!-- FOOTER -->
+   <footer class="border-t border-neon-cyan/10 py-12 px-4 mt-12">
+    <div class="max-w-6xl mx-auto">
+     <div class="grid grid-cols-1 md:grid-cols-3 gap-10 mb-10">
+      <div>
+       <div class="flex items-center gap-2 mb-4"><span class="text-2xl">🍩</span> <span class="font-orbitron font-bold text-lg neon-glow">Cyber Donuts</span>
+       </div>
+       <p class="text-gray-500 text-sm mb-4">Eat. Earn. Connect. — Where flavor meets the future.</p>
+       <div class="flex gap-3"><a href="https://chat.whatsapp.com/HyNNfNplBLM409sYzcyIEs" target="_blank" rel="noopener noreferrer" class="w-9 h-9 rounded-full bg-neon-cyan/10 flex items-center justify-center hover:bg-neon-cyan/20 transition-colors"> <i data-lucide="message-circle" class="w-4 h-4 text-neon-cyan"></i> </a> <a href="https://cyber-donuts.github.io/" target="_blank" rel="noopener noreferrer" class="w-9 h-9 rounded-full bg-neon-cyan/10 flex items-center justify-center hover:bg-neon-cyan/20 transition-colors"> <i data-lucide="globe" class="w-4 h-4 text-neon-cyan"></i> </a>
+       </div>
+      </div>
+      <div>
+       <h4 class="font-orbitron font-bold text-sm mb-4 text-neon-cyan">Pages</h4>
+       <div class="flex flex-col gap-2"><a href="/" class="text-gray-500 text-sm hover:text-neon-cyan transition-colors">Home</a> <a href="/pages/earn.html" class="text-gray-500 text-sm hover:text-neon-cyan transition-colors">Earn</a> <a href="/pages/services.html" class="text-gray-500 text-sm hover:text-neon-cyan transition-colors">Services</a> <a href="/pages/missions.html" target="_blank" rel="noopener noreferrer" class="text-gray-500 text-sm hover:text-neon-cyan transition-colors">Missions</a>
+       </div>
+      </div>
+      <div>
+       <h4 class="font-orbitron font-bold text-sm mb-4 text-neon-cyan">Contact</h4>
+       <div class="flex flex-col gap-3"><a href="tel:+254798692443" class="flex items-center gap-2 text-gray-500 text-sm hover:text-neon-cyan transition-colors"> <i data-lucide="phone" class="w-4 h-4"></i> +254 798 692 443 </a> <a href="https://wa.me/254798692443" target="_blank" rel="noopener noreferrer" class="flex items-center gap-2 text-gray-500 text-sm hover:text-neon-green transition-colors"> <i data-lucide="message-circle" class="w-4 h-4"></i> WhatsApp Us </a> <a href="https://cyber-donuts.github.io/" target="_blank" rel="noopener noreferrer" class="flex items-center gap-2 text-gray-500 text-sm hover:text-neon-cyan transition-colors"> <i data-lucide="globe" class="w-4 h-4"></i> cyber-donuts.github.io </a>
+       </div>
+      </div>
+     </div>
+     <div class="border-t border-gray-800 pt-6 flex flex-col sm:flex-row items-center justify-between gap-4">
+      <p class="text-gray-600 text-xs">© 2025 Cyber Donuts. All rights reserved.</p>
+      <p class="text-gray-700 text-xs">Built with 🍩 and code</p>
+     </div>
+    </div>
+   </footer>
+  </div>
+  <script>
+    // Initialize Lucide icons
+    lucide.createIcons();
+
+    // Mobile menu toggle
+    const menuBtn = document.getElementById('mobile-menu-btn');
+    const mobileMenu = document.getElementById('mobile-menu');
+    let menuOpen = false;
+    menuBtn.addEventListener('click', () => {
+      menuOpen = !menuOpen;
+      mobileMenu.classList.toggle('hidden', !menuOpen);
+    });
+
+    // Search and Filter Functionality
+    const searchInput = document.getElementById('search-input');
+    const filterBtns = document.querySelectorAll('.filter-btn');
+    let currentFilter = 'all';
+
+    function filterServices() {
+      const searchTerm = searchInput.value.toLowerCase();
+      const allCards = document.querySelectorAll('[data-service]');
+
+      allCards.forEach(card => {
+        const category = card.dataset.service;
+        const title = card.querySelector('h3').textContent.toLowerCase();
+        const description = card.querySelector('p').textContent.toLowerCase();
+
+        const matchesFilter = currentFilter === 'all' || category === currentFilter;
+        const matchesSearch = title.includes(searchTerm) || description.includes(searchTerm);
+
+        card.style.display = matchesFilter && matchesSearch ? 'block' : 'none';
+      });
+    }
+
+    searchInput.addEventListener('input', filterServices);
+
+    filterBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        filterBtns.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        currentFilter = btn.dataset.filter;
+        filterServices();
+      });
+    });
+
+    // WhatsApp CTA buttons
+    const ctaBtns = document.querySelectorAll('.cta-btn');
+    ctaBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const serviceName = btn.dataset.serviceName;
+        const message = `Hi Cyber Donuts! I'm interested in: ${serviceName}`;
+        const encodedMessage = encodeURIComponent(message);
+        window.open(`https://wa.me/254798692443?text=${encodedMessage}`, '_blank');
+      });
+    });
+
+    // Element SDK
+    const defaultConfig = {
+      page_title: 'Our Services',
+      page_subtitle: 'Government, Digital, and Business Solutions',
+      govt_services_title: 'Government Services',
+      printing_services_title: 'Printing & Documents',
+      digital_services_title: 'Digital Services',
+      business_services_title: 'Business Support',
+      cta_text: 'Request Service',
+      background_color: '#0a0a1a',
+      surface_color: '#12122a',
+      text_color: '#ffffff',
+      primary_action_color: '#00f0ff',
+      secondary_action_color: '#39ff14',
+      font_family: 'Exo 2',
+      font_size: 16,
+    };
+
+    function applyConfig(config) {
+      const c = { ...defaultConfig, ...config };
+
+      document.getElementById('page-title').textContent = c.page_title;
+      document.getElementById('page-subtitle').textContent = c.page_subtitle;
+      document.getElementById('govt-services-title').textContent = c.govt_services_title;
+      document.getElementById('printing-services-title').textContent = c.printing_services_title;
+      document.getElementById('digital-services-title').textContent = c.digital_services_title;
+      document.getElementById('business-services-title').textContent = c.business_services_title;
+
+      const wrapper = document.getElementById('app-wrapper');
+      wrapper.style.backgroundColor = c.background_color;
+
+      document.querySelectorAll('.glass-card').forEach(el => {
+        el.style.backgroundColor = c.surface_color + '99';
+      });
+
+      const fontStack = `${c.font_family}, Exo 2, sans-serif`;
+      document.body.style.fontFamily = fontStack;
+    }
+
+    if (window.elementSdk) {
+      window.elementSdk.init({
+        defaultConfig,
+        onConfigChange: async (config) => {
+          applyConfig(config);
+        },
+        mapToCapabilities: (config) => {
+          const c = { ...defaultConfig, ...config };
+          return {
+            recolorables: [
+              {
+                get: () => c.background_color,
+                set: (v) => { c.background_color = v; window.elementSdk.setConfig({ background_color: v }); }
+              },
+              {
+                get: () => c.surface_color,
+                set: (v) => { c.surface_color = v; window.elementSdk.setConfig({ surface_color: v }); }
+              },
+              {
+                get: () => c.text_color,
+                set: (v) => { c.text_color = v; window.elementSdk.setConfig({ text_color: v }); }
+              },
+              {
+                get: () => c.primary_action_color,
+                set: (v) => { c.primary_action_color = v; window.elementSdk.setConfig({ primary_action_color: v }); }
+              },
+              {
+                get: () => c.secondary_action_color,
+                set: (v) => { c.secondary_action_color = v; window.elementSdk.setConfig({ secondary_action_color: v }); }
+              }
+            ],
+            borderables: [],
+            fontEditable: {
+              get: () => c.font_family,
+              set: (v) => { c.font_family = v; window.elementSdk.setConfig({ font_family: v }); }
+            },
+            fontSizeable: {
+              get: () => c.font_size,
+              set: (v) => { c.font_size = v; window.elementSdk.setConfig({ font_size: v }); }
+            }
+          };
+        },
+        mapToEditPanelValues: (config) => {
+          const c = { ...defaultConfig, ...config };
+          return new Map([
+            ['page_title', c.page_title],
+            ['page_subtitle', c.page_subtitle],
+            ['govt_services_title', c.govt_services_title],
+            ['printing_services_title', c.printing_services_title],
+            ['digital_services_title', c.digital_services_title],
+            ['business_services_title', c.business_services_title],
+            ['cta_text', c.cta_text],
+          ]);
+        }
+      });
+    }
+  </script>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9dddd1f0a7c68a6a',t:'MTc3Mzc2OTYxOC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+  </html>
