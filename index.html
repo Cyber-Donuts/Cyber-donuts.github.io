@@ -1,606 +1,574 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" class="h-full">
  <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Cyber Donuts 2.0 - Eat. Earn. Grow.</title>
+  <title>Cyber Donuts — Eat. Earn. Connect.</title>
   <script src="https://cdn.tailwindcss.com/3.4.17"></script>
   <script src="https://cdn.jsdelivr.net/npm/lucide@0.263.0/dist/umd/lucide.min.js"></script>
   <script src="/_sdk/element_sdk.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&amp;family=Exo+2:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            orbitron: ['Orbitron', 'sans-serif'],
+            exo: ['Exo 2', 'sans-serif'],
+          },
+          colors: {
+            neon: {
+              pink: '#ff2d7b',
+              cyan: '#00f0ff',
+              purple: '#b44dff',
+              green: '#39ff14',
+              yellow: '#ffe600',
+            },
+            cyber: {
+              dark: '#0a0a1a',
+              card: '#12122a',
+              surface: '#1a1a3e',
+            }
+          }
+        }
+      }
+    }
+  </script>
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+    html, body { height: 100%; margin: 0; }
 
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
+    .glass-card {
+      background: rgba(18, 18, 42, 0.6);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(0, 240, 255, 0.15);
     }
 
-    html, body {
-      height: 100%;
-      background: #0a0e27;
-      font-family: 'Space Grotesk', sans-serif;
-      color: #e5e7eb;
-      overflow-x: hidden;
+    .glass-nav {
+      background: rgba(10, 10, 26, 0.85);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-bottom: 1px solid rgba(0, 240, 255, 0.1);
     }
 
-    .app-wrapper {
-      width: 100%;
-      height: 100%;
-      display: flex;
-      flex-direction: column;
+    .neon-glow {
+      text-shadow: 0 0 10px rgba(0, 240, 255, 0.5), 0 0 40px rgba(0, 240, 255, 0.2);
     }
 
-    /* Glassmorphism effect */
-    .glass {
-      background: rgba(15, 23, 42, 0.7);
-      backdrop-filter: blur(10px);
-      border: 1px solid rgba(148, 163, 184, 0.1);
+    .neon-glow-pink {
+      text-shadow: 0 0 10px rgba(255, 45, 123, 0.5), 0 0 40px rgba(255, 45, 123, 0.2);
     }
 
-    /* Gradient animations */
-    @keyframes gradient-shift {
-      0%, 100% { background-position: 0% 50%; }
-      50% { background-position: 100% 50%; }
-    }
-
-    .gradient-animate {
-      background-size: 200% 200%;
-      animation: gradient-shift 8s ease infinite;
-    }
-
-    /* Glow effect for buttons */
-    @keyframes neon-glow {
-      0%, 100% { text-shadow: 0 0 10px rgba(59, 130, 246, 0.5); }
-      50% { text-shadow: 0 0 20px rgba(59, 130, 246, 0.8); }
-    }
-
-    .neon-text {
-      animation: neon-glow 2s ease-in-out infinite;
-    }
-
-    /* Smooth transitions */
-    button, a {
+    .btn-neon {
+      position: relative;
+      overflow: hidden;
       transition: all 0.3s ease;
     }
-
-    .btn-primary {
-      background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
-      color: white;
-      padding: 12px 28px;
-      border-radius: 8px;
-      font-weight: 600;
-      border: none;
-      cursor: pointer;
-      box-shadow: 0 0 20px rgba(59, 130, 246, 0.3);
+    .btn-neon::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+      transform: translateX(-100%);
+      transition: transform 0.5s ease;
+    }
+    .btn-neon:hover::before {
+      transform: translateX(100%);
     }
 
-    .btn-primary:hover {
-      box-shadow: 0 0 30px rgba(59, 130, 246, 0.6);
-      transform: translateY(-2px);
+    .ticker-track {
+      display: flex;
+      animation: ticker-scroll 30s linear infinite;
+      width: max-content;
+    }
+    @keyframes ticker-scroll {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
     }
 
-    .btn-secondary {
-      background: rgba(148, 163, 184, 0.1);
-      color: #3b82f6;
-      padding: 12px 28px;
-      border-radius: 8px;
-      font-weight: 600;
-      border: 1px solid #3b82f6;
-      cursor: pointer;
+    .float-anim {
+      animation: float 6s ease-in-out infinite;
+    }
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-12px); }
     }
 
-    .btn-secondary:hover {
-      background: rgba(59, 130, 246, 0.1);
-      box-shadow: 0 0 20px rgba(59, 130, 246, 0.3);
+    .fade-up {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+    .fade-up.visible {
+      opacity: 1;
+      transform: translateY(0);
     }
 
-    /* Scroll animation */
-    @keyframes slide-in {
-      from {
-        opacity: 0;
-        transform: translateY(20px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
+    .pulse-border {
+      animation: pulse-b 2s ease-in-out infinite;
+    }
+    @keyframes pulse-b {
+      0%, 100% { border-color: rgba(0, 240, 255, 0.2); }
+      50% { border-color: rgba(0, 240, 255, 0.5); }
     }
 
-    .animate-in {
-      animation: slide-in 0.6s ease-out forwards;
+    .grid-bg {
+      background-image:
+        linear-gradient(rgba(0, 240, 255, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 240, 255, 0.03) 1px, transparent 1px);
+      background-size: 60px 60px;
     }
 
-    .section-divider {
-      height: 1px;
-      background: linear-gradient(90deg, transparent, rgba(59, 130, 246, 0.3), transparent);
+    .donut-emoji {
+      display: inline-block;
+      animation: spin-slow 8s linear infinite;
     }
+    @keyframes spin-slow {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    .card-hover {
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .card-hover:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 0 30px rgba(0, 240, 255, 0.15);
+    }
+
+    .scrollbar-hide::-webkit-scrollbar { display: none; }
+    .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
   </style>
   <style>body { box-sizing: border-box; }</style>
   <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
  </head>
- <body>
-  <div class="app-wrapper">
-   <!-- Header/Navigation -->
-   <header class="glass fixed w-full top-0 z-50 border-b border-blue-900/30">
-    <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
-     <div class="flex items-center gap-2">
-      <div class="w-10 h-10 rounded-full bg-gradient-to-br from-orange-400 to-pink-500 flex items-center justify-center">
-       <span class="text-lg font-bold text-white">🍩</span>
-      </div><span class="text-xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">Cyber Donuts</span>
+ <body class="h-full bg-cyber-dark text-white font-exo overflow-auto scrollbar-hide">
+  <div id="app-wrapper" class="w-full h-full overflow-auto scrollbar-hide grid-bg"><!-- NAVBAR -->
+   <nav class="glass-nav fixed top-0 left-0 w-full z-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+     <div class="flex items-center justify-between h-16"><a href="#" class="flex items-center gap-2"> <span class="text-2xl">🍩</span> <span class="font-orbitron font-bold text-lg neon-glow" id="nav-brand">Cyber Donuts</span> </a>
+      <div class="hidden md:flex items-center gap-6"><a href="#" class="text-neon-cyan text-sm font-medium hover:text-white transition-colors">Home</a> <a href="/pages/earn.html" target="_blank" rel="noopener noreferrer" class="text-gray-400 text-sm hover:text-neon-cyan transition-colors">Earn</a> <a href="/pages/services.html" target="_blank" rel="noopener noreferrer" class="text-gray-400 text-sm hover:text-neon-cyan transition-colors">Services</a> <a href="/pages/community.html" target="_blank" rel="noopener noreferrer" class="text-gray-400 text-sm hover:text-neon-cyan transition-colors">Community</a> <a href="/pages/cbd-token.html" target="_blank" rel="noopener noreferrer" class="text-gray-400 text-sm hover:text-neon-cyan transition-colors">CBD Token</a> <a href="/pages/missions.html" target="_blank" rel="noopener noreferrer" class="text-gray-400 text-sm hover:text-neon-cyan transition-colors">Missions</a>
+      </div><button id="mobile-menu-btn" class="md:hidden text-neon-cyan p-2" aria-label="Toggle menu"> <i data-lucide="menu" class="w-6 h-6"></i> </button>
      </div>
-     <div class="hidden md:flex gap-8">
-      <a href="#menu" class="hover:text-blue-400 transition">Menu</a> <a href="#services" class="hover:text-blue-400 transition">Services</a> <a href="#earn" class="hover:text-blue-400 transition">Earn</a> <a href="#community" class="hover:text-blue-400 transition">Community</a>
-     </div><button class="btn-primary" id="headerCTA">Join Now</button>
-    </nav>
-   </header><!-- Main Content -->
-   <main class="flex-1 overflow-auto">
-    <!-- Hero Section -->
-    <section class="relative min-h-screen w-full flex items-center justify-center pt-20 pb-20 px-4 sm:px-6 lg:px-8">
-     <div class="absolute inset-0 opacity-30">
-      <div class="absolute top-20 left-10 w-72 h-72 bg-blue-500 rounded-full blur-3xl"></div>
-      <div class="absolute bottom-20 right-10 w-72 h-72 bg-purple-500 rounded-full blur-3xl"></div>
+    </div><!-- Mobile Menu -->
+    <div id="mobile-menu" class="hidden md:hidden glass-card border-t border-neon-cyan/10">
+     <div class="px-4 py-4 flex flex-col gap-3"><a href="#" class="text-neon-cyan text-sm font-medium py-2">Home</a> <a href="/pages/earn.html" target="_blank" rel="noopener noreferrer" class="text-gray-400 text-sm py-2 hover:text-neon-cyan transition-colors">Earn</a> <a href="/pages/services.html" target="_blank" rel="noopener noreferrer" class="text-gray-400 text-sm py-2 hover:text-neon-cyan transition-colors">Services</a> <a href="/pages/community.html" target="_blank" rel="noopener noreferrer" class="text-gray-400 text-sm py-2 hover:text-neon-cyan transition-colors">Community</a> <a href="/pages/cbd-token.html" target="_blank" rel="noopener noreferrer" class="text-gray-400 text-sm py-2 hover:text-neon-cyan transition-colors">CBD Token</a> <a href="/pages/missions.html" target="_blank" rel="noopener noreferrer" class="text-gray-400 text-sm py-2 hover:text-neon-cyan transition-colors">Missions</a>
      </div>
-     <div class="relative z-10 text-center max-w-4xl mx-auto">
-      <div class="mb-6 animate-in">
-       <span class="inline-block px-4 py-2 rounded-full glass text-blue-400 text-sm font-mono">Web3 • Community • Earning</span>
+    </div>
+   </nav><!-- ACTIVITY TICKER -->
+   <div class="fixed top-16 left-0 w-full z-40 bg-gradient-to-r from-neon-pink/10 via-neon-purple/10 to-neon-cyan/10 border-b border-neon-cyan/10 overflow-hidden">
+    <div class="ticker-track py-2 text-xs sm:text-sm"><span class="mx-8 text-neon-green">⚡ User_K3nny earned 20 CBD tokens</span> <span class="mx-8 text-neon-cyan">🍩 New donut flavor: Neon Glaze unlocked!</span> <span class="mx-8 text-neon-yellow">🏆 Mission Complete: Share &amp; Earn — 50 XP</span> <span class="mx-8 text-neon-pink">🔥 Flash Sale: Cyber Combo 30% off</span> <span class="mx-8 text-neon-purple">👥 Community just hit 5,000 members!</span> <span class="mx-8 text-neon-green">💰 User_Mwas earned 35 CBD from referrals</span> <span class="mx-8 text-neon-cyan">🎮 New Mission: Order &amp; Review — 100 XP</span> <span class="mx-8 text-neon-yellow">📱 Mobile orders up 200% this week</span> <!-- duplicate for seamless loop --> <span class="mx-8 text-neon-green">⚡ User_K3nny earned 20 CBD tokens</span> <span class="mx-8 text-neon-cyan">🍩 New donut flavor: Neon Glaze unlocked!</span> <span class="mx-8 text-neon-yellow">🏆 Mission Complete: Share &amp; Earn — 50 XP</span> <span class="mx-8 text-neon-pink">🔥 Flash Sale: Cyber Combo 30% off</span> <span class="mx-8 text-neon-purple">👥 Community just hit 5,000 members!</span> <span class="mx-8 text-neon-green">💰 User_Mwas earned 35 CBD from referrals</span> <span class="mx-8 text-neon-cyan">🎮 New Mission: Order &amp; Review — 100 XP</span> <span class="mx-8 text-neon-yellow">📱 Mobile orders up 200% this week</span>
+    </div>
+   </div><!-- HERO SECTION -->
+   <header class="relative pt-32 sm:pt-36 pb-16 sm:pb-24 px-4 overflow-hidden">
+    <div class="absolute inset-0 overflow-hidden pointer-events-none">
+     <div class="absolute top-20 left-10 w-72 h-72 bg-neon-pink/10 rounded-full blur-3xl"></div>
+     <div class="absolute bottom-10 right-10 w-96 h-96 bg-neon-cyan/8 rounded-full blur-3xl"></div>
+     <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-neon-purple/5 rounded-full blur-3xl"></div>
+    </div>
+    <div class="max-w-5xl mx-auto text-center relative z-10">
+     <div class="mb-6 float-anim"><span class="text-6xl sm:text-8xl donut-emoji">🍩</span>
+     </div>
+     <h1 id="hero-headline" class="font-orbitron font-black text-4xl sm:text-6xl lg:text-7xl mb-4 bg-gradient-to-r from-neon-cyan via-neon-purple to-neon-pink bg-clip-text text-transparent leading-tight">Eat. Earn. Connect.</h1>
+     <p id="hero-subtext" class="text-lg sm:text-xl text-gray-400 mb-10 max-w-xl mx-auto">Where flavor meets the future.</p>
+     <div class="flex flex-col sm:flex-row gap-4 justify-center items-center"><button class="btn-neon bg-gradient-to-r from-neon-pink to-neon-purple px-8 py-3 rounded-full font-orbitron font-semibold text-sm tracking-wider hover:shadow-lg hover:shadow-neon-pink/30 w-full sm:w-auto"> <i data-lucide="shopping-bag" class="w-4 h-4 inline mr-2"></i>Order Now </button> <button class="btn-neon bg-gradient-to-r from-neon-cyan to-neon-green px-8 py-3 rounded-full font-orbitron font-semibold text-sm tracking-wider text-cyber-dark hover:shadow-lg hover:shadow-neon-cyan/30 w-full sm:w-auto"> <i data-lucide="zap" class="w-4 h-4 inline mr-2"></i>Start Earning </button> <button class="btn-neon glass-card px-8 py-3 rounded-full font-orbitron font-semibold text-sm tracking-wider text-neon-cyan hover:bg-neon-cyan/10 w-full sm:w-auto"> <i data-lucide="users" class="w-4 h-4 inline mr-2"></i>Join Community </button>
+     </div><!-- Stats Bar -->
+     <div class="mt-14 flex flex-wrap justify-center gap-6 sm:gap-10">
+      <div class="text-center">
+       <p class="font-orbitron font-bold text-2xl sm:text-3xl text-neon-cyan neon-glow">5K+</p>
+       <p class="text-xs text-gray-500 mt-1">Community</p>
       </div>
-      <h1 id="heroTitle" class="text-5xl md:text-7xl font-black mb-6 leading-tight"><span class="bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">Eat. Earn. Grow.</span></h1>
-      <p id="heroTagline" class="text-xl md:text-2xl text-gray-300 mb-8 leading-relaxed">A global platform combining food, services, Web3, and community to create income, opportunity, and impact for everyone.</p>
-      <div class="flex flex-col sm:flex-row gap-4 justify-center mb-12">
-       <button id="ctaButton" class="btn-primary text-lg">Order Now</button> <button class="btn-secondary text-lg">Explore Earn</button> <button class="btn-secondary text-lg">Join Community</button>
-      </div><!-- Stats -->
-      <div class="grid grid-cols-3 gap-6 mt-16">
-       <div class="glass p-6 rounded-lg">
-        <div class="text-3xl font-bold text-blue-400">
-         50K+
-        </div>
-        <div class="text-sm text-gray-400">
-         Active Members
-        </div>
-       </div>
-       <div class="glass p-6 rounded-lg">
-        <div class="text-3xl font-bold text-purple-400">
-         $500K+
-        </div>
-        <div class="text-sm text-gray-400">
-         Earned by Users
-        </div>
-       </div>
-       <div class="glass p-6 rounded-lg">
-        <div class="text-3xl font-bold text-pink-400">
-         24/7
-        </div>
-        <div class="text-sm text-gray-400">
-         Service Available
-        </div>
-       </div>
+      <div class="text-center">
+       <p class="font-orbitron font-bold text-2xl sm:text-3xl text-neon-pink neon-glow-pink">120K</p>
+       <p class="text-xs text-gray-500 mt-1">CBD Earned</p>
+      </div>
+      <div class="text-center">
+       <p class="font-orbitron font-bold text-2xl sm:text-3xl text-neon-green" style="text-shadow: 0 0 10px rgba(57,255,20,0.5);">50+</p>
+       <p class="text-xs text-gray-500 mt-1">Missions Live</p>
+      </div>
+      <div class="text-center">
+       <p class="font-orbitron font-bold text-2xl sm:text-3xl text-neon-yellow" style="text-shadow: 0 0 10px rgba(255,230,0,0.5);">24/7</p>
+       <p class="text-xs text-gray-500 mt-1">Digital Services</p>
       </div>
      </div>
-    </section><!-- What is Cyber Donuts -->
-    <section class="w-full py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-blue-900/10 to-transparent">
-     <div class="max-w-6xl mx-auto">
-      <h2 class="text-4xl font-bold mb-12 text-center">What is Cyber Donuts?</h2>
-      <div class="grid md:grid-cols-3 gap-8">
-       <div class="glass p-8 rounded-lg hover:border-blue-500/50 transition">
-        <div class="w-12 h-12 rounded-lg bg-blue-500/20 flex items-center justify-center mb-4">
-         <i data-lucide="utensils" class="text-blue-400" style="width: 24px; height: 24px;"></i>
-        </div>
-        <h3 class="text-xl font-bold mb-3">Delicious Food</h3>
-        <p class="text-gray-400">Fresh donuts, meals, and drinks delivered locally or for pickup</p>
-       </div>
-       <div class="glass p-8 rounded-lg hover:border-purple-500/50 transition">
-        <div class="w-12 h-12 rounded-lg bg-purple-500/20 flex items-center justify-center mb-4">
-         <i data-lucide="zap" class="text-purple-400" style="width: 24px; height: 24px;"></i>
-        </div>
-        <h3 class="text-xl font-bold mb-3">Cyber Services</h3>
-        <p class="text-gray-400">Digital services, printing, and government assistance in one place</p>
-       </div>
-       <div class="glass p-8 rounded-lg hover:border-pink-500/50 transition">
-        <div class="w-12 h-12 rounded-lg bg-pink-500/20 flex items-center justify-center mb-4">
-         <i data-lucide="coins" class="text-pink-400" style="width: 24px; height: 24px;"></i>
-        </div>
-        <h3 class="text-xl font-bold mb-3">Earn CBD Tokens</h3>
-        <p class="text-gray-400">Complete missions, refer friends, and unlock Web3 rewards</p>
-       </div>
+    </div>
+   </header><!-- ABOUT SECTION -->
+   <section class="py-16 sm:py-20 px-4 fade-up">
+    <div class="max-w-4xl mx-auto text-center"><span class="text-neon-cyan font-orbitron text-xs tracking-[0.3em] uppercase mb-4 inline-block">// About Us</span>
+     <h2 id="about-title" class="font-orbitron font-bold text-2xl sm:text-4xl mb-6 text-white">About Cyber Donuts</h2>
+     <p id="about-text" class="text-gray-400 text-base sm:text-lg leading-relaxed max-w-2xl mx-auto">We're not your average café. Cyber Donuts blends mouth-watering food with cutting-edge digital services and a Web3 earning ecosystem. Order a donut, complete a mission, earn CBD tokens — all from one platform. Welcome to the future of food and tech.</p>
+     <div class="grid grid-cols-3 gap-4 mt-10 max-w-md mx-auto">
+      <div class="glass-card rounded-xl p-4 pulse-border"><span class="text-3xl mb-2 block">🍩</span>
+       <p class="text-xs text-gray-400">Food</p>
+      </div>
+      <div class="glass-card rounded-xl p-4 pulse-border"><span class="text-3xl mb-2 block">💻</span>
+       <p class="text-xs text-gray-400">Services</p>
+      </div>
+      <div class="glass-card rounded-xl p-4 pulse-border"><span class="text-3xl mb-2 block">💰</span>
+       <p class="text-xs text-gray-400">Earning</p>
       </div>
      </div>
-    </section><!-- Involve-to-Unlock System -->
-    <section class="w-full py-20 px-4 sm:px-6 lg:px-8">
-     <div class="max-w-6xl mx-auto">
-      <h2 class="text-4xl font-bold mb-12 text-center">Involve-to-Unlock</h2>
-      <div class="glass p-12 rounded-lg border-2 border-blue-500/30 mb-12">
-       <p class="text-xl text-gray-300 mb-8">The more involved you are, the more you unlock.</p>
-       <div class="grid md:grid-cols-2 gap-8">
-        <div>
-         <h3 class="text-lg font-bold mb-4 text-blue-400">Activities</h3>
-         <ul class="space-y-3">
-          <li class="flex gap-3"><span class="text-green-400">✓</span> Daily login &amp; missions</li>
-          <li class="flex gap-3"><span class="text-green-400">✓</span> Refer users &amp; earn</li>
-          <li class="flex gap-3"><span class="text-green-400">✓</span> Submit content</li>
-          <li class="flex gap-3"><span class="text-green-400">✓</span> Use cyber services</li>
-          <li class="flex gap-3"><span class="text-green-400">✓</span> Community participation</li>
-         </ul>
-        </div>
-        <div>
-         <h3 class="text-lg font-bold mb-4 text-purple-400">Rewards</h3>
-         <ul class="space-y-3">
-          <li class="flex gap-3"><span class="text-green-400">✓</span> CBD Tokens</li>
-          <li class="flex gap-3"><span class="text-green-400">✓</span> XP Points &amp; Levels</li>
-          <li class="flex gap-3"><span class="text-green-400">✓</span> NFT Badges</li>
-          <li class="flex gap-3"><span class="text-green-400">✓</span> Tier Upgrades</li>
-          <li class="flex gap-3"><span class="text-green-400">✓</span> Premium Features</li>
-         </ul>
-        </div>
-       </div>
-      </div><!-- Tier System -->
-      <div class="grid md:grid-cols-5 gap-4">
-       <div class="glass p-6 rounded-lg text-center hover:border-blue-500/50 transition">
-        <div class="text-4xl mb-2">
-         🌱
-        </div>
-        <h4 class="font-bold">Newcomer</h4>
-        <p class="text-xs text-gray-400 mt-2">Get started</p>
-       </div>
-       <div class="glass p-6 rounded-lg text-center hover:border-blue-500/50 transition">
-        <div class="text-4xl mb-2">
-         🔍
-        </div>
-        <h4 class="font-bold">Explorer</h4>
-        <p class="text-xs text-gray-400 mt-2">500 XP</p>
-       </div>
-       <div class="glass p-6 rounded-lg text-center hover:border-purple-500/50 transition border-purple-500/50">
-        <div class="text-4xl mb-2">
-         ⚙️
-        </div>
-        <h4 class="font-bold">Apprentice</h4>
-        <p class="text-xs text-gray-400 mt-2">2,500 XP</p>
-       </div>
-       <div class="glass p-6 rounded-lg text-center hover:border-pink-500/50 transition">
-        <div class="text-4xl mb-2">
-         🎨
-        </div>
-        <h4 class="font-bold">Artisan</h4>
-        <p class="text-xs text-gray-400 mt-2">7,500 XP</p>
-       </div>
-       <div class="glass p-6 rounded-lg text-center hover:border-blue-500/50 transition">
-        <div class="text-4xl mb-2">
-         👑
-        </div>
-        <h4 class="font-bold">Master</h4>
-        <p class="text-xs text-gray-400 mt-2">15K+ XP</p>
-       </div>
-      </div>
+    </div>
+   </section><!-- FOOD HIGHLIGHTS -->
+   <section class="py-16 sm:py-20 px-4 fade-up">
+    <div class="max-w-6xl mx-auto">
+     <div class="text-center mb-12"><span class="text-neon-pink font-orbitron text-xs tracking-[0.3em] uppercase mb-4 inline-block">// Menu Highlights</span>
+      <h2 class="font-orbitron font-bold text-2xl sm:text-4xl text-white">Featured Meals</h2>
      </div>
-    </section><!-- Menu Preview Section -->
-    <section id="menu" class="w-full py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-purple-900/10 to-transparent">
-     <div class="max-w-6xl mx-auto">
-      <h2 class="text-4xl font-bold mb-12 text-center">Explore Our Menu</h2>
-      <div class="grid md:grid-cols-3 gap-6">
-       <div class="glass p-6 rounded-lg hover:border-blue-500/50 transition cursor-pointer group">
-        <div class="text-5xl mb-4">
-         🍩
+     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"><!-- Donuts -->
+      <div class="glass-card rounded-2xl overflow-hidden card-hover">
+       <div class="h-40 bg-gradient-to-br from-neon-pink/20 to-neon-purple/20 flex items-center justify-center"><span class="text-7xl float-anim">🍩</span>
+       </div>
+       <div class="p-5">
+        <div class="flex items-center justify-between mb-2">
+         <h3 class="font-orbitron font-bold text-lg text-white">Cyber Donuts</h3><span class="text-neon-green text-xs font-semibold bg-neon-green/10 px-2 py-1 rounded-full">Popular</span>
         </div>
-        <h3 class="text-xl font-bold mb-2">Fresh Donuts</h3>
-        <p class="text-gray-400 text-sm mb-4">Classic and creative flavors</p>
-        <div class="flex justify-between items-center">
-         <span class="text-blue-400 font-bold">From KSh 50</span> <button class="btn-secondary text-sm py-2 px-3">Order</button>
+        <p class="text-gray-400 text-sm mb-3">Neon-glazed, sprinkle-loaded, futuristic flavors you won't find anywhere else.</p>
+        <div class="flex items-center justify-between"><span class="font-orbitron text-neon-cyan font-bold">KES 80–200</span> <button class="text-xs bg-neon-pink/20 text-neon-pink px-3 py-1 rounded-full hover:bg-neon-pink/30 transition-colors">Order</button>
         </div>
        </div>
-       <div class="glass p-6 rounded-lg hover:border-purple-500/50 transition cursor-pointer group">
-        <div class="text-5xl mb-4">
-         🍽️
+      </div><!-- Kenyan Meals -->
+      <div class="glass-card rounded-2xl overflow-hidden card-hover">
+       <div class="h-40 bg-gradient-to-br from-neon-yellow/20 to-neon-green/20 flex items-center justify-center"><span class="text-7xl float-anim" style="animation-delay: -2s;">🍛</span>
+       </div>
+       <div class="p-5">
+        <div class="flex items-center justify-between mb-2">
+         <h3 class="font-orbitron font-bold text-lg text-white">Kenyan Meals</h3><span class="text-neon-yellow text-xs font-semibold bg-neon-yellow/10 px-2 py-1 rounded-full">Local Fav</span>
         </div>
-        <h3 class="text-xl font-bold mb-2">Meals</h3>
-        <p class="text-gray-400 text-sm mb-4">Chapati, Rice, Ugali &amp; more</p>
-        <div class="flex justify-between items-center">
-         <span class="text-purple-400 font-bold">From KSh 150</span> <button class="btn-secondary text-sm py-2 px-3">Order</button>
+        <p class="text-gray-400 text-sm mb-3">Ugali, nyama choma, chapati combos — authentic Kenyan flavors with a cyber twist.</p>
+        <div class="flex items-center justify-between"><span class="font-orbitron text-neon-cyan font-bold">KES 150–500</span> <button class="text-xs bg-neon-pink/20 text-neon-pink px-3 py-1 rounded-full hover:bg-neon-pink/30 transition-colors">Order</button>
         </div>
        </div>
-       <div class="glass p-6 rounded-lg hover:border-pink-500/50 transition cursor-pointer group">
-        <div class="text-5xl mb-4">
-         🥤
+      </div><!-- Fast Food -->
+      <div class="glass-card rounded-2xl overflow-hidden card-hover sm:col-span-2 lg:col-span-1">
+       <div class="h-40 bg-gradient-to-br from-neon-cyan/20 to-neon-pink/20 flex items-center justify-center"><span class="text-7xl float-anim" style="animation-delay: -4s;">🍔</span>
+       </div>
+       <div class="p-5">
+        <div class="flex items-center justify-between mb-2">
+         <h3 class="font-orbitron font-bold text-lg text-white">Fast Food</h3><span class="text-neon-cyan text-xs font-semibold bg-neon-cyan/10 px-2 py-1 rounded-full">Quick Bite</span>
         </div>
-        <h3 class="text-xl font-bold mb-2">Drinks</h3>
-        <p class="text-gray-400 text-sm mb-4">Chai, Mala, Juice &amp; smoothies</p>
-        <div class="flex justify-between items-center">
-         <span class="text-pink-400 font-bold">From KSh 30</span> <button class="btn-secondary text-sm py-2 px-3">Order</button>
+        <p class="text-gray-400 text-sm mb-3">Burgers, fries, shakes — quick, loaded, and perfect for your hustle breaks.</p>
+        <div class="flex items-center justify-between"><span class="font-orbitron text-neon-cyan font-bold">KES 120–400</span> <button class="text-xs bg-neon-pink/20 text-neon-pink px-3 py-1 rounded-full hover:bg-neon-pink/30 transition-colors">Order</button>
         </div>
        </div>
       </div>
      </div>
-    </section><!-- Services Section -->
-    <section id="services" class="w-full py-20 px-4 sm:px-6 lg:px-8">
-     <div class="max-w-6xl mx-auto">
-      <h2 class="text-4xl font-bold mb-12 text-center">Cyber Services Hub</h2>
-      <div class="grid md:grid-cols-3 gap-8">
-       <div class="glass p-8 rounded-lg">
-        <h3 class="text-2xl font-bold mb-6 text-blue-400">🏛️ Gov Services</h3>
-        <ul class="space-y-3 text-gray-300">
-         <li class="flex gap-2"><span>→</span> KRA Tax Services</li>
-         <li class="flex gap-2"><span>→</span> HELB Applications</li>
-         <li class="flex gap-2"><span>→</span> eCitizen Services</li>
-         <li class="flex gap-2"><span>→</span> Passport Assistance</li>
-        </ul>
+    </div>
+   </section><!-- SERVICES PREVIEW -->
+   <section class="py-16 sm:py-20 px-4 fade-up">
+    <div class="max-w-6xl mx-auto">
+     <div class="text-center mb-12"><span class="text-neon-purple font-orbitron text-xs tracking-[0.3em] uppercase mb-4 inline-block">// Our Services</span>
+      <h2 class="font-orbitron font-bold text-2xl sm:text-4xl text-white">Digital &amp; Physical Services</h2>
+     </div>
+     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div class="glass-card rounded-2xl p-6 card-hover text-center">
+       <div class="w-16 h-16 rounded-full bg-neon-cyan/10 flex items-center justify-center mx-auto mb-4"><i data-lucide="printer" class="w-8 h-8 text-neon-cyan"></i>
        </div>
-       <div class="glass p-8 rounded-lg">
-        <h3 class="text-2xl font-bold mb-6 text-purple-400">🖨️ Printing</h3>
-        <ul class="space-y-3 text-gray-300">
-         <li class="flex gap-2"><span>→</span> Document Printing</li>
-         <li class="flex gap-2"><span>→</span> Photocopying</li>
-         <li class="flex gap-2"><span>→</span> Scanning Services</li>
-         <li class="flex gap-2"><span>→</span> CV Creation</li>
-        </ul>
+       <h3 class="font-orbitron font-bold text-lg mb-2">Printing &amp; Cyber</h3>
+       <p class="text-gray-400 text-sm">Documents, photos, scanning, lamination — all your printing needs sorted fast.</p>
+      </div>
+      <div class="glass-card rounded-2xl p-6 card-hover text-center">
+       <div class="w-16 h-16 rounded-full bg-neon-purple/10 flex items-center justify-center mx-auto mb-4"><i data-lucide="landmark" class="w-8 h-8 text-neon-purple"></i>
        </div>
-       <div class="glass p-8 rounded-lg">
-        <h3 class="text-2xl font-bold mb-6 text-pink-400">💻 Digital</h3>
-        <ul class="space-y-3 text-gray-300">
-         <li class="flex gap-2"><span>→</span> Web Development</li>
-         <li class="flex gap-2"><span>→</span> Logo Design</li>
-         <li class="flex gap-2"><span>→</span> Social Media Setup</li>
-         <li class="flex gap-2"><span>→</span> Branding Services</li>
-        </ul>
+       <h3 class="font-orbitron font-bold text-lg mb-2">Gov Services</h3>
+       <p class="text-gray-400 text-sm">eCitizen, KRA, NTSA, NSSF, NHIF — we handle government applications for you.</p>
+      </div>
+      <div class="glass-card rounded-2xl p-6 card-hover text-center sm:col-span-2 lg:col-span-1">
+       <div class="w-16 h-16 rounded-full bg-neon-green/10 flex items-center justify-center mx-auto mb-4"><i data-lucide="laptop" class="w-8 h-8 text-neon-green"></i>
        </div>
+       <h3 class="font-orbitron font-bold text-lg mb-2">Digital Work</h3>
+       <p class="text-gray-400 text-sm">CV writing, graphic design, social media management, data entry &amp; more.</p>
       </div>
      </div>
-    </section><!-- Earn Section -->
-    <section id="earn" class="w-full py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-blue-900/10 to-transparent">
-     <div class="max-w-6xl mx-auto">
-      <h2 class="text-4xl font-bold mb-12 text-center">Earn With Cyber Donuts</h2>
-      <div class="glass p-12 rounded-lg border-2 border-blue-500/30 mb-12">
-       <div class="grid md:grid-cols-2 gap-12">
-        <div>
-         <h3 class="text-2xl font-bold mb-6">Mission System</h3>
-         <div class="space-y-4">
-          <div class="p-4 bg-blue-500/10 rounded border border-blue-500/30">
-           <div class="font-bold text-blue-400 mb-1">
-            Daily Missions
-           </div>
-           <div class="text-sm text-gray-400">
-            +10 CBD, +50 XP
-           </div>
-          </div>
-          <div class="p-4 bg-purple-500/10 rounded border border-purple-500/30">
-           <div class="font-bold text-purple-400 mb-1">
-            Weekly Challenges
-           </div>
-           <div class="text-sm text-gray-400">
-            +100 CBD, +500 XP
-           </div>
-          </div>
-          <div class="p-4 bg-pink-500/10 rounded border border-pink-500/30">
-           <div class="font-bold text-pink-400 mb-1">
-            Referral Rewards
-           </div>
-           <div class="text-sm text-gray-400">
-            +5% commission per ref
-           </div>
-          </div>
-         </div>
+    </div>
+   </section><!-- EARN PREVIEW -->
+   <section class="py-16 sm:py-20 px-4 fade-up">
+    <div class="max-w-5xl mx-auto">
+     <div class="text-center mb-12"><span class="text-neon-green font-orbitron text-xs tracking-[0.3em] uppercase mb-4 inline-block">// Earn System</span>
+      <h2 class="font-orbitron font-bold text-2xl sm:text-4xl text-white">Earn While You Eat</h2>
+     </div>
+     <div class="glass-card rounded-3xl p-6 sm:p-10 relative overflow-hidden">
+      <div class="absolute top-0 right-0 w-64 h-64 bg-neon-green/5 rounded-full blur-3xl pointer-events-none"></div>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8 relative z-10">
+       <div class="text-center">
+        <div class="w-20 h-20 rounded-2xl bg-gradient-to-br from-neon-cyan/20 to-neon-cyan/5 flex items-center justify-center mx-auto mb-4 border border-neon-cyan/20"><i data-lucide="star" class="w-10 h-10 text-neon-cyan"></i>
+        </div>
+        <h3 class="font-orbitron font-bold text-lg mb-2 text-neon-cyan">Earn XP</h3>
+        <p class="text-gray-400 text-sm">Complete tasks, engage with content, and level up your profile to unlock rewards.</p>
+       </div>
+       <div class="text-center">
+        <div class="w-20 h-20 rounded-2xl bg-gradient-to-br from-neon-yellow/20 to-neon-yellow/5 flex items-center justify-center mx-auto mb-4 border border-neon-yellow/20"><i data-lucide="coins" class="w-10 h-10 text-neon-yellow"></i>
+        </div>
+        <h3 class="font-orbitron font-bold text-lg mb-2 text-neon-yellow">CBD Tokens</h3>
+        <p class="text-gray-400 text-sm">Earn CBD tokens through orders, referrals, and missions. Redeem for real value.</p>
+       </div>
+       <div class="text-center">
+        <div class="w-20 h-20 rounded-2xl bg-gradient-to-br from-neon-pink/20 to-neon-pink/5 flex items-center justify-center mx-auto mb-4 border border-neon-pink/20"><i data-lucide="target" class="w-10 h-10 text-neon-pink"></i>
+        </div>
+        <h3 class="font-orbitron font-bold text-lg mb-2 text-neon-pink">Missions</h3>
+        <p class="text-gray-400 text-sm">Daily and weekly missions — share, review, refer friends, and stack rewards.</p>
+       </div>
+      </div>
+      <div class="text-center mt-10"><button class="btn-neon bg-gradient-to-r from-neon-green to-neon-cyan px-8 py-3 rounded-full font-orbitron font-semibold text-sm tracking-wider text-cyber-dark hover:shadow-lg hover:shadow-neon-green/30"> <i data-lucide="rocket" class="w-4 h-4 inline mr-2"></i>Start Earning Now </button>
+      </div>
+     </div>
+    </div>
+   </section><!-- TESTIMONIALS -->
+   <section class="py-16 sm:py-20 px-4 fade-up">
+    <div class="max-w-5xl mx-auto">
+     <div class="text-center mb-12"><span class="text-neon-yellow font-orbitron text-xs tracking-[0.3em] uppercase mb-4 inline-block">// Social Proof</span>
+      <h2 class="font-orbitron font-bold text-2xl sm:text-4xl text-white">What People Say</h2>
+     </div>
+     <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div class="glass-card rounded-2xl p-6 card-hover">
+       <div class="flex items-center gap-3 mb-4">
+        <div class="w-10 h-10 rounded-full bg-gradient-to-br from-neon-pink to-neon-purple flex items-center justify-center font-orbitron font-bold text-sm">
+         W
         </div>
         <div>
-         <h3 class="text-2xl font-bold mb-6">Future Features</h3>
-         <div class="space-y-4">
-          <div class="p-4 bg-yellow-500/10 rounded border border-yellow-500/30">
-           <div class="font-bold text-yellow-400 mb-1">
-            Staking System
-           </div>
-           <div class="text-sm text-gray-400">
-            Earn passive income on CBD
-           </div>
-          </div>
-          <div class="p-4 bg-green-500/10 rounded border border-green-500/30">
-           <div class="font-bold text-green-400 mb-1">
-            NFT Rewards
-           </div>
-           <div class="text-sm text-gray-400">
-            Exclusive collectible badges
-           </div>
-          </div>
-          <div class="p-4 bg-indigo-500/10 rounded border border-indigo-500/30">
-           <div class="font-bold text-indigo-400 mb-1">
-            DAO Governance
-           </div>
-           <div class="text-sm text-gray-400">
-            Vote on platform decisions
-           </div>
-          </div>
-         </div>
+         <p class="font-semibold text-sm">Wanjiku M.</p>
+         <p class="text-xs text-gray-500">Nairobi</p>
         </div>
        </div>
+       <p class="text-gray-400 text-sm italic">"Ordered donuts and earned 50 CBD tokens from a mission. This place is the real deal! 🔥"</p>
+       <div class="flex gap-1 mt-3"><span class="text-neon-yellow text-sm">★★★★★</span>
+       </div>
       </div>
-      <div class="grid md:grid-cols-2 gap-8">
-       <button class="btn-primary text-lg py-4">View All Missions</button> <button class="btn-secondary text-lg py-4">Learn About CBD Token</button>
+      <div class="glass-card rounded-2xl p-6 card-hover">
+       <div class="flex items-center gap-3 mb-4">
+        <div class="w-10 h-10 rounded-full bg-gradient-to-br from-neon-cyan to-neon-green flex items-center justify-center font-orbitron font-bold text-sm">
+         K
+        </div>
+        <div>
+         <p class="font-semibold text-sm">Kevin O.</p>
+         <p class="text-xs text-gray-500">Kisumu</p>
+        </div>
+       </div>
+       <p class="text-gray-400 text-sm italic">"Got my KRA PIN sorted and a burger in the same visit. Cyber Donuts is next level."</p>
+       <div class="flex gap-1 mt-3"><span class="text-neon-yellow text-sm">★★★★★</span>
+       </div>
+      </div>
+      <div class="glass-card rounded-2xl p-6 card-hover">
+       <div class="flex items-center gap-3 mb-4">
+        <div class="w-10 h-10 rounded-full bg-gradient-to-br from-neon-yellow to-neon-pink flex items-center justify-center font-orbitron font-bold text-sm">
+         A
+        </div>
+        <div>
+         <p class="font-semibold text-sm">Amina H.</p>
+         <p class="text-xs text-gray-500">Mombasa</p>
+        </div>
+       </div>
+       <p class="text-gray-400 text-sm italic">"The earning system is addictive. I've referred 10 friends and stacked serious CBD. 💰"</p>
+       <div class="flex gap-1 mt-3"><span class="text-neon-yellow text-sm">★★★★☆</span>
+       </div>
       </div>
      </div>
-    </section><!-- Community Section -->
-    <section id="community" class="w-full py-20 px-4 sm:px-6 lg:px-8">
-     <div class="max-w-6xl mx-auto">
-      <h2 class="text-4xl font-bold mb-12 text-center">Join Our Community</h2>
-      <div class="grid md:grid-cols-2 gap-8 mb-12">
-       <div class="glass p-8 rounded-lg">
-        <h3 class="text-2xl font-bold mb-6">Connect With Us</h3>
-        <div class="space-y-4">
-         <a href="#" target="_blank" class="flex items-center gap-3 p-4 hover:bg-blue-500/10 rounded transition"> <i data-lucide="message-circle" style="width: 24px; height: 24px;"></i>
-          <div>
-           <div class="font-bold">
-            WhatsApp Group
-           </div>
-           <div class="text-sm text-gray-400">
-            Daily updates &amp; support
-           </div>
-          </div></a> <a href="#" target="_blank" class="flex items-center gap-3 p-4 hover:bg-purple-500/10 rounded transition"> <i data-lucide="send" style="width: 24px; height: 24px;"></i>
-          <div>
-           <div class="font-bold">
-            Telegram Channel
-           </div>
-           <div class="text-sm text-gray-400">
-            Latest news &amp; announcements
-           </div>
-          </div></a> <a href="#" target="_blank" class="flex items-center gap-3 p-4 hover:bg-pink-500/10 rounded transition"> <i data-lucide="heart" style="width: 24px; height: 24px;"></i>
-          <div>
-           <div class="font-bold">
-            Instagram
-           </div>
-           <div class="text-sm text-gray-400">
-            Behind the scenes &amp; vibes
-           </div>
-          </div></a>
-        </div>
+    </div>
+   </section><!-- COMMUNITY SECTION -->
+   <section class="py-16 sm:py-20 px-4 fade-up">
+    <div class="max-w-4xl mx-auto text-center"><span class="text-neon-cyan font-orbitron text-xs tracking-[0.3em] uppercase mb-4 inline-block">// Join The Tribe</span>
+     <h2 class="font-orbitron font-bold text-2xl sm:text-4xl text-white mb-4">Community Hub</h2>
+     <p class="text-gray-400 mb-10 max-w-lg mx-auto">Connect with thousands of Cyber Donut fans. Share, earn, and grow together.</p>
+     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-lg mx-auto"><a href="https://chat.whatsapp.com/HyNNfNplBLM409sYzcyIEs" target="_blank" rel="noopener noreferrer" class="glass-card rounded-xl p-5 card-hover flex items-center gap-4 text-left">
+       <div class="w-12 h-12 rounded-full bg-green-500/20 flex items-center justify-center flex-shrink-0"><i data-lucide="message-circle" class="w-6 h-6 text-green-400"></i>
        </div>
-       <div class="glass p-8 rounded-lg">
-        <h3 class="text-2xl font-bold mb-6">Leaderboards</h3>
-        <div class="space-y-3">
-         <div class="flex justify-between items-center p-3 bg-blue-500/10 rounded">
-          <div>
-           <div class="font-bold">
-            🥇 Alex
-           </div>
-           <div class="text-xs text-gray-400">
-            Master Tier
-           </div>
-          </div>
-          <div class="text-blue-400 font-bold">
-           45,280 XP
-          </div>
-         </div>
-         <div class="flex justify-between items-center p-3 bg-purple-500/10 rounded">
-          <div>
-           <div class="font-bold">
-            🥈 Maria
-           </div>
-           <div class="text-xs text-gray-400">
-            Artisan Tier
-           </div>
-          </div>
-          <div class="text-purple-400 font-bold">
-           38,150 XP
-          </div>
-         </div>
-         <div class="flex justify-between items-center p-3 bg-pink-500/10 rounded">
-          <div>
-           <div class="font-bold">
-            🥉 Kevin
-           </div>
-           <div class="text-xs text-gray-400">
-            Apprentice Tier
-           </div>
-          </div>
-          <div class="text-pink-400 font-bold">
-           27,890 XP
-          </div>
-         </div>
-        </div>
+       <div>
+        <p class="font-semibold text-sm text-white">WhatsApp Group</p>
+        <p class="text-xs text-gray-500">Join the conversation</p>
+       </div></a> <a href="https://whatsapp.com/channel/0029Vaoabui1yT22hZlAH019" target="_blank" rel="noopener noreferrer" class="glass-card rounded-xl p-5 card-hover flex items-center gap-4 text-left">
+       <div class="w-12 h-12 rounded-full bg-green-500/20 flex items-center justify-center flex-shrink-0"><i data-lucide="radio" class="w-6 h-6 text-green-400"></i>
+       </div>
+       <div>
+        <p class="font-semibold text-sm text-white">WhatsApp Channel</p>
+        <p class="text-xs text-gray-500">Get updates first</p>
+       </div></a> <a href="#" class="glass-card rounded-xl p-5 card-hover flex items-center gap-4 text-left">
+       <div class="w-12 h-12 rounded-full bg-blue-500/20 flex items-center justify-center flex-shrink-0"><i data-lucide="send" class="w-6 h-6 text-blue-400"></i>
+       </div>
+       <div>
+        <p class="font-semibold text-sm text-white">Telegram</p>
+        <p class="text-xs text-gray-500">Join our channel</p>
+       </div></a> <a href="#" class="glass-card rounded-xl p-5 card-hover flex items-center gap-4 text-left">
+       <div class="w-12 h-12 rounded-full bg-pink-500/20 flex items-center justify-center flex-shrink-0"><i data-lucide="instagram" class="w-6 h-6 text-pink-400"></i>
+       </div>
+       <div>
+        <p class="font-semibold text-sm text-white">Instagram</p>
+        <p class="text-xs text-gray-500">Follow the vibes</p>
+       </div></a>
+     </div>
+    </div>
+   </section><!-- FOOTER -->
+   <footer class="border-t border-neon-cyan/10 py-12 px-4">
+    <div class="max-w-6xl mx-auto">
+     <div class="grid grid-cols-1 md:grid-cols-3 gap-10 mb-10">
+      <div>
+       <div class="flex items-center gap-2 mb-4"><span class="text-2xl">🍩</span> <span class="font-orbitron font-bold text-lg neon-glow">Cyber Donuts</span>
+       </div>
+       <p id="footer-tagline" class="text-gray-500 text-sm mb-4">Eat. Earn. Connect. — Where flavor meets the future.</p>
+       <div class="flex gap-3"><a href="https://chat.whatsapp.com/HyNNfNplBLM409sYzcyIEs" target="_blank" rel="noopener noreferrer" class="w-9 h-9 rounded-full bg-neon-cyan/10 flex items-center justify-center hover:bg-neon-cyan/20 transition-colors"> <i data-lucide="message-circle" class="w-4 h-4 text-neon-cyan"></i> </a> <a href="https://cyber-donuts.github.io/" target="_blank" rel="noopener noreferrer" class="w-9 h-9 rounded-full bg-neon-cyan/10 flex items-center justify-center hover:bg-neon-cyan/20 transition-colors"> <i data-lucide="globe" class="w-4 h-4 text-neon-cyan"></i> </a> <a href="#" class="w-9 h-9 rounded-full bg-neon-cyan/10 flex items-center justify-center hover:bg-neon-cyan/20 transition-colors"> <i data-lucide="instagram" class="w-4 h-4 text-neon-cyan"></i> </a>
        </div>
       </div>
-      <div class="glass p-12 rounded-lg border-2 border-green-500/30 text-center">
-       <h3 class="text-2xl font-bold mb-4">Ready to Join?</h3>
-       <p class="text-gray-300 mb-6">Start your journey with Cyber Donuts today and unlock amazing rewards!</p><button class="btn-primary text-lg">Start Your Journey</button>
+      <div>
+       <h4 class="font-orbitron font-bold text-sm mb-4 text-neon-cyan">Quick Links</h4>
+       <div class="flex flex-col gap-2"><a href="#" class="text-gray-500 text-sm hover:text-neon-cyan transition-colors">Home</a> <a href="/pages/earn.html" target="_blank" rel="noopener noreferrer" class="text-gray-500 text-sm hover:text-neon-cyan transition-colors">Earn</a> <a href="/pages/services.html" target="_blank" rel="noopener noreferrer" class="text-gray-500 text-sm hover:text-neon-cyan transition-colors">Services</a> <a href="/pages/missions.html" target="_blank" rel="noopener noreferrer" class="text-gray-500 text-sm hover:text-neon-cyan transition-colors">Missions</a> <a href="/pages/cbd-token.html" target="_blank" rel="noopener noreferrer" class="text-gray-500 text-sm hover:text-neon-cyan transition-colors">CBD Token</a>
+       </div>
+      </div>
+      <div>
+       <h4 class="font-orbitron font-bold text-sm mb-4 text-neon-cyan">Contact</h4>
+       <div class="flex flex-col gap-3"><a href="tel:+254798692443" class="flex items-center gap-2 text-gray-500 text-sm hover:text-neon-cyan transition-colors"> <i data-lucide="phone" class="w-4 h-4"></i> +254 798 692 443 </a> <a href="https://wa.me/254798692443" target="_blank" rel="noopener noreferrer" class="flex items-center gap-2 text-gray-500 text-sm hover:text-neon-green transition-colors"> <i data-lucide="message-circle" class="w-4 h-4"></i> WhatsApp Us </a> <a href="https://cyber-donuts.github.io/" target="_blank" rel="noopener noreferrer" class="flex items-center gap-2 text-gray-500 text-sm hover:text-neon-cyan transition-colors"> <i data-lucide="globe" class="w-4 h-4"></i> cyber-donuts.github.io </a>
+       </div>
       </div>
      </div>
-    </section><!-- Footer -->
-    <footer class="w-full py-12 px-4 sm:px-6 lg:px-8 border-t border-blue-900/30 bg-blue-950/20">
-     <div class="max-w-6xl mx-auto">
-      <div class="grid md:grid-cols-4 gap-8 mb-8">
-       <div>
-        <div class="flex items-center gap-2 mb-4">
-         <span class="text-lg font-bold text-blue-400">Cyber Donuts</span>
-        </div>
-        <p class="text-sm text-gray-400">Eat. Earn. Grow.</p>
-       </div>
-       <div>
-        <h4 class="font-bold mb-4">Platform</h4>
-        <ul class="space-y-2 text-sm text-gray-400">
-         <li><a href="#menu" class="hover:text-blue-400">Menu</a></li>
-         <li><a href="#services" class="hover:text-blue-400">Services</a></li>
-         <li><a href="#earn" class="hover:text-blue-400">Earn</a></li>
-        </ul>
-       </div>
-       <div>
-        <h4 class="font-bold mb-4">Community</h4>
-        <ul class="space-y-2 text-sm text-gray-400">
-         <li><a href="#" class="hover:text-blue-400">WhatsApp</a></li>
-         <li><a href="#" class="hover:text-blue-400">Telegram</a></li>
-         <li><a href="#" class="hover:text-blue-400">Twitter</a></li>
-        </ul>
-       </div>
-       <div>
-        <h4 class="font-bold mb-4">About</h4>
-        <ul class="space-y-2 text-sm text-gray-400">
-         <li><a href="#" class="hover:text-blue-400">Our Story</a></li>
-         <li><a href="#" class="hover:text-blue-400">Privacy Policy</a></li>
-         <li><a href="#" class="hover:text-blue-400">Terms</a></li>
-        </ul>
-       </div>
-      </div>
-      <div class="border-t border-blue-900/30 pt-8 text-center text-sm text-gray-500">
-       <p>© 2024 Cyber Donuts 2.0. All rights reserved. | Built for a global community</p>
-      </div>
+     <div class="border-t border-gray-800 pt-6 flex flex-col sm:flex-row items-center justify-between gap-4">
+      <p class="text-gray-600 text-xs">© 2025 Cyber Donuts. All rights reserved.</p>
+      <p class="text-gray-700 text-xs">Built with 🍩 and code</p>
      </div>
-    </footer>
-   </main>
+    </div>
+   </footer>
   </div>
   <script>
     // Initialize Lucide icons
     lucide.createIcons();
 
-    // Element SDK initialization
+    // Mobile menu toggle
+    const menuBtn = document.getElementById('mobile-menu-btn');
+    const mobileMenu = document.getElementById('mobile-menu');
+    let menuOpen = false;
+    menuBtn.addEventListener('click', () => {
+      menuOpen = !menuOpen;
+      mobileMenu.classList.toggle('hidden', !menuOpen);
+    });
+
+    // Scroll fade-up animations
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        }
+      });
+    }, { threshold: 0.1 });
+    document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+
+    // Element SDK
     const defaultConfig = {
-      hero_title: "Eat. Earn. Grow.",
-      hero_tagline: "A global platform combining food, services, Web3, and community to create income, opportunity, and impact for everyone.",
-      cta_button_text: "Order Now"
+      hero_headline: 'Eat. Earn. Connect.',
+      hero_subtext: 'Where flavor meets the future.',
+      about_title: 'About Cyber Donuts',
+      about_text: "We're not your average café. Cyber Donuts blends mouth-watering food with cutting-edge digital services and a Web3 earning ecosystem. Order a donut, complete a mission, earn CBD tokens — all from one platform. Welcome to the future of food and tech.",
+      footer_tagline: 'Eat. Earn. Connect. — Where flavor meets the future.',
+      background_color: '#0a0a1a',
+      surface_color: '#12122a',
+      text_color: '#ffffff',
+      primary_action_color: '#ff2d7b',
+      secondary_action_color: '#00f0ff',
+      font_family: 'Exo 2',
+      font_size: 16,
     };
 
-    const config = { ...defaultConfig };
+    function applyConfig(config) {
+      const c = { ...defaultConfig, ...config };
 
-    const elementHandler = {
-      onConfigChange: async (updatedConfig) => {
-        const titleEl = document.getElementById('heroTitle');
-        const taglineEl = document.getElementById('heroTagline');
-        const ctaBtn = document.getElementById('ctaButton');
+      // Text content
+      document.getElementById('hero-headline').textContent = c.hero_headline;
+      document.getElementById('hero-subtext').textContent = c.hero_subtext;
+      document.getElementById('about-title').textContent = c.about_title;
+      document.getElementById('about-text').textContent = c.about_text;
+      document.getElementById('footer-tagline').textContent = c.footer_tagline;
 
-        if (titleEl) {
-          titleEl.innerHTML = `<span class="bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">${updatedConfig.hero_title || defaultConfig.hero_title}</span>`;
+      // Colors
+      const wrapper = document.getElementById('app-wrapper');
+      wrapper.style.backgroundColor = c.background_color;
+
+      document.querySelectorAll('.glass-card').forEach(el => {
+        el.style.backgroundColor = c.surface_color + '99';
+      });
+
+      document.querySelectorAll('h1, h2, h3, .font-orbitron.font-bold').forEach(el => {
+        if (!el.classList.contains('neon-glow') && !el.id) {
+          el.style.color = c.text_color;
         }
-        if (taglineEl) {
-          taglineEl.textContent = updatedConfig.hero_tagline || defaultConfig.hero_tagline;
+      });
+
+      // Primary action (pink buttons gradient start)
+      document.querySelectorAll('.from-neon-pink').forEach(btn => {
+        if (btn.classList.contains('btn-neon')) {
+          btn.style.background = `linear-gradient(to right, ${c.primary_action_color}, ${c.secondary_action_color})`;
         }
-        if (ctaBtn) {
-          ctaBtn.textContent = updatedConfig.cta_button_text || defaultConfig.cta_button_text;
+      });
+
+      // Secondary action (cyan accents)
+      document.getElementById('nav-brand').style.color = c.secondary_action_color;
+
+      // Font
+      const fontStack = `${c.font_family}, Exo 2, sans-serif`;
+      document.body.style.fontFamily = fontStack;
+
+      // Font size
+      const base = c.font_size;
+      document.querySelectorAll('p:not(.font-orbitron)').forEach(el => {
+        if (el.classList.contains('text-lg') || el.classList.contains('text-xl')) {
+          el.style.fontSize = `${base * 1.15}px`;
+        } else if (el.classList.contains('text-xs')) {
+          el.style.fontSize = `${base * 0.75}px`;
+        } else {
+          el.style.fontSize = `${base * 0.875}px`;
         }
-      }
-    };
-
-    const capabilities = {
-      recolorables: [],
-      fontEditable: undefined,
-      fontSizeable: undefined
-    };
-
-    const mapToEditPanelValues = (cfg) => new Map([
-      ["hero_title", cfg.hero_title || defaultConfig.hero_title],
-      ["hero_tagline", cfg.hero_tagline || defaultConfig.hero_tagline],
-      ["cta_button_text", cfg.cta_button_text || defaultConfig.cta_button_text]
-    ]);
-
-    // Initialize Element SDK
-    if (window.elementSdk) {
-      window.elementSdk.init({
-        defaultConfig,
-        onConfigChange: elementHandler.onConfigChange,
-        mapToCapabilities: () => capabilities,
-        mapToEditPanelValues
       });
     }
 
-    // Button interactions
-    document.getElementById('headerCTA')?.addEventListener('click', () => {
-      document.getElementById('community').scrollIntoView({ behavior: 'smooth' });
-    });
-
-    document.getElementById('ctaButton')?.addEventListener('click', () => {
-      document.getElementById('menu').scrollIntoView({ behavior: 'smooth' });
-    });
+    if (window.elementSdk) {
+      window.elementSdk.init({
+        defaultConfig,
+        onConfigChange: async (config) => {
+          applyConfig(config);
+        },
+        mapToCapabilities: (config) => {
+          const c = { ...defaultConfig, ...config };
+          return {
+            recolorables: [
+              {
+                get: () => c.background_color,
+                set: (v) => { c.background_color = v; window.elementSdk.setConfig({ background_color: v }); }
+              },
+              {
+                get: () => c.surface_color,
+                set: (v) => { c.surface_color = v; window.elementSdk.setConfig({ surface_color: v }); }
+              },
+              {
+                get: () => c.text_color,
+                set: (v) => { c.text_color = v; window.elementSdk.setConfig({ text_color: v }); }
+              },
+              {
+                get: () => c.primary_action_color,
+                set: (v) => { c.primary_action_color = v; window.elementSdk.setConfig({ primary_action_color: v }); }
+              },
+              {
+                get: () => c.secondary_action_color,
+                set: (v) => { c.secondary_action_color = v; window.elementSdk.setConfig({ secondary_action_color: v }); }
+              }
+            ],
+            borderables: [],
+            fontEditable: {
+              get: () => c.font_family,
+              set: (v) => { c.font_family = v; window.elementSdk.setConfig({ font_family: v }); }
+            },
+            fontSizeable: {
+              get: () => c.font_size,
+              set: (v) => { c.font_size = v; window.elementSdk.setConfig({ font_size: v }); }
+            }
+          };
+        },
+        mapToEditPanelValues: (config) => {
+          const c = { ...defaultConfig, ...config };
+          return new Map([
+            ['hero_headline', c.hero_headline],
+            ['hero_subtext', c.hero_subtext],
+            ['about_title', c.about_title],
+            ['about_text', c.about_text],
+            ['footer_tagline', c.footer_tagline],
+          ]);
+        }
+      });
+    }
   </script>
- <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9dd9b88e57b48a6d',t:'MTc3MzcyNjYzNS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
-      </html>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9dd9d30ca5062d04',t:'MTc3MzcyNzcyMC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+ </html>
