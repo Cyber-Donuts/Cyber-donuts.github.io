@@ -1,0 +1,547 @@
+<!doctype html>
+<html lang="en" class="h-full">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Community — Cyber Donuts</title>
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <script src="https://cdn.jsdelivr.net/npm/lucide@0.263.0/dist/umd/lucide.min.js"></script>
+  <script src="/_sdk/element_sdk.js"></script>
+  <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&amp;family=Exo+2:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            orbitron: ['Orbitron', 'sans-serif'],
+            exo: ['Exo 2', 'sans-serif'],
+          },
+          colors: {
+            neon: {
+              pink: '#ff2d7b',
+              cyan: '#00f0ff',
+              purple: '#b44dff',
+              green: '#39ff14',
+              yellow: '#ffe600',
+            },
+            cyber: {
+              dark: '#0a0a1a',
+              card: '#12122a',
+              surface: '#1a1a3e',
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    html, body { height: 100%; margin: 0; }
+
+    .glass-card {
+      background: rgba(18, 18, 42, 0.6);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(0, 240, 255, 0.15);
+    }
+
+    .glass-nav {
+      background: rgba(10, 10, 26, 0.85);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-bottom: 1px solid rgba(0, 240, 255, 0.1);
+    }
+
+    .neon-glow {
+      text-shadow: 0 0 10px rgba(0, 240, 255, 0.5), 0 0 40px rgba(0, 240, 255, 0.2);
+    }
+
+    .btn-neon {
+      position: relative;
+      overflow: hidden;
+      transition: all 0.3s ease;
+    }
+    .btn-neon::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+      transform: translateX(-100%);
+      transition: transform 0.5s ease;
+    }
+    .btn-neon:hover::before {
+      transform: translateX(100%);
+    }
+
+    .grid-bg {
+      background-image:
+        linear-gradient(rgba(0, 240, 255, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 240, 255, 0.03) 1px, transparent 1px);
+      background-size: 60px 60px;
+    }
+
+    .card-hover {
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .card-hover:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 0 30px rgba(0, 240, 255, 0.15);
+    }
+
+    .scrollbar-hide::-webkit-scrollbar { display: none; }
+    .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+
+    .fade-in {
+      animation: fadeInUp 0.6s ease forwards;
+    }
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes slideInLeft {
+      from { opacity: 0; transform: translateX(-20px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+
+    @keyframes pulse-glow {
+      0%, 100% { box-shadow: 0 0 20px rgba(0, 240, 255, 0.3), inset 0 0 20px rgba(0, 240, 255, 0.1); }
+      50% { box-shadow: 0 0 40px rgba(0, 240, 255, 0.6), inset 0 0 30px rgba(0, 240, 255, 0.2); }
+    }
+
+    .platform-card {
+      animation: slideInLeft 0.4s ease;
+    }
+
+    .stat-number {
+      animation: fadeInUp 0.8s ease both;
+    }
+
+    @media (max-width: 768px) {
+      .grid-cols-lg { grid-template-columns: 1fr; }
+    }
+  </style>
+  <style>body { box-sizing: border-box; }</style>
+ </head>
+ <body class="h-full bg-cyber-dark text-white font-exo overflow-auto scrollbar-hide">
+  <div id="app-wrapper" class="w-full h-full overflow-auto scrollbar-hide grid-bg"><!-- NAVBAR -->
+   <nav class="glass-nav fixed top-0 left-0 w-full z-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+     <div class="flex items-center justify-between h-16"><a href="/" class="flex items-center gap-2"> <span class="text-2xl">🍩</span> <span class="font-orbitron font-bold text-lg neon-glow">Cyber Donuts</span> </a>
+      <div class="hidden md:flex items-center gap-6"><a href="/" class="text-gray-400 text-sm hover:text-neon-cyan transition-colors">Home</a> <a href="/pages/earn.html" class="text-gray-400 text-sm hover:text-neon-cyan transition-colors">Earn</a> <a href="/pages/services.html" class="text-gray-400 text-sm hover:text-neon-cyan transition-colors">Services</a> <a href="/pages/community.html" class="text-neon-cyan text-sm font-medium">Community</a> <a href="/pages/cbd-token.html" target="_blank" rel="noopener noreferrer" class="text-gray-400 text-sm hover:text-neon-cyan transition-colors">CBD Token</a> <a href="/pages/missions.html" class="text-gray-400 text-sm hover:text-neon-cyan transition-colors">Missions</a>
+      </div><button id="mobile-menu-btn" class="md:hidden text-neon-cyan p-2" aria-label="Toggle menu"> <i data-lucide="menu" class="w-6 h-6"></i> </button>
+     </div>
+    </div>
+    <div id="mobile-menu" class="hidden md:hidden glass-card border-t border-neon-cyan/10">
+     <div class="px-4 py-4 flex flex-col gap-3"><a href="/" class="text-gray-400 text-sm py-2 hover:text-neon-cyan transition-colors">Home</a> <a href="/pages/earn.html" class="text-gray-400 text-sm py-2 hover:text-neon-cyan transition-colors">Earn</a> <a href="/pages/services.html" class="text-gray-400 text-sm py-2 hover:text-neon-cyan transition-colors">Services</a> <a href="/pages/community.html" class="text-neon-cyan text-sm font-medium py-2">Community</a> <a href="/pages/cbd-token.html" target="_blank" rel="noopener noreferrer" class="text-gray-400 text-sm py-2 hover:text-neon-cyan transition-colors">CBD Token</a> <a href="/pages/missions.html" class="text-gray-400 text-sm py-2 hover:text-neon-cyan transition-colors">Missions</a>
+     </div>
+    </div>
+   </nav><!-- HERO SECTION -->
+   <header class="relative pt-32 pb-16 px-4 overflow-hidden">
+    <div class="absolute top-0 left-1/4 w-96 h-96 bg-neon-cyan/5 rounded-full blur-3xl pointer-events-none"></div>
+    <div class="absolute bottom-0 right-1/4 w-96 h-96 bg-neon-purple/5 rounded-full blur-3xl pointer-events-none"></div>
+    <div class="max-w-6xl mx-auto relative z-10">
+     <div class="text-center fade-in">
+      <div class="mb-6 inline-block text-6xl">
+       🌍🍩
+      </div>
+      <h1 id="page-title" class="font-orbitron font-black text-4xl sm:text-5xl lg:text-6xl mb-6 bg-gradient-to-r from-neon-green via-neon-cyan to-neon-purple bg-clip-text text-transparent">Join the Cyber Donuts Movement</h1>
+      <p id="page-subtitle" class="text-xl sm:text-2xl text-neon-cyan mb-6 font-orbitron font-bold">Connect. Earn. Grow together.</p>
+      <p id="hero-description" class="text-lg text-gray-400 max-w-2xl mx-auto mb-10">Be part of a global community where food, technology, and opportunity meet.</p>
+      <div class="flex flex-col sm:flex-row gap-4 justify-center"><a href="https://chat.whatsapp.com/HyNNfNplBLM409sYzcyIEs" target="_blank" rel="noopener noreferrer" class="btn-neon inline-flex items-center justify-center gap-2 bg-gradient-to-r from-neon-green to-neon-cyan px-8 py-4 rounded-full font-orbitron font-semibold text-sm tracking-wider text-cyber-dark hover:shadow-lg hover:shadow-neon-green/30 transition-all"> <i data-lucide="message-circle" class="w-5 h-5"></i>Join WhatsApp Group </a> <a href="https://t.me/CyberDonutsCommunity" target="_blank" rel="noopener noreferrer" class="btn-neon inline-flex items-center justify-center gap-2 bg-neon-cyan/20 text-neon-cyan px-8 py-4 rounded-full font-orbitron font-semibold text-sm tracking-wider border border-neon-cyan/50 hover:bg-neon-cyan/30 transition-all"> <i data-lucide="send" class="w-5 h-5"></i>Join Telegram </a> <a href="/pages/missions.html" class="btn-neon inline-flex items-center justify-center gap-2 bg-neon-purple/20 text-neon-purple px-8 py-4 rounded-full font-orbitron font-semibold text-sm tracking-wider border border-neon-purple/50 hover:bg-neon-purple/30 transition-all"> <i data-lucide="zap" class="w-5 h-5"></i>Start Earning </a>
+      </div>
+     </div>
+    </div>
+   </header><!-- PLATFORMS SECTION -->
+   <section class="px-4 py-16">
+    <div class="max-w-6xl mx-auto">
+     <h2 id="platforms-title" class="font-orbitron font-bold text-3xl mb-4 text-center">🌐 Join Our Platforms</h2>
+     <p class="text-center text-gray-400 mb-12 max-w-2xl mx-auto">Connect with us across multiple channels. Choose your favorite way to stay updated and engaged.</p>
+     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"><!-- WhatsApp Group -->
+      <div class="glass-card rounded-xl p-6 card-hover platform-card fade-in" style="animation-delay: 0.1s;">
+       <div class="flex items-center gap-4 mb-4">
+        <div class="w-12 h-12 rounded-lg bg-gradient-to-br from-neon-green/20 to-neon-cyan/20 flex items-center justify-center"><i data-lucide="message-circle" class="w-6 h-6 text-neon-green"></i>
+        </div>
+        <div>
+         <h3 class="font-orbitron font-bold text-lg">WhatsApp Group</h3>
+         <p class="text-xs text-gray-500">Active community chat</p>
+        </div>
+       </div>
+       <p class="text-sm text-gray-400 mb-4">Real-time chat, updates, and opportunities. Connect with thousands of active members.</p><a href="https://chat.whatsapp.com/HyNNfNplBLM409sYzcyIEs" target="_blank" rel="noopener noreferrer" class="btn-neon w-full bg-neon-green/20 text-neon-green px-4 py-2 rounded-lg hover:bg-neon-green/30 text-sm font-bold transition-colors flex items-center justify-center gap-2"> <i data-lucide="external-link" class="w-4 h-4"></i>Join Now </a>
+      </div><!-- WhatsApp Channel -->
+      <div class="glass-card rounded-xl p-6 card-hover platform-card fade-in" style="animation-delay: 0.15s;">
+       <div class="flex items-center gap-4 mb-4">
+        <div class="w-12 h-12 rounded-lg bg-gradient-to-br from-neon-cyan/20 to-neon-blue/20 flex items-center justify-center"><i data-lucide="bell" class="w-6 h-6 text-neon-cyan"></i>
+        </div>
+        <div>
+         <h3 class="font-orbitron font-bold text-lg">WhatsApp Channel</h3>
+         <p class="text-xs text-gray-500">Announcements &amp; news</p>
+        </div>
+       </div>
+       <p class="text-sm text-gray-400 mb-4">Official announcements, product launches, and important updates delivered directly to you.</p><a href="https://whatsapp.com/channel/0029Vaoabui1yT22hZlAH019" target="_blank" rel="noopener noreferrer" class="btn-neon w-full bg-neon-cyan/20 text-neon-cyan px-4 py-2 rounded-lg hover:bg-neon-cyan/30 text-sm font-bold transition-colors flex items-center justify-center gap-2"> <i data-lucide="external-link" class="w-4 h-4"></i>Follow Now </a>
+      </div><!-- Telegram Channel -->
+      <div class="glass-card rounded-xl p-6 card-hover platform-card fade-in" style="animation-delay: 0.2s;">
+       <div class="flex items-center gap-4 mb-4">
+        <div class="w-12 h-12 rounded-lg bg-gradient-to-br from-neon-blue/20 to-neon-cyan/20 flex items-center justify-center"><i data-lucide="send" class="w-6 h-6 text-neon-blue"></i>
+        </div>
+        <div>
+         <h3 class="font-orbitron font-bold text-lg">Telegram Channel</h3>
+         <p class="text-xs text-gray-500">Official updates &amp; drops</p>
+        </div>
+       </div>
+       <p class="text-sm text-gray-400 mb-4">Latest news, exclusive drops, and fast-moving updates from the Cyber Donuts team.</p><a href="https://t.me/CyberDonutsCafeteria" target="_blank" rel="noopener noreferrer" class="btn-neon w-full bg-neon-blue/20 text-neon-blue px-4 py-2 rounded-lg hover:bg-neon-blue/30 text-sm font-bold transition-colors flex items-center justify-center gap-2"> <i data-lucide="external-link" class="w-4 h-4"></i>Subscribe </a>
+      </div><!-- Telegram Community -->
+      <div class="glass-card rounded-xl p-6 card-hover platform-card fade-in" style="animation-delay: 0.25s;">
+       <div class="flex items-center gap-4 mb-4">
+        <div class="w-12 h-12 rounded-lg bg-gradient-to-br from-neon-purple/20 to-neon-pink/20 flex items-center justify-center"><i data-lucide="users" class="w-6 h-6 text-neon-purple"></i>
+        </div>
+        <div>
+         <h3 class="font-orbitron font-bold text-lg">Telegram Community</h3>
+         <p class="text-xs text-gray-500">Discussions &amp; networking</p>
+        </div>
+       </div>
+       <p class="text-sm text-gray-400 mb-4">Share ideas, collaborate on projects, and network with like-minded Web3 enthusiasts.</p><a href="https://t.me/CyberDonutsCommunity" target="_blank" rel="noopener noreferrer" class="btn-neon w-full bg-neon-purple/20 text-neon-purple px-4 py-2 rounded-lg hover:bg-neon-purple/30 text-sm font-bold transition-colors flex items-center justify-center gap-2"> <i data-lucide="external-link" class="w-4 h-4"></i>Join </a>
+      </div><!-- Facebook Page -->
+      <div class="glass-card rounded-xl p-6 card-hover platform-card fade-in" style="animation-delay: 0.3s;">
+       <div class="flex items-center gap-4 mb-4">
+        <div class="w-12 h-12 rounded-lg bg-gradient-to-br from-neon-blue/20 to-neon-purple/20 flex items-center justify-center"><i data-lucide="facebook" class="w-6 h-6 text-neon-blue"></i>
+        </div>
+        <div>
+         <h3 class="font-orbitron font-bold text-lg">Facebook Page</h3>
+         <p class="text-xs text-gray-500">Public engagement</p>
+        </div>
+       </div>
+       <p class="text-sm text-gray-400 mb-4">Follow us for community stories, memes, and public engagement with our growing fanbase.</p><a href="https://www.facebook.com/share/1Dn4FLpYVF/" target="_blank" rel="noopener noreferrer" class="btn-neon w-full bg-neon-blue/20 text-neon-blue px-4 py-2 rounded-lg hover:bg-neon-blue/30 text-sm font-bold transition-colors flex items-center justify-center gap-2"> <i data-lucide="external-link" class="w-4 h-4"></i>Follow </a>
+      </div><!-- Website -->
+      <div class="glass-card rounded-xl p-6 card-hover platform-card fade-in" style="animation-delay: 0.35s;">
+       <div class="flex items-center gap-4 mb-4">
+        <div class="w-12 h-12 rounded-lg bg-gradient-to-br from-neon-yellow/20 to-neon-green/20 flex items-center justify-center"><i data-lucide="globe" class="w-6 h-6 text-neon-yellow"></i>
+        </div>
+        <div>
+         <h3 class="font-orbitron font-bold text-lg">Main Website</h3>
+         <p class="text-xs text-gray-500">Hub &amp; resources</p>
+        </div>
+       </div>
+       <p class="text-sm text-gray-400 mb-4">Central hub with all resources, guides, and information about Cyber Donuts ecosystem.</p><a href="https://cyber-donuts.github.io/" target="_blank" rel="noopener noreferrer" class="btn-neon w-full bg-neon-yellow/20 text-neon-yellow px-4 py-2 rounded-lg hover:bg-neon-yellow/30 text-sm font-bold transition-colors flex items-center justify-center gap-2"> <i data-lucide="external-link" class="w-4 h-4"></i>Visit </a>
+      </div>
+     </div>
+    </div>
+   </section><!-- FEATURES SECTION -->
+   <section class="px-4 py-16">
+    <div class="max-w-6xl mx-auto">
+     <h2 id="features-title" class="font-orbitron font-bold text-3xl mb-4 text-center">🎮 Community Features</h2>
+     <p class="text-center text-gray-400 mb-12 max-w-2xl mx-auto">Explore the unique features that make Cyber Donuts community special.</p>
+     <div class="grid grid-cols-1 md:grid-cols-2 gap-8"><!-- Leaderboards -->
+      <div class="glass-card rounded-xl p-8 card-hover fade-in relative overflow-hidden" style="animation-delay: 0.1s;">
+       <div class="absolute top-0 right-0 w-32 h-32 bg-neon-yellow/5 rounded-full blur-2xl pointer-events-none"></div>
+       <div class="relative z-10">
+        <div class="flex items-center gap-3 mb-4">
+         <div class="w-14 h-14 rounded-lg bg-gradient-to-br from-neon-yellow/20 to-neon-green/20 flex items-center justify-center"><i data-lucide="award" class="w-7 h-7 text-neon-yellow"></i>
+         </div>
+         <h3 class="font-orbitron font-bold text-2xl">Leaderboards</h3>
+        </div>
+        <p class="text-gray-400 mb-6">See top earners and most active members. Compete with others and climb the ranks to earn exclusive badges and rewards.</p>
+        <div class="space-y-2 mb-6">
+         <div class="flex items-center gap-2"><i data-lucide="check-circle" class="w-5 h-5 text-neon-green"></i> <span class="text-sm text-gray-300">Track XP progress in real-time</span>
+         </div>
+         <div class="flex items-center gap-2"><i data-lucide="check-circle" class="w-5 h-5 text-neon-green"></i> <span class="text-sm text-gray-300">Unlock tier badges</span>
+         </div>
+         <div class="flex items-center gap-2"><i data-lucide="check-circle" class="w-5 h-5 text-neon-green"></i> <span class="text-sm text-gray-300">Win monthly rewards</span>
+         </div>
+        </div><button class="btn-neon bg-neon-yellow/20 text-neon-yellow px-6 py-2 rounded-lg hover:bg-neon-yellow/30 font-semibold text-sm transition-colors">View Leaderboard</button>
+       </div>
+      </div><!-- Events -->
+      <div class="glass-card rounded-xl p-8 card-hover fade-in relative overflow-hidden" style="animation-delay: 0.15s;">
+       <div class="absolute top-0 right-0 w-32 h-32 bg-neon-cyan/5 rounded-full blur-2xl pointer-events-none"></div>
+       <div class="relative z-10">
+        <div class="flex items-center gap-3 mb-4">
+         <div class="w-14 h-14 rounded-lg bg-gradient-to-br from-neon-cyan/20 to-neon-blue/20 flex items-center justify-center"><i data-lucide="calendar" class="w-7 h-7 text-neon-cyan"></i>
+         </div>
+         <h3 class="font-orbitron font-bold text-2xl">Events</h3>
+        </div>
+        <p class="text-gray-400 mb-6">Online &amp; real-world meetups, AMA sessions with team members, and exclusive product launches.</p>
+        <div class="space-y-2 mb-6">
+         <div class="flex items-center gap-2"><i data-lucide="check-circle" class="w-5 h-5 text-neon-green"></i> <span class="text-sm text-gray-300">Weekly online meetups</span>
+         </div>
+         <div class="flex items-center gap-2"><i data-lucide="check-circle" class="w-5 h-5 text-neon-green"></i> <span class="text-sm text-gray-300">Monthly in-person events</span>
+         </div>
+         <div class="flex items-center gap-2"><i data-lucide="check-circle" class="w-5 h-5 text-neon-green"></i> <span class="text-sm text-gray-300">AMA with founders</span>
+         </div>
+        </div><button class="btn-neon bg-neon-cyan/20 text-neon-cyan px-6 py-2 rounded-lg hover:bg-neon-cyan/30 font-semibold text-sm transition-colors">View Events</button>
+       </div>
+      </div><!-- Challenges -->
+      <div class="glass-card rounded-xl p-8 card-hover fade-in relative overflow-hidden" style="animation-delay: 0.2s;">
+       <div class="absolute top-0 right-0 w-32 h-32 bg-neon-pink/5 rounded-full blur-2xl pointer-events-none"></div>
+       <div class="relative z-10">
+        <div class="flex items-center gap-3 mb-4">
+         <div class="w-14 h-14 rounded-lg bg-gradient-to-br from-neon-pink/20 to-neon-purple/20 flex items-center justify-center"><i data-lucide="zap" class="w-7 h-7 text-neon-pink"></i>
+         </div>
+         <h3 class="font-orbitron font-bold text-2xl">Challenges</h3>
+        </div>
+        <p class="text-gray-400 mb-6">Complete daily, weekly, and monthly challenges to earn XP, CBD tokens, and special rewards.</p>
+        <div class="space-y-2 mb-6">
+         <div class="flex items-center gap-2"><i data-lucide="check-circle" class="w-5 h-5 text-neon-green"></i> <span class="text-sm text-gray-300">Daily micro-challenges</span>
+         </div>
+         <div class="flex items-center gap-2"><i data-lucide="check-circle" class="w-5 h-5 text-neon-green"></i> <span class="text-sm text-gray-300">Weekly team challenges</span>
+         </div>
+         <div class="flex items-center gap-2"><i data-lucide="check-circle" class="w-5 h-5 text-neon-green"></i> <span class="text-sm text-gray-300">Seasonal tournaments</span>
+         </div>
+        </div><button class="btn-neon bg-neon-pink/20 text-neon-pink px-6 py-2 rounded-lg hover:bg-neon-pink/30 font-semibold text-sm transition-colors">Browse Challenges</button>
+       </div>
+      </div><!-- Crew System -->
+      <div class="glass-card rounded-xl p-8 card-hover fade-in relative overflow-hidden" style="animation-delay: 0.25s;">
+       <div class="absolute top-0 right-0 w-32 h-32 bg-neon-purple/5 rounded-full blur-2xl pointer-events-none"></div>
+       <div class="relative z-10">
+        <div class="flex items-center gap-3 mb-4">
+         <div class="w-14 h-14 rounded-lg bg-gradient-to-br from-neon-purple/20 to-neon-pink/20 flex items-center justify-center"><i data-lucide="users" class="w-7 h-7 text-neon-purple"></i>
+         </div>
+         <h3 class="font-orbitron font-bold text-2xl">Crew System</h3>
+        </div>
+        <p class="text-gray-400 mb-6">Join teams (guilds) and grow together! Collaborate on tasks and earn collective rewards.</p>
+        <div class="space-y-2 mb-6">
+         <div class="flex items-center gap-2"><i data-lucide="check-circle" class="w-5 h-5 text-neon-green"></i> <span class="text-sm text-gray-300">Create or join crews</span>
+         </div>
+         <div class="flex items-center gap-2"><i data-lucide="check-circle" class="w-5 h-5 text-neon-green"></i> <span class="text-sm text-gray-300">Team collaboration tools</span>
+         </div>
+         <div class="flex items-center gap-2"><i data-lucide="check-circle" class="w-5 h-5 text-neon-green"></i> <span class="text-sm text-gray-300">Crew-exclusive rewards</span>
+         </div>
+        </div><button class="btn-neon bg-neon-purple/20 text-neon-purple px-6 py-2 rounded-lg hover:bg-neon-purple/30 font-semibold text-sm transition-colors">Form a Crew</button>
+       </div>
+      </div>
+     </div>
+    </div>
+   </section><!-- WHY JOIN SECTION -->
+   <section class="px-4 py-16">
+    <div class="max-w-6xl mx-auto">
+     <div class="glass-card rounded-2xl p-8 md:p-12 relative overflow-hidden">
+      <div class="absolute top-0 left-0 w-96 h-96 bg-neon-cyan/5 rounded-full blur-3xl pointer-events-none"></div>
+      <div class="absolute bottom-0 right-0 w-96 h-96 bg-neon-green/5 rounded-full blur-3xl pointer-events-none"></div>
+      <div class="relative z-10">
+       <h2 id="why-join-title" class="font-orbitron font-bold text-3xl md:text-4xl mb-4 text-center">❓ Why Join Cyber Donuts?</h2>
+       <p class="text-center text-gray-400 mb-12">We're not just a community — we're a movement.</p>
+       <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
+        <div class="flex gap-4">
+         <div class="flex-shrink-0">
+          <div class="flex items-center justify-center h-12 w-12 rounded-lg bg-neon-green/20"><i data-lucide="coins" class="w-6 h-6 text-neon-green"></i>
+          </div>
+         </div>
+         <div>
+          <h3 class="font-orbitron font-bold text-lg mb-2">Earn Real Rewards</h3>
+          <p class="text-gray-400">Earn CBD tokens and cryptocurrency just by participating. Every action has value.</p>
+         </div>
+        </div>
+        <div class="flex gap-4">
+         <div class="flex-shrink-0">
+          <div class="flex items-center justify-center h-12 w-12 rounded-lg bg-neon-cyan/20"><i data-lucide="lock-open" class="w-6 h-6 text-neon-cyan"></i>
+          </div>
+         </div>
+         <div>
+          <h3 class="font-orbitron font-bold text-lg mb-2">Access Opportunities</h3>
+          <p class="text-gray-400">Get early access to features, exclusive events, and opportunities before anyone else.</p>
+         </div>
+        </div>
+        <div class="flex gap-4">
+         <div class="flex-shrink-0">
+          <div class="flex items-center justify-center h-12 w-12 rounded-lg bg-neon-purple/20"><i data-lucide="book-open" class="w-6 h-6 text-neon-purple"></i>
+          </div>
+         </div>
+         <div>
+          <h3 class="font-orbitron font-bold text-lg mb-2">Learn Web3 Skills</h3>
+          <p class="text-gray-400">Master blockchain, cryptocurrency, and digital entrepreneurship from industry experts.</p>
+         </div>
+        </div>
+        <div class="flex gap-4">
+         <div class="flex-shrink-0">
+          <div class="flex items-center justify-center h-12 w-12 rounded-lg bg-neon-pink/20"><i data-lucide="globe" class="w-6 h-6 text-neon-pink"></i>
+          </div>
+         </div>
+         <div>
+          <h3 class="font-orbitron font-bold text-lg mb-2">Connect Globally</h3>
+          <p class="text-gray-400">Network with thousands of like-minded entrepreneurs and innovators worldwide.</p>
+         </div>
+        </div>
+       </div><!-- Live Stats -->
+       <div class="bg-cyber-dark/50 backdrop-filter backdrop-blur-xl rounded-xl p-8 border border-neon-cyan/10">
+        <h3 class="font-orbitron font-bold text-xl mb-8 text-center">📊 Community Stats</h3>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+         <div class="text-center stat-number">
+          <div class="font-orbitron font-black text-4xl bg-gradient-to-r from-neon-green to-neon-cyan bg-clip-text text-transparent mb-2" id="stat-members">
+           5,000+
+          </div>
+          <p class="text-gray-400 text-sm">Active Members</p>
+         </div>
+         <div class="text-center stat-number" style="animation-delay: 0.2s;">
+          <div class="font-orbitron font-black text-4xl bg-gradient-to-r from-neon-cyan to-neon-purple bg-clip-text text-transparent mb-2" id="stat-tasks">
+           50,000+
+          </div>
+          <p class="text-gray-400 text-sm">Tasks Completed</p>
+         </div>
+         <div class="text-center stat-number" style="animation-delay: 0.4s;">
+          <div class="font-orbitron font-black text-4xl bg-gradient-to-r from-neon-purple to-neon-pink bg-clip-text text-transparent mb-2" id="stat-rewards">
+           100,000+
+          </div>
+          <p class="text-gray-400 text-sm">Rewards Earned</p>
+         </div>
+        </div>
+       </div>
+      </div>
+     </div>
+    </div>
+   </section><!-- FINAL CTA SECTION -->
+   <section class="px-4 py-16">
+    <div class="max-w-4xl mx-auto">
+     <div class="glass-card rounded-2xl p-8 md:p-12 relative overflow-hidden text-center">
+      <div class="absolute top-0 right-0 w-48 h-48 bg-neon-green/5 rounded-full blur-3xl pointer-events-none"></div>
+      <div class="relative z-10">
+       <div class="flex justify-center mb-6">
+        <div class="w-20 h-20 rounded-full bg-gradient-to-br from-neon-green/20 to-neon-cyan/20 flex items-center justify-center"><i data-lucide="rocket" class="w-10 h-10 text-neon-green"></i>
+        </div>
+       </div>
+       <h2 class="font-orbitron font-bold text-3xl md:text-4xl mb-4">Don't Just Watch. Get Involved.</h2>
+       <p class="text-gray-400 mb-10 text-lg">The future of food, tech, and community is being built right now. Be part of it.</p>
+       <div class="flex flex-col sm:flex-row gap-4 justify-center"><a href="https://chat.whatsapp.com/HyNNfNplBLM409sYzcyIEs" target="_blank" rel="noopener noreferrer" class="btn-neon inline-flex items-center justify-center gap-2 bg-gradient-to-r from-neon-green to-neon-cyan px-8 py-3 rounded-full font-orbitron font-semibold text-sm tracking-wider text-cyber-dark hover:shadow-lg hover:shadow-neon-green/30 transition-all"> <i data-lucide="message-circle" class="w-5 h-5"></i>Join Community </a> <a href="/pages/missions.html" class="btn-neon inline-flex items-center justify-center gap-2 bg-neon-cyan/20 text-neon-cyan px-8 py-3 rounded-full font-orbitron font-semibold text-sm tracking-wider border border-neon-cyan/50 hover:bg-neon-cyan/30 transition-all"> <i data-lucide="zap" class="w-5 h-5"></i>Start Missions </a> <a href="https://cyber-donuts.github.io/" target="_blank" rel="noopener noreferrer" class="btn-neon inline-flex items-center justify-center gap-2 bg-neon-purple/20 text-neon-purple px-8 py-3 rounded-full font-orbitron font-semibold text-sm tracking-wider border border-neon-purple/50 hover:bg-neon-purple/30 transition-all"> <i data-lucide="external-link" class="w-5 h-5"></i>Explore Platform </a>
+       </div>
+      </div>
+     </div>
+    </div>
+   </section><!-- FOOTER -->
+   <footer class="border-t border-neon-cyan/10 py-12 px-4 mt-12">
+    <div class="max-w-6xl mx-auto">
+     <div class="grid grid-cols-1 md:grid-cols-3 gap-10 mb-10">
+      <div>
+       <div class="flex items-center gap-2 mb-4"><span class="text-2xl">🍩</span> <span class="font-orbitron font-bold text-lg neon-glow">Cyber Donuts</span>
+       </div>
+       <p class="text-gray-500 text-sm mb-4">Eat. Earn. Connect. — Where flavor meets the future.</p>
+       <div class="flex gap-3"><a href="https://chat.whatsapp.com/HyNNfNplBLM409sYzcyIEs" target="_blank" rel="noopener noreferrer" class="w-9 h-9 rounded-full bg-neon-cyan/10 flex items-center justify-center hover:bg-neon-cyan/20 transition-colors"> <i data-lucide="message-circle" class="w-4 h-4 text-neon-cyan"></i> </a> <a href="https://t.me/CyberDonutsCommunity" target="_blank" rel="noopener noreferrer" class="w-9 h-9 rounded-full bg-neon-cyan/10 flex items-center justify-center hover:bg-neon-cyan/20 transition-colors"> <i data-lucide="send" class="w-4 h-4 text-neon-cyan"></i> </a> <a href="https://cyber-donuts.github.io/" target="_blank" rel="noopener noreferrer" class="w-9 h-9 rounded-full bg-neon-cyan/10 flex items-center justify-center hover:bg-neon-cyan/20 transition-colors"> <i data-lucide="globe" class="w-4 h-4 text-neon-cyan"></i> </a>
+       </div>
+      </div>
+      <div>
+       <h4 class="font-orbitron font-bold text-sm mb-4 text-neon-cyan">Pages</h4>
+       <div class="flex flex-col gap-2"><a href="/" class="text-gray-500 text-sm hover:text-neon-cyan transition-colors">Home</a> <a href="/pages/earn.html" class="text-gray-500 text-sm hover:text-neon-cyan transition-colors">Earn</a> <a href="/pages/services.html" class="text-gray-500 text-sm hover:text-neon-cyan transition-colors">Services</a> <a href="/pages/community.html" class="text-neon-cyan text-sm font-medium">Community</a>
+       </div>
+      </div>
+      <div>
+       <h4 class="font-orbitron font-bold text-sm mb-4 text-neon-cyan">Contact</h4>
+       <div class="flex flex-col gap-3"><a href="tel:+254798692443" class="flex items-center gap-2 text-gray-500 text-sm hover:text-neon-cyan transition-colors"> <i data-lucide="phone" class="w-4 h-4"></i> +254 798 692 443 </a> <a href="https://wa.me/254798692443" target="_blank" rel="noopener noreferrer" class="flex items-center gap-2 text-gray-500 text-sm hover:text-neon-green transition-colors"> <i data-lucide="message-circle" class="w-4 h-4"></i> WhatsApp Us </a> <a href="https://cyber-donuts.github.io/" target="_blank" rel="noopener noreferrer" class="flex items-center gap-2 text-gray-500 text-sm hover:text-neon-cyan transition-colors"> <i data-lucide="globe" class="w-4 h-4"></i> cyber-donuts.github.io </a>
+       </div>
+      </div>
+     </div>
+     <div class="border-t border-gray-800 pt-6 flex flex-col sm:flex-row items-center justify-between gap-4">
+      <p class="text-gray-600 text-xs">© 2025 Cyber Donuts. All rights reserved.</p>
+      <p class="text-gray-700 text-xs">Built with 🍩 and code</p>
+     </div>
+    </div>
+   </footer>
+  </div>
+  <script>
+    // Initialize Lucide icons
+    lucide.createIcons();
+
+    // Mobile menu toggle
+    const menuBtn = document.getElementById('mobile-menu-btn');
+    const mobileMenu = document.getElementById('mobile-menu');
+    let menuOpen = false;
+    menuBtn.addEventListener('click', () => {
+      menuOpen = !menuOpen;
+      mobileMenu.classList.toggle('hidden', !menuOpen);
+    });
+
+    // Data SDK handler
+    let membersData = [];
+
+    const dataHandler = {
+      onDataChanged(data) {
+        membersData = data;
+        updateCommunityStats();
+      }
+    };
+
+    async function initDataSDK() {
+      if (window.dataSdk) {
+        const result = await window.dataSdk.init(dataHandler);
+        if (!result.isOk) console.error('SDK init failed');
+      }
+    }
+
+    function updateCommunityStats() {
+      const memberCount = membersData.length;
+      const tasksCompleted = membersData.reduce((sum, m) => sum + (m.engagement_points || 0), 0);
+      const referralsCount = membersData.reduce((sum, m) => sum + (m.referrals || 0), 0);
+
+      document.getElementById('stat-members').textContent = (5000 + memberCount).toLocaleString() + '+';
+      document.getElementById('stat-tasks').textContent = (50000 + tasksCompleted).toLocaleString() + '+';
+      document.getElementById('stat-rewards').textContent = (100000 + referralsCount).toLocaleString() + '+';
+    }
+
+    // Element SDK
+    const defaultConfig = {
+      page_title: 'Join the Cyber Donuts Movement',
+      page_subtitle: 'Connect. Earn. Grow together.',
+      hero_description: 'Be part of a global community where food, technology, and opportunity meet.',
+      platforms_title: '🌐 Join Our Platforms',
+      features_title: '🎮 Community Features',
+      why_join_title: '❓ Why Join Cyber Donuts?',
+      background_color: '#0a0a1a',
+      surface_color: '#12122a',
+      text_color: '#ffffff',
+      primary_action_color: '#00f0ff',
+      secondary_action_color: '#39ff14',
+      font_family: 'Exo 2',
+      font_size: 16,
+    };
+
+    function applyConfig(config) {
+      const c = { ...defaultConfig, ...config };
+      document.getElementById('page-title').textContent = c.page_title;
+      document.getElementById('page-subtitle').textContent = c.page_subtitle;
+      document.getElementById('hero-description').textContent = c.hero_description;
+      document.getElementById('platforms-title').textContent = c.platforms_title;
+      document.getElementById('features-title').textContent = c.features_title;
+      document.getElementById('why-join-title').textContent = c.why_join_title;
+
+      const wrapper = document.getElementById('app-wrapper');
+      wrapper.style.backgroundColor = c.background_color;
+      document.querySelectorAll('.glass-card').forEach(el => el.style.backgroundColor = c.surface_color + '99');
+
+      const fontStack = `${c.font_family}, Exo 2, sans-serif`;
+      document.body.style.fontFamily = fontStack;
+    }
+
+    if (window.elementSdk) {
+      window.elementSdk.init({
+        defaultConfig,
+        onConfigChange: async (config) => applyConfig(config),
+        mapToCapabilities: (config) => {
+          const c = { ...defaultConfig, ...config };
+          return {
+            recolorables: [
+              { get: () => c.background_color, set: (v) => { c.background_color = v; window.elementSdk.setConfig({ background_color: v }); } },
+              { get: () => c.surface_color, set: (v) => { c.surface_color = v; window.elementSdk.setConfig({ surface_color: v }); } },
+              { get: () => c.text_color, set: (v) => { c.text_color = v; window.elementSdk.setConfig({ text_color: v }); } },
+              { get: () => c.primary_action_color, set: (v) => { c.primary_action_color = v; window.elementSdk.setConfig({ primary_action_color: v }); } },
+              { get: () => c.secondary_action_color, set: (v) => { c.secondary_action_color = v; window.elementSdk.setConfig({ secondary_action_color: v }); } }
+            ],
+            borderables: [],
+            fontEditable: { get: () => c.font_family, set: (v) => { c.font_family = v; window.elementSdk.setConfig({ font_family: v }); } },
+            fontSizeable: { get: () => c.font_size, set: (v) => { c.font_size = v; window.elementSdk.setConfig({ font_size: v }); } }
+          };
+        },
+        mapToEditPanelValues: (config) => {
+          const c = { ...defaultConfig, ...config };
+          return new Map([
+            ['page_title', c.page_title],
+            ['page_subtitle', c.page_subtitle],
+            ['hero_description', c.hero_description],
+            ['platforms_title', c.platforms_title],
+            ['features_title', c.features_title],
+            ['why_join_title', c.why_join_title],
+          ]);
+        }
+      });
+    }
+
+    // Initialize Data SDK
+    initDataSDK();
+  </script>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9de194a2d5b68a5e',t:'MTc3MzgwOTA1MC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+    </html>
