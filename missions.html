@@ -1,0 +1,1272 @@
+<!doctype html>
+<html lang="en" class="h-full">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Missions — Cyber Donuts</title>
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <script src="https://cdn.jsdelivr.net/npm/lucide@0.263.0/dist/umd/lucide.min.js"></script>
+  <script src="/_sdk/element_sdk.js"></script>
+  <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&amp;family=Exo+2:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            orbitron: ['Orbitron', 'sans-serif'],
+            exo: ['Exo 2', 'sans-serif'],
+          },
+          colors: {
+            neon: {
+              pink: '#ff2d7b',
+              cyan: '#00f0ff',
+              purple: '#b44dff',
+              green: '#39ff14',
+              yellow: '#ffe600',
+            },
+            cyber: {
+              dark: '#0a0a1a',
+              card: '#12122a',
+              surface: '#1a1a3e',
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    html, body { height: 100%; margin: 0; }
+
+    .glass-card {
+      background: rgba(18, 18, 42, 0.6);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(0, 240, 255, 0.15);
+    }
+
+    .glass-nav {
+      background: rgba(10, 10, 26, 0.85);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-bottom: 1px solid rgba(0, 240, 255, 0.1);
+    }
+
+    .neon-glow {
+      text-shadow: 0 0 10px rgba(0, 240, 255, 0.5), 0 0 40px rgba(0, 240, 255, 0.2);
+    }
+
+    .btn-neon {
+      position: relative;
+      overflow: hidden;
+      transition: all 0.3s ease;
+    }
+    .btn-neon::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+      transform: translateX(-100%);
+      transition: transform 0.5s ease;
+    }
+    .btn-neon:hover::before {
+      transform: translateX(100%);
+    }
+
+    .grid-bg {
+      background-image:
+        linear-gradient(rgba(0, 240, 255, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 240, 255, 0.03) 1px, transparent 1px);
+      background-size: 60px 60px;
+    }
+
+    .card-hover {
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .card-hover:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 0 30px rgba(0, 240, 255, 0.15);
+    }
+
+    .mission-card {
+      transition: all 0.3s ease;
+    }
+    .mission-card.completed {
+      background: rgba(57, 255, 20, 0.05) !important;
+      border-color: rgba(57, 255, 20, 0.3) !important;
+    }
+
+    .scrollbar-hide::-webkit-scrollbar { display: none; }
+    .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+
+    .fade-in {
+      animation: fadeInUp 0.6s ease forwards;
+    }
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes slideInLeft {
+      from { opacity: 0; transform: translateX(-20px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+
+    @keyframes popUp {
+      0% { opacity: 0; transform: scale(0.5); }
+      50% { transform: scale(1.1); }
+      100% { opacity: 1; transform: scale(1); }
+    }
+
+    .slide-in { animation: slideInLeft 0.4s ease; }
+    .pop-up { animation: popUp 0.5s ease; }
+
+    .progress-fill {
+      transition: width 0.5s ease;
+    }
+
+    .xp-badge {
+      animation: popUp 0.6s ease;
+    }
+
+    .mission-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 1.5rem;
+    }
+
+    @media (max-width: 768px) {
+      .mission-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .checkbox-custom {
+      appearance: none;
+      width: 24px;
+      height: 24px;
+      border: 2px solid rgba(0, 240, 255, 0.5);
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      background: transparent;
+    }
+    .checkbox-custom:checked {
+      background: linear-gradient(135deg, #00f0ff, #39ff14);
+      border-color: #39ff14;
+    }
+    .checkbox-custom:checked::after {
+      content: '✓';
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      height: 100%;
+      color: #0a0a1a;
+      font-weight: bold;
+    }
+
+    .tier-badge {
+      display: inline-block;
+      padding: 6px 12px;
+      border-radius: 8px;
+      font-size: 0.75rem;
+      font-weight: bold;
+      font-family: 'Orbitron', sans-serif;
+    }
+    .tier-starter { background: rgba(100, 100, 255, 0.2); color: #6464ff; }
+    .tier-active { background: rgba(0, 240, 255, 0.2); color: #00f0ff; }
+    .tier-pro { background: rgba(180, 77, 255, 0.2); color: #b44dff; }
+    .tier-elite { background: rgba(255, 230, 0, 0.2); color: #ffe600; }
+
+    .reward-popup {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: rgba(10, 10, 26, 0.95);
+      border: 2px solid #39ff14;
+      border-radius: 16px;
+      padding: 32px;
+      text-align: center;
+      z-index: 999;
+      animation: popUp 0.6s ease;
+      backdrop-filter: blur(20px);
+    }
+  </style>
+  <style>body { box-sizing: border-box; }</style>
+ </head>
+ <body class="h-full bg-cyber-dark text-white font-exo overflow-auto scrollbar-hide">
+  <div id="app-wrapper" class="w-full h-full overflow-auto scrollbar-hide grid-bg"><!-- NAVBAR -->
+   <nav class="glass-nav fixed top-0 left-0 w-full z-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+     <div class="flex items-center justify-between h-16">
+      <a href="/" class="flex items-center gap-2"> <span class="text-2xl">🍩</span> <span class="font-orbitron font-bold text-lg neon-glow">Cyber Donuts</span> </a>
+      <div class="hidden md:flex items-center gap-6">
+       <a href="/" class="text-gray-400 text-sm hover:text-neon-cyan transition-colors">Home</a> <a href="/pages/earn.html" class="text-gray-400 text-sm hover:text-neon-cyan transition-colors">Earn</a> <a href="/pages/services.html" class="text-gray-400 text-sm hover:text-neon-cyan transition-colors">Services</a> <a href="/pages/community.html" target="_blank" rel="noopener noreferrer" class="text-gray-400 text-sm hover:text-neon-cyan transition-colors">Community</a> <a href="/pages/cbd-token.html" target="_blank" rel="noopener noreferrer" class="text-gray-400 text-sm hover:text-neon-cyan transition-colors">CBD Token</a> <a href="/pages/missions.html" class="text-neon-cyan text-sm font-medium">Missions</a>
+      </div><button id="mobile-menu-btn" class="md:hidden text-neon-cyan p-2" aria-label="Toggle menu"> <i data-lucide="menu" class="w-6 h-6"></i> </button>
+     </div>
+    </div><!-- Mobile Menu -->
+    <div id="mobile-menu" class="hidden md:hidden glass-card border-t border-neon-cyan/10">
+     <div class="px-4 py-4 flex flex-col gap-3">
+      <a href="/" class="text-gray-400 text-sm py-2 hover:text-neon-cyan transition-colors">Home</a> <a href="/pages/earn.html" class="text-gray-400 text-sm py-2 hover:text-neon-cyan transition-colors">Earn</a> <a href="/pages/services.html" class="text-gray-400 text-sm py-2 hover:text-neon-cyan transition-colors">Services</a> <a href="/pages/community.html" target="_blank" rel="noopener noreferrer" class="text-gray-400 text-sm py-2 hover:text-neon-cyan transition-colors">Community</a> <a href="/pages/cbd-token.html" target="_blank" rel="noopener noreferrer" class="text-gray-400 text-sm py-2 hover:text-neon-cyan transition-colors">CBD Token</a> <a href="/pages/missions.html" class="text-neon-cyan text-sm font-medium py-2">Missions</a>
+     </div>
+    </div>
+   </nav><!-- HERO SECTION -->
+   <header class="relative pt-32 pb-12 px-4 overflow-hidden">
+    <div class="max-w-6xl mx-auto">
+     <div class="text-center fade-in">
+      <h1 id="page-title" class="font-orbitron font-black text-4xl sm:text-5xl lg:text-6xl mb-4 bg-gradient-to-r from-neon-green via-neon-cyan to-neon-purple bg-clip-text text-transparent">Complete Missions. Unlock Rewards.</h1>
+      <p id="page-subtitle" class="text-lg sm:text-xl text-gray-400 max-w-2xl mx-auto mb-8">The more involved you are, the more you unlock 🔑</p><!-- XP Progress -->
+      <div class="mt-12 max-w-2xl mx-auto glass-card rounded-xl p-6">
+       <div class="flex items-center justify-between mb-4">
+        <div class="flex items-center gap-3">
+         <div class="w-12 h-12 rounded-lg bg-gradient-to-br from-neon-cyan/20 to-neon-purple/20 flex items-center justify-center">
+          <i data-lucide="zap" class="w-6 h-6 text-neon-cyan"></i>
+         </div>
+         <div class="text-left">
+          <p class="text-xs text-gray-500">LEVEL</p>
+          <p class="font-orbitron font-bold text-xl text-neon-cyan" id="user-level">Starter</p>
+         </div>
+        </div>
+        <div class="text-right">
+         <p class="text-xs text-gray-500">XP PROGRESS</p>
+         <p class="font-orbitron font-bold text-lg text-neon-green" id="user-xp">0 / 500</p>
+        </div>
+       </div>
+       <div class="w-full h-3 bg-cyber-dark rounded-full overflow-hidden border border-neon-cyan/20">
+        <div class="progress-fill h-full bg-gradient-to-r from-neon-cyan to-neon-green" id="xp-bar" style="width: 0%"></div>
+       </div>
+       <p class="text-xs text-gray-500 mt-3">Complete missions to earn XP and unlock new features</p>
+      </div>
+     </div>
+    </div>
+   </header><!-- MISSIONS GRID -->
+   <section class="px-4 py-12">
+    <div class="max-w-6xl mx-auto"><!-- Web3 & Earning Missions -->
+     <div class="mb-20" data-category="web3">
+      <h2 id="web3-category-title" class="font-orbitron font-bold text-3xl mb-8 flex items-center gap-3">
+       <div class="w-10 h-10 rounded-lg bg-gradient-to-br from-neon-cyan/20 to-neon-purple/20 flex items-center justify-center">
+        <i data-lucide="link-2" class="w-5 h-5 text-neon-cyan"></i>
+       </div>🔗 Web3 &amp; Earning Missions</h2>
+      <div class="mission-grid"><!-- Sweatcoin -->
+       <div class="glass-card rounded-xl p-6 card-hover mission-card fade-in" data-mission-id="m_sweatcoin" data-category="web3" style="animation-delay: 0.1s;">
+        <div class="flex items-start justify-between mb-4">
+         <div class="flex items-center gap-3">
+          <div class="w-12 h-12 rounded-lg bg-gradient-to-br from-neon-cyan/20 to-neon-blue/20 flex items-center justify-center">
+           <i data-lucide="coins" class="w-6 h-6 text-neon-cyan"></i>
+          </div>
+          <div>
+           <h3 class="font-orbitron font-bold text-lg">Sweatcoin App</h3>
+           <p class="text-xs text-gray-500">Earn coins by walking</p>
+          </div>
+         </div><input type="checkbox" class="checkbox-custom mission-checkbox" data-mission-id="m_sweatcoin">
+        </div>
+        <div class="mb-4">
+         <p class="text-sm text-gray-400 mb-3">Download &amp; join the Sweatcoin community. Earn crypto while walking.</p>
+         <div class="flex gap-2"><span class="tier-badge tier-starter">+100 XP</span> <span class="tier-badge tier-active">+CBD</span>
+         </div>
+        </div><a href="https://w2.swcapp.com/i/macreatives" target="_blank" rel="noopener noreferrer" class="btn-neon w-full bg-neon-cyan/20 text-neon-cyan px-4 py-2 rounded-lg hover:bg-neon-cyan/30 text-sm font-bold transition-colors flex items-center justify-center gap-2"> <i data-lucide="external-link" class="w-4 h-4"></i>Start Mission </a>
+       </div><!-- Sweat Wallet -->
+       <div class="glass-card rounded-xl p-6 card-hover mission-card fade-in" data-mission-id="m_sweat_wallet" data-category="web3" style="animation-delay: 0.15s;">
+        <div class="flex items-start justify-between mb-4">
+         <div class="flex items-center gap-3">
+          <div class="w-12 h-12 rounded-lg bg-gradient-to-br from-neon-purple/20 to-neon-pink/20 flex items-center justify-center">
+           <i data-lucide="wallet" class="w-6 h-6 text-neon-purple"></i>
+          </div>
+          <div>
+           <h3 class="font-orbitron font-bold text-lg">Sweat Wallet</h3>
+           <p class="text-xs text-gray-500">Web3 wallet rewards</p>
+          </div>
+         </div><input type="checkbox" class="checkbox-custom mission-checkbox" data-mission-id="m_sweat_wallet">
+        </div>
+        <div class="mb-4">
+         <p class="text-sm text-gray-400 mb-3">Set up your Sweat Wallet and claim rewards.</p>
+         <div class="flex gap-2"><span class="tier-badge tier-starter">+100 XP</span> <span class="tier-badge tier-active">+CBD</span>
+         </div>
+        </div><a href="https://swe.at/r/40mmQNQ50v" target="_blank" rel="noopener noreferrer" class="btn-neon w-full bg-neon-cyan/20 text-neon-cyan px-4 py-2 rounded-lg hover:bg-neon-cyan/30 text-sm font-bold transition-colors flex items-center justify-center gap-2"> <i data-lucide="external-link" class="w-4 h-4"></i>Start Mission </a>
+       </div><!-- MEC App -->
+       <div class="glass-card rounded-xl p-6 card-hover mission-card fade-in" data-mission-id="m_mec" data-category="web3" style="animation-delay: 0.2s;">
+        <div class="flex items-start justify-between mb-4">
+         <div class="flex items-center gap-3">
+          <div class="w-12 h-12 rounded-lg bg-gradient-to-br from-neon-green/20 to-neon-cyan/20 flex items-center justify-center">
+           <i data-lucide="activity" class="w-6 h-6 text-neon-green"></i>
+          </div>
+          <div>
+           <h3 class="font-orbitron font-bold text-lg">MEC App</h3>
+           <p class="text-xs text-gray-500">Move-to-Earn platform</p>
+          </div>
+         </div><input type="checkbox" class="checkbox-custom mission-checkbox" data-mission-id="m_mec">
+        </div>
+        <div class="mb-4">
+         <p class="text-sm text-gray-400 mb-3">Join MEC and earn rewards for your movements.</p>
+         <div class="flex gap-2"><span class="tier-badge tier-starter">+100 XP</span> <span class="tier-badge tier-active">+CBD</span>
+         </div>
+        </div><a href="https://i.mec.me/?c=xu6us1z1" target="_blank" rel="noopener noreferrer" class="btn-neon w-full bg-neon-cyan/20 text-neon-cyan px-4 py-2 rounded-lg hover:bg-neon-cyan/30 text-sm font-bold transition-colors flex items-center justify-center gap-2"> <i data-lucide="external-link" class="w-4 h-4"></i>Start Mission </a>
+       </div><!-- Pi Network -->
+       <div class="glass-card rounded-xl p-6 card-hover mission-card fade-in" data-mission-id="m_pi" data-category="web3" style="animation-delay: 0.25s;">
+        <div class="flex items-start justify-between mb-4">
+         <div class="flex items-center gap-3">
+          <div class="w-12 h-12 rounded-lg bg-gradient-to-br from-neon-yellow/20 to-neon-green/20 flex items-center justify-center">
+           <i data-lucide="circle" class="w-6 h-6 text-neon-yellow"></i>
+          </div>
+          <div>
+           <h3 class="font-orbitron font-bold text-lg">Pi Network</h3>
+           <p class="text-xs text-gray-500">Mine Pi cryptocurrency</p>
+          </div>
+         </div><input type="checkbox" class="checkbox-custom mission-checkbox" data-mission-id="m_pi">
+        </div>
+        <div class="mb-4">
+         <p class="text-sm text-gray-400 mb-3">Join using code <span class="font-mono text-neon-yellow font-bold">macreatives</span></p>
+         <div class="flex gap-2"><span class="tier-badge tier-starter">+100 XP</span> <span class="tier-badge tier-active">+CBD</span>
+         </div>
+        </div><a href="https://minepi.com/macreatives" target="_blank" rel="noopener noreferrer" class="btn-neon w-full bg-neon-cyan/20 text-neon-cyan px-4 py-2 rounded-lg hover:bg-neon-cyan/30 text-sm font-bold transition-colors flex items-center justify-center gap-2"> <i data-lucide="external-link" class="w-4 h-4"></i>Start Mission </a>
+       </div>
+      </div>
+     </div><!-- Social Engagement Missions -->
+     <div class="mb-20" data-category="social">
+      <h2 id="social-category-title" class="font-orbitron font-bold text-3xl mb-8 flex items-center gap-3">
+       <div class="w-10 h-10 rounded-lg bg-gradient-to-br from-neon-pink/20 to-neon-purple/20 flex items-center justify-center">
+        <i data-lucide="share-2" class="w-5 h-5 text-neon-pink"></i>
+       </div>📱 Social Engagement Missions</h2>
+      <div class="mission-grid"><!-- Join WhatsApp Group -->
+       <div class="glass-card rounded-xl p-6 card-hover mission-card fade-in" data-mission-id="m_whatsapp_group" data-category="social" style="animation-delay: 0.1s;">
+        <div class="flex items-start justify-between mb-4">
+         <div class="flex items-center gap-3">
+          <div class="w-12 h-12 rounded-lg bg-gradient-to-br from-neon-green/20 to-neon-cyan/20 flex items-center justify-center">
+           <i data-lucide="message-circle" class="w-6 h-6 text-neon-green"></i>
+          </div>
+          <div>
+           <h3 class="font-orbitron font-bold text-lg">Join WhatsApp Group</h3>
+           <p class="text-xs text-gray-500">Community connection</p>
+          </div>
+         </div><input type="checkbox" class="checkbox-custom mission-checkbox" data-mission-id="m_whatsapp_group">
+        </div>
+        <div class="mb-4">
+         <p class="text-sm text-gray-400 mb-3">Join our active WhatsApp community.</p>
+         <div class="flex gap-2"><span class="tier-badge tier-starter">+50 XP</span> <span class="tier-badge tier-active">+CBD</span>
+         </div>
+        </div><a href="https://chat.whatsapp.com/HyNNfNplBLM409sYzcyIEs" target="_blank" rel="noopener noreferrer" class="btn-neon w-full bg-neon-green/20 text-neon-green px-4 py-2 rounded-lg hover:bg-neon-green/30 text-sm font-bold transition-colors flex items-center justify-center gap-2"> <i data-lucide="external-link" class="w-4 h-4"></i>Join Now </a>
+       </div><!-- Follow WhatsApp Channel -->
+       <div class="glass-card rounded-xl p-6 card-hover mission-card fade-in" data-mission-id="m_whatsapp_channel" data-category="social" style="animation-delay: 0.15s;">
+        <div class="flex items-start justify-between mb-4">
+         <div class="flex items-center gap-3">
+          <div class="w-12 h-12 rounded-lg bg-gradient-to-br from-neon-cyan/20 to-neon-green/20 flex items-center justify-center">
+           <i data-lucide="bell" class="w-6 h-6 text-neon-cyan"></i>
+          </div>
+          <div>
+           <h3 class="font-orbitron font-bold text-lg">Follow WhatsApp Channel</h3>
+           <p class="text-xs text-gray-500">Stay updated</p>
+          </div>
+         </div><input type="checkbox" class="checkbox-custom mission-checkbox" data-mission-id="m_whatsapp_channel">
+        </div>
+        <div class="mb-4">
+         <p class="text-sm text-gray-400 mb-3">Follow our updates and announcements.</p>
+         <div class="flex gap-2"><span class="tier-badge tier-starter">+50 XP</span> <span class="tier-badge tier-active">+CBD</span>
+         </div>
+        </div><a href="https://whatsapp.com/channel/0029Vaoabui1yT22hZlAH019" target="_blank" rel="noopener noreferrer" class="btn-neon w-full bg-neon-cyan/20 text-neon-cyan px-4 py-2 rounded-lg hover:bg-neon-cyan/30 text-sm font-bold transition-colors flex items-center justify-center gap-2"> <i data-lucide="external-link" class="w-4 h-4"></i>Follow Now </a>
+       </div><!-- Visit Website -->
+       <div class="glass-card rounded-xl p-6 card-hover mission-card fade-in" data-mission-id="m_website" data-category="social" style="animation-delay: 0.2s;">
+        <div class="flex items-start justify-between mb-4">
+         <div class="flex items-center gap-3">
+          <div class="w-12 h-12 rounded-lg bg-gradient-to-br from-neon-purple/20 to-neon-pink/20 flex items-center justify-center">
+           <i data-lucide="globe" class="w-6 h-6 text-neon-purple"></i>
+          </div>
+          <div>
+           <h3 class="font-orbitron font-bold text-lg">Visit Website</h3>
+           <p class="text-xs text-gray-500">Explore our world</p>
+          </div>
+         </div><input type="checkbox" class="checkbox-custom mission-checkbox" data-mission-id="m_website">
+        </div>
+        <div class="mb-4">
+         <p class="text-sm text-gray-400 mb-3">Check out Cyber Donuts online.</p>
+         <div class="flex gap-2"><span class="tier-badge tier-starter">+50 XP</span> <span class="tier-badge tier-active">+CBD</span>
+         </div>
+        </div><a href="https://cyber-donuts.github.io/" target="_blank" rel="noopener noreferrer" class="btn-neon w-full bg-neon-purple/20 text-neon-purple px-4 py-2 rounded-lg hover:bg-neon-purple/30 text-sm font-bold transition-colors flex items-center justify-center gap-2"> <i data-lucide="external-link" class="w-4 h-4"></i>Visit Site </a>
+       </div><!-- Share Cyber Donuts -->
+       <div class="glass-card rounded-xl p-6 card-hover mission-card fade-in" data-mission-id="m_share" data-category="social" style="animation-delay: 0.25s;">
+        <div class="flex items-start justify-between mb-4">
+         <div class="flex items-center gap-3">
+          <div class="w-12 h-12 rounded-lg bg-gradient-to-br from-neon-yellow/20 to-neon-pink/20 flex items-center justify-center">
+           <i data-lucide="send" class="w-6 h-6 text-neon-yellow"></i>
+          </div>
+          <div>
+           <h3 class="font-orbitron font-bold text-lg">Share Cyber Donuts</h3>
+           <p class="text-xs text-gray-500">Spread the word</p>
+          </div>
+         </div><input type="checkbox" class="checkbox-custom mission-checkbox" data-mission-id="m_share">
+        </div>
+        <div class="mb-4">
+         <p class="text-sm text-gray-400 mb-3">Tell your friends about Cyber Donuts!</p>
+         <div class="flex gap-2"><span class="tier-badge tier-starter">+75 XP</span> <span class="tier-badge tier-active">+CBD</span>
+         </div>
+        </div><button class="btn-neon w-full bg-neon-yellow/20 text-neon-yellow px-4 py-2 rounded-lg hover:bg-neon-yellow/30 text-sm font-bold transition-colors flex items-center justify-center gap-2" onclick="navigator.share ? navigator.share({title: 'Cyber Donuts', text: 'Check out Cyber Donuts - Eat. Earn. Connect! 🍩', url: 'https://cyber-donuts.github.io/'}) : alert('Share this: cyber-donuts.github.io')"> <i data-lucide="share-2" class="w-4 h-4"></i>Share </button>
+       </div>
+      </div>
+     </div><!-- Real-World Missions -->
+     <div class="mb-20" data-category="realworld">
+      <h2 id="realworld-category-title" class="font-orbitron font-bold text-3xl mb-8 flex items-center gap-3">
+       <div class="w-10 h-10 rounded-lg bg-gradient-to-br from-neon-green/20 to-neon-yellow/20 flex items-center justify-center">
+        <i data-lucide="map-pin" class="w-5 h-5 text-neon-green"></i>
+       </div>🌍 Real-World Missions</h2>
+      <div class="mission-grid"><!-- Buy a meal -->
+       <div class="glass-card rounded-xl p-6 card-hover mission-card fade-in" data-mission-id="m_meal" data-category="realworld" style="animation-delay: 0.1s;">
+        <div class="flex items-start justify-between mb-4">
+         <div class="flex items-center gap-3">
+          <div class="w-12 h-12 rounded-lg bg-gradient-to-br from-neon-cyan/20 to-neon-green/20 flex items-center justify-center">
+           <i data-lucide="utensils" class="w-6 h-6 text-neon-cyan"></i>
+          </div>
+          <div>
+           <h3 class="font-orbitron font-bold text-lg">Buy a Meal</h3>
+           <p class="text-xs text-gray-500">Enjoy our donuts</p>
+          </div>
+         </div><input type="checkbox" class="checkbox-custom mission-checkbox" data-mission-id="m_meal">
+        </div>
+        <div class="mb-4">
+         <p class="text-sm text-gray-400 mb-3">Visit Cyber Donuts and purchase a meal.</p>
+         <div class="flex gap-2"><span class="tier-badge tier-starter">+150 XP</span> <span class="tier-badge tier-active">+CBD</span>
+         </div>
+        </div><a href="https://wa.me/254798692443?text=Hi%20Cyber%20Donuts%21%20I%20want%20to%20order%20a%20meal" target="_blank" rel="noopener noreferrer" class="btn-neon w-full bg-neon-cyan/20 text-neon-cyan px-4 py-2 rounded-lg hover:bg-neon-cyan/30 text-sm font-bold transition-colors flex items-center justify-center gap-2"> <i data-lucide="phone" class="w-4 h-4"></i>Order Now </a>
+       </div><!-- Refer a customer -->
+       <div class="glass-card rounded-xl p-6 card-hover mission-card fade-in" data-mission-id="m_refer" data-category="realworld" style="animation-delay: 0.15s;">
+        <div class="flex items-start justify-between mb-4">
+         <div class="flex items-center gap-3">
+          <div class="w-12 h-12 rounded-lg bg-gradient-to-br from-neon-purple/20 to-neon-pink/20 flex items-center justify-center">
+           <i data-lucide="users" class="w-6 h-6 text-neon-purple"></i>
+          </div>
+          <div>
+           <h3 class="font-orbitron font-bold text-lg">Refer a Customer</h3>
+           <p class="text-xs text-gray-500">Earn rewards</p>
+          </div>
+         </div><input type="checkbox" class="checkbox-custom mission-checkbox" data-mission-id="m_refer">
+        </div>
+        <div class="mb-4">
+         <p class="text-sm text-gray-400 mb-3">Bring a friend to Cyber Donuts.</p>
+         <div class="flex gap-2"><span class="tier-badge tier-starter">+200 XP</span> <span class="tier-badge tier-pro">+CBD</span>
+         </div>
+        </div><button class="btn-neon w-full bg-neon-purple/20 text-neon-purple px-4 py-2 rounded-lg hover:bg-neon-purple/30 text-sm font-bold transition-colors flex items-center justify-center gap-2" data-mission-id="m_refer"> <i data-lucide="check-circle" class="w-4 h-4"></i>Mark Complete </button>
+       </div><!-- Use services -->
+       <div class="glass-card rounded-xl p-6 card-hover mission-card fade-in" data-mission-id="m_services" data-category="realworld" style="animation-delay: 0.2s;">
+        <div class="flex items-start justify-between mb-4">
+         <div class="flex items-center gap-3">
+          <div class="w-12 h-12 rounded-lg bg-gradient-to-br from-neon-yellow/20 to-neon-green/20 flex items-center justify-center">
+           <i data-lucide="laptop" class="w-6 h-6 text-neon-yellow"></i>
+          </div>
+          <div>
+           <h3 class="font-orbitron font-bold text-lg">Use Cyber Café Services</h3>
+           <p class="text-xs text-gray-500">Browse &amp; work</p>
+          </div>
+         </div><input type="checkbox" class="checkbox-custom mission-checkbox" data-mission-id="m_services">
+        </div>
+        <div class="mb-4">
+         <p class="text-sm text-gray-400 mb-3">Use printing, scanning, or internet services.</p>
+         <div class="flex gap-2"><span class="tier-badge tier-starter">+100 XP</span> <span class="tier-badge tier-active">+CBD</span>
+         </div>
+        </div><button class="btn-neon w-full bg-neon-yellow/20 text-neon-yellow px-4 py-2 rounded-lg hover:bg-neon-yellow/30 text-sm font-bold transition-colors flex items-center justify-center gap-2" data-mission-id="m_services"> <i data-lucide="check-circle" class="w-4 h-4"></i>Mark Complete </button>
+       </div><!-- Promote locally -->
+       <div class="glass-card rounded-xl p-6 card-hover mission-card fade-in" data-mission-id="m_promote" data-category="realworld" style="animation-delay: 0.25s;">
+        <div class="flex items-start justify-between mb-4">
+         <div class="flex items-center gap-3">
+          <div class="w-12 h-12 rounded-lg bg-gradient-to-br from-neon-pink/20 to-neon-purple/20 flex items-center justify-center">
+           <i data-lucide="megaphone" class="w-6 h-6 text-neon-pink"></i>
+          </div>
+          <div>
+           <h3 class="font-orbitron font-bold text-lg">Promote Locally</h3>
+           <p class="text-xs text-gray-500">Spread awareness</p>
+          </div>
+         </div><input type="checkbox" class="checkbox-custom mission-checkbox" data-mission-id="m_promote">
+        </div>
+        <div class="mb-4">
+         <p class="text-sm text-gray-400 mb-3">Tell your community about Cyber Donuts.</p>
+         <div class="flex gap-2"><span class="tier-badge tier-starter">+150 XP</span> <span class="tier-badge tier-pro">+CBD</span>
+         </div>
+        </div><button class="btn-neon w-full bg-neon-pink/20 text-neon-pink px-4 py-2 rounded-lg hover:bg-neon-pink/30 text-sm font-bold transition-colors flex items-center justify-center gap-2" data-mission-id="m_promote"> <i data-lucide="check-circle" class="w-4 h-4"></i>Mark Complete </button>
+       </div>
+      </div>
+     </div><!-- Learning Missions -->
+     <div class="mb-20" data-category="learning">
+      <h2 id="learning-category-title" class="font-orbitron font-bold text-3xl mb-8 flex items-center gap-3">
+       <div class="w-10 h-10 rounded-lg bg-gradient-to-br from-neon-yellow/20 to-neon-orange/20 flex items-center justify-center">
+        <i data-lucide="book-open" class="w-5 h-5 text-neon-yellow"></i>
+       </div>🧠 Learning Missions</h2>
+      <div class="mission-grid"><!-- Learn coding -->
+       <div class="glass-card rounded-xl p-6 card-hover mission-card fade-in" data-mission-id="m_mimo" data-category="learning" style="animation-delay: 0.1s;">
+        <div class="flex items-start justify-between mb-4">
+         <div class="flex items-center gap-3">
+          <div class="w-12 h-12 rounded-lg bg-gradient-to-br from-neon-cyan/20 to-neon-purple/20 flex items-center justify-center">
+           <i data-lucide="code" class="w-6 h-6 text-neon-cyan"></i>
+          </div>
+          <div>
+           <h3 class="font-orbitron font-bold text-lg">Learn Coding on Mimo</h3>
+           <p class="text-xs text-gray-500">Master programming</p>
+          </div>
+         </div><input type="checkbox" class="checkbox-custom mission-checkbox" data-mission-id="m_mimo">
+        </div>
+        <div class="mb-4">
+         <p class="text-sm text-gray-400 mb-3">Complete 5 lessons on the Mimo app.</p>
+         <div class="flex gap-2"><span class="tier-badge tier-starter">+250 XP</span> <span class="tier-badge tier-pro">+CBD</span>
+         </div>
+        </div><a href="https://getmimo.com/invite/78smly" target="_blank" rel="noopener noreferrer" class="btn-neon w-full bg-neon-cyan/20 text-neon-cyan px-4 py-2 rounded-lg hover:bg-neon-cyan/30 text-sm font-bold transition-colors flex items-center justify-center gap-2"> <i data-lucide="external-link" class="w-4 h-4"></i>Start Learning </a>
+       </div><!-- Complete lessons -->
+       <div class="glass-card rounded-xl p-6 card-hover mission-card fade-in" data-mission-id="m_lessons" data-category="learning" style="animation-delay: 0.15s;">
+        <div class="flex items-start justify-between mb-4">
+         <div class="flex items-center gap-3">
+          <div class="w-12 h-12 rounded-lg bg-gradient-to-br from-neon-green/20 to-neon-cyan/20 flex items-center justify-center">
+           <i data-lucide="check-square" class="w-6 h-6 text-neon-green"></i>
+          </div>
+          <div>
+           <h3 class="font-orbitron font-bold text-lg">Complete 10 Lessons</h3>
+           <p class="text-xs text-gray-500">Level up skills</p>
+          </div>
+         </div><input type="checkbox" class="checkbox-custom mission-checkbox" data-mission-id="m_lessons">
+        </div>
+        <div class="mb-4">
+         <p class="text-sm text-gray-400 mb-3">Finish 10 coding/tech lessons anywhere.</p>
+         <div class="flex gap-2"><span class="tier-badge tier-pro">+300 XP</span> <span class="tier-badge tier-elite">+CBD</span>
+         </div>
+        </div><button class="btn-neon w-full bg-neon-green/20 text-neon-green px-4 py-2 rounded-lg hover:bg-neon-green/30 text-sm font-bold transition-colors flex items-center justify-center gap-2" data-mission-id="m_lessons"> <i data-lucide="check-circle" class="w-4 h-4"></i>Mark Complete </button>
+       </div><!-- Share progress -->
+       <div class="glass-card rounded-xl p-6 card-hover mission-card fade-in" data-mission-id="m_share_progress" data-category="learning" style="animation-delay: 0.2s;">
+        <div class="flex items-start justify-between mb-4">
+         <div class="flex items-center gap-3">
+          <div class="w-12 h-12 rounded-lg bg-gradient-to-br from-neon-pink/20 to-neon-purple/20 flex items-center justify-center">
+           <i data-lucide="award" class="w-6 h-6 text-neon-pink"></i>
+          </div>
+          <div>
+           <h3 class="font-orbitron font-bold text-lg">Share Your Progress</h3>
+           <p class="text-xs text-gray-500">Inspire others</p>
+          </div>
+         </div><input type="checkbox" class="checkbox-custom mission-checkbox" data-mission-id="m_share_progress">
+        </div>
+        <div class="mb-4">
+         <p class="text-sm text-gray-400 mb-3">Share your learning achievements.</p>
+         <div class="flex gap-2"><span class="tier-badge tier-starter">+100 XP</span> <span class="tier-badge tier-active">+CBD</span>
+         </div>
+        </div><button class="btn-neon w-full bg-neon-pink/20 text-neon-pink px-4 py-2 rounded-lg hover:bg-neon-pink/30 text-sm font-bold transition-colors flex items-center justify-center gap-2" data-mission-id="m_share_progress"> <i data-lucide="share-2" class="w-4 h-4"></i>Share Now </button>
+       </div>
+      </div>
+     </div>
+    </div>
+   </section><!-- CTA SECTION -->
+   <section class="px-4 py-12">
+    <div class="max-w-4xl mx-auto">
+     <div class="glass-card rounded-2xl p-8 relative overflow-hidden">
+      <div class="absolute top-0 right-0 w-48 h-48 bg-neon-green/5 rounded-full blur-3xl pointer-events-none"></div>
+      <div class="relative z-10 text-center">
+       <div class="flex justify-center mb-6">
+        <div class="w-20 h-20 rounded-full bg-gradient-to-br from-neon-green/20 to-neon-cyan/20 flex items-center justify-center">
+         <i data-lucide="rocket" class="w-10 h-10 text-neon-green"></i>
+        </div>
+       </div>
+       <h2 class="font-orbitron font-bold text-3xl mb-4">Ready to Earn?</h2>
+       <p class="text-gray-400 mb-8 max-w-xl mx-auto">Start completing missions now and unlock CBD tokens, exclusive features, and amazing rewards!</p>
+       <div class="flex flex-wrap gap-4 justify-center"><a href="#" class="btn-neon inline-flex items-center gap-2 bg-gradient-to-r from-neon-green to-neon-cyan px-8 py-3 rounded-full font-orbitron font-semibold text-sm tracking-wider text-cyber-dark hover:shadow-lg hover:shadow-neon-green/30 transition-all"> <i data-lucide="zap" class="w-5 h-5"></i>Start Missions </a> <a href="https://wa.me/254798692443" target="_blank" rel="noopener noreferrer" class="btn-neon inline-flex items-center gap-2 bg-neon-cyan/20 text-neon-cyan px-8 py-3 rounded-full font-orbitron font-semibold text-sm tracking-wider border border-neon-cyan/50 hover:bg-neon-cyan/30 transition-all"> <i data-lucide="message-circle" class="w-5 h-5"></i>Ask Questions </a>
+       </div>
+      </div>
+     </div>
+    </div>
+   </section><!-- FOOTER -->
+   <footer class="border-t border-neon-cyan/10 py-12 px-4 mt-12">
+    <div class="max-w-6xl mx-auto">
+     <div class="grid grid-cols-1 md:grid-cols-3 gap-10 mb-10">
+      <div>
+       <div class="flex items-center gap-2 mb-4">
+        <span class="text-2xl">🍩</span> <span class="font-orbitron font-bold text-lg neon-glow">Cyber Donuts</span>
+       </div>
+       <p class="text-gray-500 text-sm mb-4">Eat. Earn. Connect. — Where flavor meets the future.</p>
+       <div class="flex gap-3">
+        <a href="https://chat.whatsapp.com/HyNNfNplBLM409sYzcyIEs" target="_blank" rel="noopener noreferrer" class="w-9 h-9 rounded-full bg-neon-cyan/10 flex items-center justify-center hover:bg-neon-cyan/20 transition-colors"><i data-lucide="message-circle" class="w-4 h-4 text-neon-cyan"></i></a> <a href="https://cyber-donuts.github.io/" target="_blank" rel="noopener noreferrer" class="w-9 h-9 rounded-full bg-neon-cyan/10 flex items-center justify-center hover:bg-neon-cyan/20 transition-colors"><i data-lucide="globe" class="w-4 h-4 text-neon-cyan"></i></a>
+       </div>
+      </div>
+      <div>
+       <h4 class="font-orbitron font-bold text-sm mb-4 text-neon-cyan">Pages</h4>
+       <div class="flex flex-col gap-2">
+        <a href="/" class="text-gray-500 text-sm hover:text-neon-cyan transition-colors">Home</a> <a href="/pages/earn.html" class="text-gray-500 text-sm hover:text-neon-cyan transition-colors">Earn</a> <a href="/pages/services.html" class="text-gray-500 text-sm hover:text-neon-cyan transition-colors">Services</a> <a href="/pages/missions.html" class="text-neon-cyan text-sm font-medium">Missions</a>
+       </div>
+      </div>
+      <div>
+       <h4 class="font-orbitron font-bold text-sm mb-4 text-neon-cyan">Contact</h4>
+       <div class="flex flex-col gap-3">
+        <a href="tel:+254798692443" class="flex items-center gap-2 text-gray-500 text-sm hover:text-neon-cyan transition-colors"><i data-lucide="phone" class="w-4 h-4"></i> +254 798 692 443 </a> <a href="https://wa.me/254798692443" target="_blank" rel="noopener noreferrer" class="flex items-center gap-2 text-gray-500 text-sm hover:text-neon-green transition-colors"><i data-lucide="message-circle" class="w-4 h-4"></i> WhatsApp Us </a> <a href="https://cyber-donuts.github.io/" target="_blank" rel="noopener noreferrer" class="flex items-center gap-2 text-gray-500 text-sm hover:text-neon-cyan transition-colors"><i data-lucide="globe" class="w-4 h-4"></i> cyber-donuts.github.io </a>
+       </div>
+      </div>
+     </div>
+     <div class="border-t border-gray-800 pt-6 flex flex-col sm:flex-row items-center justify-between gap-4">
+      <p class="text-gray-600 text-xs">© 2025 Cyber Donuts. All rights reserved.</p>
+      <p class="text-gray-700 text-xs">Built with 🍩 and code</p>
+     </div>
+    </div>
+   </footer><!-- Reward Popup -->
+   <div id="reward-popup" class="hidden reward-popup">
+    <div class="mb-6">
+     <div class="w-16 h-16 rounded-full bg-gradient-to-br from-neon-green to-neon-cyan flex items-center justify-center mx-auto mb-4"><i data-lucide="check-circle" class="w-8 h-8 text-cyber-dark"></i>
+     </div>
+    </div>
+    <h3 class="font-orbitron font-bold text-2xl mb-2 text-neon-green">Mission Complete!</h3>
+    <p class="text-gray-300 mb-4" id="reward-message">+50 XP Earned</p><button onclick="document.getElementById('reward-popup').classList.add('hidden')" class="btn-neon bg-neon-green/20 text-neon-green px-6 py-2 rounded-lg font-orbitron font-bold text-sm hover:bg-neon-green/30 transition-colors"> Awesome! </button>
+   </div>
+  </div>
+  <script>
+    // Initialize Lucide icons
+    lucide.createIcons();
+
+    // Mobile menu
+    const menuBtn = document.getElementById('mobile-menu-btn');
+    const mobileMenu = document.getElementById('mobile-menu');
+    let menuOpen = false;
+    menuBtn?.addEventListener('click', () => {
+      menuOpen = !menuOpen;
+      mobileMenu?.classList.toggle('hidden', !menuOpen);
+    });
+
+    // Data SDK handler
+    let missionsData = [];
+    let userXP = 0;
+    const xpPerLevel = 500;
+
+    const dataHandler = {
+      onDataChanged(data) {
+        missionsData = data;
+        updateMissionUI();
+        updateXPProgress();
+      }
+    };
+
+    async function initDataSDK() {
+      if (window.dataSdk) {
+        const result = await window.dataSdk.init(dataHandler);
+        if (!result.isOk) console.error('SDK init failed');
+      }
+    }
+
+    // Reference missions data
+    const referenceMissions = [
+      { id: 'm_sweatcoin', name: 'Sweatcoin App', xp: 100 },
+      { id: 'm_sweat_wallet', name: 'Sweat Wallet', xp: 100 },
+      { id: 'm_mec', name: 'MEC App', xp: 100 },
+      { id: 'm_pi', name: 'Pi Network', xp: 100 },
+      { id: 'm_whatsapp_group', name: 'Join WhatsApp Group', xp: 50 },
+      { id: 'm_whatsapp_channel', name: 'Follow WhatsApp Channel', xp: 50 },
+      { id: 'm_website', name: 'Visit Website', xp: 50 },
+      { id: 'm_share', name: 'Share Cyber Donuts', xp: 75 },
+      { id: 'm_meal', name: 'Buy a Meal', xp: 150 },
+      { id: 'm_refer', name: 'Refer a Customer', xp: 200 },
+      { id: 'm_services', name: 'Use Cyber Café Services', xp: 100 },
+      { id: 'm_promote', name: 'Promote Locally', xp: 150 },
+      { id: 'm_mimo', name: 'Learn Coding on Mimo', xp: 250 },
+      { id: 'm_lessons', name: 'Complete 10 Lessons', xp: 300 },
+      { id: 'm_share_progress', name: 'Share Your Progress', xp: 100 },
+    ];
+
+    function getMissionData(id) {
+      return missionsData.find(m => m.mission_id === id) || null;
+    }
+
+    function updateMissionUI() {
+      document.querySelectorAll('.mission-checkbox').forEach(checkbox => {
+        const missionId = checkbox.dataset.missionId;
+        const missionData = getMissionData(missionId);
+        checkbox.checked = missionData?.completed || false;
+
+        const card = checkbox.closest('.mission-card');
+        if (missionData?.completed) {
+          card.classList.add('completed');
+        } else {
+          card.classList.remove('completed');
+        }
+      });
+    }
+
+    function updateXPProgress() {
+      userXP = missionsData.reduce((sum, m) => sum + (m.completed ? (referenceMissions.find(r => r.id === m.mission_id)?.xp || 0) : 0), 0);
+      const level = Math.floor(userXP / xpPerLevel);
+      const levelNames = ['Starter', 'Active', 'Pro', 'Elite'];
+      const currentLevelName = levelNames[Math.min(level, 3)];
+      const xpInLevel = userXP % xpPerLevel;
+      const progressPercent = (xpInLevel / xpPerLevel) * 100;
+
+      document.getElementById('user-level').textContent = currentLevelName;
+      document.getElementById('user-xp').textContent = `${xpInLevel} / ${xpPerLevel}`;
+      document.getElementById('xp-bar').style.width = progressPercent + '%';
+    }
+
+    // Mission completion
+    document.querySelectorAll('.mission-checkbox').forEach(checkbox => {
+      checkbox.addEventListener('change', async (e) => {
+        const missionId = e.target.dataset.missionId;
+        const missionRef = referenceMissions.find(m => m.id === missionId);
+
+        if (!window.dataSdk) return;
+
+        let existingData = getMissionData(missionId);
+        if (!existingData) {
+          const result = await window.dataSdk.create({
+            mission_id: missionId,
+            mission_name: missionRef.name,
+            category: 'general',
+            completed: e.target.checked,
+            xp_earned: missionRef.xp,
+            completedAt: new Date().toISOString()
+          });
+          if (!result.isOk) {
+            e.target.checked = !e.target.checked;
+            alert('Error saving mission. Try again.');
+          }
+        } else {
+          const result = await window.dataSdk.update({
+            ...existingData,
+            completed: e.target.checked,
+            completedAt: e.target.checked ? new Date().toISOString() : ''
+          });
+          if (!result.isOk) {
+            e.target.checked = !e.target.checked;
+            alert('Error updating mission. Try again.');
+          }
+        }
+
+        if (e.target.checked) {
+          showRewardPopup(missionRef.xp);
+        }
+      });
+    });
+
+    function showRewardPopup(xp) {
+      const popup = document.getElementById('reward-popup');
+      document.getElementById('reward-message').textContent = `+${xp} XP Earned`;
+      popup.classList.remove('hidden');
+      setTimeout(() => popup.classList.add('hidden'), 3000);
+    }
+
+    // Element SDK
+    const defaultConfig = {
+      page_title: 'Complete Missions. Unlock Rewards.',
+      page_subtitle: 'The more involved you are, the more you unlock 🔑',
+      web3_category_title: '🔗 Web3 & Earning Missions',
+      social_category_title: '📱 Social Engagement Missions',
+      realworld_category_title: '🌍 Real-World Missions',
+      learning_category_title: '🧠 Learning Missions',
+      background_color: '#0a0a1a',
+      surface_color: '#12122a',
+      text_color: '#ffffff',
+      primary_action_color: '#00f0ff',
+      secondary_action_color: '#39ff14',
+      font_family: 'Exo 2',
+      font_size: 16,
+    };
+
+    function applyConfig(config) {
+      const c = { ...defaultConfig, ...config };
+      document.getElementById('page-title').textContent = c.page_title;
+      document.getElementById('page-subtitle').textContent = c.page_subtitle;
+      document.getElementById('web3-category-title').textContent = c.web3_category_title;
+      document.getElementById('social-category-title').textContent = c.social_category_title;
+      document.getElementById('realworld-category-title').textContent = c.realworld_category_title;
+      document.getElementById('learning-category-title').textContent = c.learning_category_title;
+
+      const wrapper = document.getElementById('app-wrapper');
+      wrapper.style.backgroundColor = c.background_color;
+      document.querySelectorAll('.glass-card').forEach(el => el.style.backgroundColor = c.surface_color + '99');
+
+      const fontStack = `${c.font_family}, Exo 2, sans-serif`;
+      document.body.style.fontFamily = fontStack;
+    }
+
+    if (window.elementSdk) {
+      window.elementSdk.init({
+        defaultConfig,
+        onConfigChange: async (config) => applyConfig(config),
+        mapToCapabilities: (config) => {
+          const c = { ...defaultConfig, ...config };
+          return {
+            recolorables: [
+              { get: () => c.background_color, set: (v) => { c.background_color = v; window.elementSdk.setConfig({ background_color: v }); } },
+              { get: () => c.surface_color, set: (v) => { c.surface_color = v; window.elementSdk.setConfig({ surface_color: v }); } },
+              { get: () => c.text_color, set: (v) => { c.text_color = v; window.elementSdk.setConfig({ text_color: v }); } },
+              { get: () => c.primary_action_color, set: (v) => { c.primary_action_color = v; window.elementSdk.setConfig({ primary_action_color: v }); } },
+              { get: () => c.secondary_action_color, set: (v) => { c.secondary_action_color = v; window.elementSdk.setConfig({ secondary_action_color: v }); } }
+            ],
+            borderables: [],
+            fontEditable: { get: () => c.font_family, set: (v) => { c.font_family = v; window.elementSdk.setConfig({ font_family: v }); } },
+            fontSizeable: { get: () => c.font_size, set: (v) => { c.font_size = v; window.elementSdk.setConfig({ font_size: v }); } }
+          };
+        },
+        mapToEditPanelValues: (config) => {
+          const c = { ...defaultConfig, ...config };
+          return new Map([
+            ['page_title', c.page_title],
+            ['page_subtitle', c.page_subtitle],
+            ['web3_category_title', c.web3_category_title],
+            ['social_category_title', c.social_category_title],
+            ['realworld_category_title', c.realworld_category_title],
+            ['learning_category_title', c.learning_category_title],
+          ]);
+        }
+      });
+    }
+
+    // Initialize
+    initDataSDK();
+  </script>
+  <section class="px-4 py-8 sticky top-20 z-40 glass-nav border-b border-neon-cyan/10">
+   <div class="max-w-6xl mx-auto">
+    <div class="flex flex-col gap-4">
+     <!-- Search -->
+     <div class="relative">
+      <input type="text" id="search-input" placeholder="Search services..." class="w-full bg-cyber-card border border-neon-cyan/20 rounded-lg px-4 py-3 text-white placeholder-gray-600 focus:outline-none focus:border-neon-cyan/50 transition-colors"> <i data-lucide="search" class="absolute right-4 top-3.5 w-5 h-5 text-gray-500"></i>
+     </div><!-- Filters -->
+     <div class="flex flex-wrap gap-2">
+      <button class="filter-btn active glass-card px-4 py-2 rounded-lg text-xs font-semibold border border-neon-cyan/30" data-filter="all">All Services</button> <button class="filter-btn glass-card px-4 py-2 rounded-lg text-xs font-semibold border border-neon-cyan/10 hover:border-neon-cyan/30 transition-colors" data-filter="government">Government</button> <button class="filter-btn glass-card px-4 py-2 rounded-lg text-xs font-semibold border border-neon-cyan/10 hover:border-neon-cyan/30 transition-colors" data-filter="printing">Printing</button> <button class="filter-btn glass-card px-4 py-2 rounded-lg text-xs font-semibold border border-neon-cyan/10 hover:border-neon-cyan/30 transition-colors" data-filter="digital">Digital</button> <button class="filter-btn glass-card px-4 py-2 rounded-lg text-xs font-semibold border border-neon-cyan/10 hover:border-neon-cyan/30 transition-colors" data-filter="business">Business</button>
+     </div>
+    </div>
+   </div>
+  </section><!-- SERVICES GRID -->
+  <section class="px-4 py-12">
+   <div class="max-w-6xl mx-auto">
+    <!-- Government Services -->
+    <div class="mb-16" data-category="government">
+     <h2 id="govt-services-title" class="font-orbitron font-bold text-3xl mb-8 flex items-center gap-3">
+      <div class="w-10 h-10 rounded-lg bg-gradient-to-br from-neon-cyan/20 to-neon-blue/20 flex items-center justify-center">
+       <i data-lucide="building-2" class="w-5 h-5 text-neon-cyan"></i>
+      </div>Government Services</h2>
+     <div class="service-grid" data-services="government">
+      <!-- KRA Services -->
+      <div class="glass-card rounded-xl p-6 card-hover fade-in" data-service="government" style="animation-delay: 0.1s;">
+       <div class="service-icon bg-neon-cyan/10 mb-4">
+        <i data-lucide="file-text" class="w-6 h-6 text-neon-cyan"></i>
+       </div>
+       <h3 class="font-orbitron font-bold text-lg mb-2">KRA Tax Filing</h3>
+       <p class="text-sm text-gray-400 mb-4">Professional tax return preparation and filing with KRA</p>
+       <div class="flex items-end justify-between">
+        <div>
+         <p class="text-xs text-gray-600 mb-1">Starting from</p>
+         <p class="font-orbitron font-bold text-neon-green text-lg">KES 2,500</p>
+        </div><button class="btn-neon cta-btn bg-neon-cyan/20 text-neon-cyan px-3 py-2 rounded-lg hover:bg-neon-cyan/30 text-xs font-bold transition-colors" data-service-name="KRA Tax Filing"> <i data-lucide="message-circle" class="w-4 h-4"></i> </button>
+       </div>
+      </div><!-- HELB Application -->
+      <div class="glass-card rounded-xl p-6 card-hover fade-in" data-service="government" style="animation-delay: 0.15s;">
+       <div class="service-icon bg-neon-purple/10 mb-4">
+        <i data-lucide="graduation-cap" class="w-6 h-6 text-neon-purple"></i>
+       </div>
+       <h3 class="font-orbitron font-bold text-lg mb-2">HELB Loan Application</h3>
+       <p class="text-sm text-gray-400 mb-4">Complete HELB application process and document preparation</p>
+       <div class="flex items-end justify-between">
+        <div>
+         <p class="text-xs text-gray-600 mb-1">Starting from</p>
+         <p class="font-orbitron font-bold text-neon-green text-lg">KES 1,500</p>
+        </div><button class="btn-neon cta-btn bg-neon-cyan/20 text-neon-cyan px-3 py-2 rounded-lg hover:bg-neon-cyan/30 text-xs font-bold transition-colors" data-service-name="HELB Loan Application"> <i data-lucide="message-circle" class="w-4 h-4"></i> </button>
+       </div>
+      </div><!-- eCitizen Services -->
+      <div class="glass-card rounded-xl p-6 card-hover fade-in" data-service="government" style="animation-delay: 0.2s;">
+       <div class="service-icon bg-neon-yellow/10 mb-4">
+        <i data-lucide="smartphone" class="w-6 h-6 text-neon-yellow"></i>
+       </div>
+       <h3 class="font-orbitron font-bold text-lg mb-2">eCitizen Services</h3>
+       <p class="text-sm text-gray-400 mb-4">Birth certificates, IDs, and other government e-services</p>
+       <div class="flex items-end justify-between">
+        <div>
+         <p class="text-xs text-gray-600 mb-1">Starting from</p>
+         <p class="font-orbitron font-bold text-neon-green text-lg">KES 500</p>
+        </div><button class="btn-neon cta-btn bg-neon-cyan/20 text-neon-cyan px-3 py-2 rounded-lg hover:bg-neon-cyan/30 text-xs font-bold transition-colors" data-service-name="eCitizen Services"> <i data-lucide="message-circle" class="w-4 h-4"></i> </button>
+       </div>
+      </div><!-- Passport Application -->
+      <div class="glass-card rounded-xl p-6 card-hover fade-in" data-service="government" style="animation-delay: 0.25s;">
+       <div class="service-icon bg-neon-pink/10 mb-4">
+        <i data-lucide="passport" class="w-6 h-6 text-neon-pink"></i>
+       </div>
+       <h3 class="font-orbitron font-bold text-lg mb-2">Passport Application</h3>
+       <p class="text-sm text-gray-400 mb-4">Complete passport application and document handling</p>
+       <div class="flex items-end justify-between">
+        <div>
+         <p class="text-xs text-gray-600 mb-1">Starting from</p>
+         <p class="font-orbitron font-bold text-neon-green text-lg">KES 2,000</p>
+        </div><button class="btn-neon cta-btn bg-neon-cyan/20 text-neon-cyan px-3 py-2 rounded-lg hover:bg-neon-cyan/30 text-xs font-bold transition-colors" data-service-name="Passport Application"> <i data-lucide="message-circle" class="w-4 h-4"></i> </button>
+       </div>
+      </div>
+     </div>
+    </div><!-- Printing Services -->
+    <div class="mb-16" data-category="printing">
+     <h2 id="printing-services-title" class="font-orbitron font-bold text-3xl mb-8 flex items-center gap-3">
+      <div class="w-10 h-10 rounded-lg bg-gradient-to-br from-neon-green/20 to-neon-cyan/20 flex items-center justify-center">
+       <i data-lucide="printer" class="w-5 h-5 text-neon-green"></i>
+      </div>Printing &amp; Documents</h2>
+     <div class="service-grid" data-services="printing">
+      <!-- Document Printing -->
+      <div class="glass-card rounded-xl p-6 card-hover fade-in" data-service="printing" style="animation-delay: 0.1s;">
+       <div class="service-icon bg-neon-cyan/10 mb-4">
+        <i data-lucide="file" class="w-6 h-6 text-neon-cyan"></i>
+       </div>
+       <h3 class="font-orbitron font-bold text-lg mb-2">Document Printing</h3>
+       <p class="text-sm text-gray-400 mb-4">Professional printing for documents, flyers, and materials</p>
+       <div class="flex items-end justify-between">
+        <div>
+         <p class="text-xs text-gray-600 mb-1">Starting from</p>
+         <p class="font-orbitron font-bold text-neon-green text-lg">KES 100</p>
+        </div><button class="btn-neon cta-btn bg-neon-cyan/20 text-neon-cyan px-3 py-2 rounded-lg hover:bg-neon-cyan/30 text-xs font-bold transition-colors" data-service-name="Document Printing"> <i data-lucide="message-circle" class="w-4 h-4"></i> </button>
+       </div>
+      </div><!-- CV & Resume Creation -->
+      <div class="glass-card rounded-xl p-6 card-hover fade-in" data-service="printing" style="animation-delay: 0.15s;">
+       <div class="service-icon bg-neon-purple/10 mb-4">
+        <i data-lucide="briefcase" class="w-6 h-6 text-neon-purple"></i>
+       </div>
+       <h3 class="font-orbitron font-bold text-lg mb-2">CV &amp; Resume</h3>
+       <p class="text-sm text-gray-400 mb-4">Professional CV writing and resume design services</p>
+       <div class="flex items-end justify-between">
+        <div>
+         <p class="text-xs text-gray-600 mb-1">Starting from</p>
+         <p class="font-orbitron font-bold text-neon-green text-lg">KES 1,500</p>
+        </div><button class="btn-neon cta-btn bg-neon-cyan/20 text-neon-cyan px-3 py-2 rounded-lg hover:bg-neon-cyan/30 text-xs font-bold transition-colors" data-service-name="CV &amp; Resume"> <i data-lucide="message-circle" class="w-4 h-4"></i> </button>
+       </div>
+      </div><!-- Document Scanning -->
+      <div class="glass-card rounded-xl p-6 card-hover fade-in" data-service="printing" style="animation-delay: 0.2s;">
+       <div class="service-icon bg-neon-yellow/10 mb-4">
+        <i data-lucide="image" class="w-6 h-6 text-neon-yellow"></i>
+       </div>
+       <h3 class="font-orbitron font-bold text-lg mb-2">Document Scanning</h3>
+       <p class="text-sm text-gray-400 mb-4">High-quality scanning and digitization of documents</p>
+       <div class="flex items-end justify-between">
+        <div>
+         <p class="text-xs text-gray-600 mb-1">Starting from</p>
+         <p class="font-orbitron font-bold text-neon-green text-lg">KES 50</p>
+        </div><button class="btn-neon cta-btn bg-neon-cyan/20 text-neon-cyan px-3 py-2 rounded-lg hover:bg-neon-cyan/30 text-xs font-bold transition-colors" data-service-name="Document Scanning"> <i data-lucide="message-circle" class="w-4 h-4"></i> </button>
+       </div>
+      </div><!-- Banner & Poster -->
+      <div class="glass-card rounded-xl p-6 card-hover fade-in" data-service="printing" style="animation-delay: 0.25s;">
+       <div class="service-icon bg-neon-pink/10 mb-4">
+        <i data-lucide="layout" class="w-6 h-6 text-neon-pink"></i>
+       </div>
+       <h3 class="font-orbitron font-bold text-lg mb-2">Banners &amp; Posters</h3>
+       <p class="text-sm text-gray-400 mb-4">Custom banner and poster design with printing</p>
+       <div class="flex items-end justify-between">
+        <div>
+         <p class="text-xs text-gray-600 mb-1">Starting from</p>
+         <p class="font-orbitron font-bold text-neon-green text-lg">KES 2,000</p>
+        </div><button class="btn-neon cta-btn bg-neon-cyan/20 text-neon-cyan px-3 py-2 rounded-lg hover:bg-neon-cyan/30 text-xs font-bold transition-colors" data-service-name="Banners &amp; Posters"> <i data-lucide="message-circle" class="w-4 h-4"></i> </button>
+       </div>
+      </div>
+     </div>
+    </div><!-- Digital Services -->
+    <div class="mb-16" data-category="digital">
+     <h2 id="digital-services-title" class="font-orbitron font-bold text-3xl mb-8 flex items-center gap-3">
+      <div class="w-10 h-10 rounded-lg bg-gradient-to-br from-neon-purple/20 to-neon-pink/20 flex items-center justify-center">
+       <i data-lucide="code" class="w-5 h-5 text-neon-purple"></i>
+      </div>Digital Services</h2>
+     <div class="service-grid" data-services="digital">
+      <!-- Web Development -->
+      <div class="glass-card rounded-xl p-6 card-hover fade-in" data-service="digital" style="animation-delay: 0.1s;">
+       <div class="service-icon bg-neon-cyan/10 mb-4">
+        <i data-lucide="globe" class="w-6 h-6 text-neon-cyan"></i>
+       </div>
+       <h3 class="font-orbitron font-bold text-lg mb-2">Web Development</h3>
+       <p class="text-sm text-gray-400 mb-4">Responsive websites for businesses and portfolios</p>
+       <div class="flex items-end justify-between">
+        <div>
+         <p class="text-xs text-gray-600 mb-1">Starting from</p>
+         <p class="font-orbitron font-bold text-neon-green text-lg">KES 15,000</p>
+        </div><button class="btn-neon cta-btn bg-neon-cyan/20 text-neon-cyan px-3 py-2 rounded-lg hover:bg-neon-cyan/30 text-xs font-bold transition-colors" data-service-name="Web Development"> <i data-lucide="message-circle" class="w-4 h-4"></i> </button>
+       </div>
+      </div><!-- Logo Design -->
+      <div class="glass-card rounded-xl p-6 card-hover fade-in" data-service="digital" style="animation-delay: 0.15s;">
+       <div class="service-icon bg-neon-purple/10 mb-4">
+        <i data-lucide="palette" class="w-6 h-6 text-neon-purple"></i>
+       </div>
+       <h3 class="font-orbitron font-bold text-lg mb-2">Logo Design</h3>
+       <p class="text-sm text-gray-400 mb-4">Professional logo creation and brand identity design</p>
+       <div class="flex items-end justify-between">
+        <div>
+         <p class="text-xs text-gray-600 mb-1">Starting from</p>
+         <p class="font-orbitron font-bold text-neon-green text-lg">KES 5,000</p>
+        </div><button class="btn-neon cta-btn bg-neon-cyan/20 text-neon-cyan px-3 py-2 rounded-lg hover:bg-neon-cyan/30 text-xs font-bold transition-colors" data-service-name="Logo Design"> <i data-lucide="message-circle" class="w-4 h-4"></i> </button>
+       </div>
+      </div><!-- Branding -->
+      <div class="glass-card rounded-xl p-6 card-hover fade-in" data-service="digital" style="animation-delay: 0.2s;">
+       <div class="service-icon bg-neon-yellow/10 mb-4">
+        <i data-lucide="sparkles" class="w-6 h-6 text-neon-yellow"></i>
+       </div>
+       <h3 class="font-orbitron font-bold text-lg mb-2">Branding Package</h3>
+       <p class="text-sm text-gray-400 mb-4">Complete brand identity including guidelines and assets</p>
+       <div class="flex items-end justify-between">
+        <div>
+         <p class="text-xs text-gray-600 mb-1">Starting from</p>
+         <p class="font-orbitron font-bold text-neon-green text-lg">KES 12,000</p>
+        </div><button class="btn-neon cta-btn bg-neon-cyan/20 text-neon-cyan px-3 py-2 rounded-lg hover:bg-neon-cyan/30 text-xs font-bold transition-colors" data-service-name="Branding Package"> <i data-lucide="message-circle" class="w-4 h-4"></i> </button>
+       </div>
+      </div><!-- Social Media Setup -->
+      <div class="glass-card rounded-xl p-6 card-hover fade-in" data-service="digital" style="animation-delay: 0.25s;">
+       <div class="service-icon bg-neon-pink/10 mb-4">
+        <i data-lucide="share-2" class="w-6 h-6 text-neon-pink"></i>
+       </div>
+       <h3 class="font-orbitron font-bold text-lg mb-2">Social Media Setup</h3>
+       <p class="text-sm text-gray-400 mb-4">Professional profile setup and content calendar planning</p>
+       <div class="flex items-end justify-between">
+        <div>
+         <p class="text-xs text-gray-600 mb-1">Starting from</p>
+         <p class="font-orbitron font-bold text-neon-green text-lg">KES 3,000</p>
+        </div><button class="btn-neon cta-btn bg-neon-cyan/20 text-neon-cyan px-3 py-2 rounded-lg hover:bg-neon-cyan/30 text-xs font-bold transition-colors" data-service-name="Social Media Setup"> <i data-lucide="message-circle" class="w-4 h-4"></i> </button>
+       </div>
+      </div>
+     </div>
+    </div><!-- Business Support Services -->
+    <div class="mb-16" data-category="business">
+     <h2 id="business-services-title" class="font-orbitron font-bold text-3xl mb-8 flex items-center gap-3">
+      <div class="w-10 h-10 rounded-lg bg-gradient-to-br from-neon-green/20 to-neon-purple/20 flex items-center justify-center">
+       <i data-lucide="rocket" class="w-5 h-5 text-neon-green"></i>
+      </div>Business Support</h2>
+     <div class="service-grid" data-services="business">
+      <!-- Startup Kit -->
+      <div class="glass-card rounded-xl p-6 card-hover fade-in" data-service="business" style="animation-delay: 0.1s;">
+       <div class="service-icon bg-neon-cyan/10 mb-4">
+        <i data-lucide="briefcase" class="w-6 h-6 text-neon-cyan"></i>
+       </div>
+       <h3 class="font-orbitron font-bold text-lg mb-2">Startup Kit</h3>
+       <p class="text-sm text-gray-400 mb-4">Complete business setup with branding and legal docs</p>
+       <div class="flex items-end justify-between">
+        <div>
+         <p class="text-xs text-gray-600 mb-1">Starting from</p>
+         <p class="font-orbitron font-bold text-neon-green text-lg">KES 25,000</p>
+        </div><button class="btn-neon cta-btn bg-neon-cyan/20 text-neon-cyan px-3 py-2 rounded-lg hover:bg-neon-cyan/30 text-xs font-bold transition-colors" data-service-name="Startup Kit"> <i data-lucide="message-circle" class="w-4 h-4"></i> </button>
+       </div>
+      </div><!-- Website Package -->
+      <div class="glass-card rounded-xl p-6 card-hover fade-in" data-service="business" style="animation-delay: 0.15s;">
+       <div class="service-icon bg-neon-purple/10 mb-4">
+        <i data-lucide="layout-grid" class="w-6 h-6 text-neon-purple"></i>
+       </div>
+       <h3 class="font-orbitron font-bold text-lg mb-2">Website Package</h3>
+       <p class="text-sm text-gray-400 mb-4">Website hosting, domain, and maintenance included</p>
+       <div class="flex items-end justify-between">
+        <div>
+         <p class="text-xs text-gray-600 mb-1">Starting from</p>
+         <p class="font-orbitron font-bold text-neon-green text-lg">KES 8,000/mo</p>
+        </div><button class="btn-neon cta-btn bg-neon-cyan/20 text-neon-cyan px-3 py-2 rounded-lg hover:bg-neon-cyan/30 text-xs font-bold transition-colors" data-service-name="Website Package"> <i data-lucide="message-circle" class="w-4 h-4"></i> </button>
+       </div>
+      </div><!-- Marketing Campaign -->
+      <div class="glass-card rounded-xl p-6 card-hover fade-in" data-service="business" style="animation-delay: 0.2s;">
+       <div class="service-icon bg-neon-yellow/10 mb-4">
+        <i data-lucide="trending-up" class="w-6 h-6 text-neon-yellow"></i>
+       </div>
+       <h3 class="font-orbitron font-bold text-lg mb-2">Marketing Campaign</h3>
+       <p class="text-sm text-gray-400 mb-4">Social media marketing and promotional strategy</p>
+       <div class="flex items-end justify-between">
+        <div>
+         <p class="text-xs text-gray-600 mb-1">Starting from</p>
+         <p class="font-orbitron font-bold text-neon-green text-lg">KES 5,000/mo</p>
+        </div><button class="btn-neon cta-btn bg-neon-cyan/20 text-neon-cyan px-3 py-2 rounded-lg hover:bg-neon-cyan/30 text-xs font-bold transition-colors" data-service-name="Marketing Campaign"> <i data-lucide="message-circle" class="w-4 h-4"></i> </button>
+       </div>
+      </div><!-- Business Consulting -->
+      <div class="glass-card rounded-xl p-6 card-hover fade-in" data-service="business" style="animation-delay: 0.25s;">
+       <div class="service-icon bg-neon-pink/10 mb-4">
+        <i data-lucide="lightbulb" class="w-6 h-6 text-neon-pink"></i>
+       </div>
+       <h3 class="font-orbitron font-bold text-lg mb-2">Business Consulting</h3>
+       <p class="text-sm text-gray-400 mb-4">Expert advice on business growth and strategy</p>
+       <div class="flex items-end justify-between">
+        <div>
+         <p class="text-xs text-gray-600 mb-1">Starting from</p>
+         <p class="font-orbitron font-bold text-neon-green text-lg">KES 10,000</p>
+        </div><button class="btn-neon cta-btn bg-neon-cyan/20 text-neon-cyan px-3 py-2 rounded-lg hover:bg-neon-cyan/30 text-xs font-bold transition-colors" data-service-name="Business Consulting"> <i data-lucide="message-circle" class="w-4 h-4"></i> </button>
+       </div>
+      </div>
+     </div>
+    </div>
+   </div>
+  </section><!-- WHATSAPP CTA -->
+  <section class="px-4 py-12">
+   <div class="max-w-4xl mx-auto">
+    <div class="glass-card rounded-2xl p-8 relative overflow-hidden">
+     <div class="absolute top-0 right-0 w-48 h-48 bg-neon-green/5 rounded-full blur-3xl pointer-events-none"></div>
+     <div class="relative z-10 text-center">
+      <div class="flex justify-center mb-6">
+       <div class="w-20 h-20 rounded-full bg-gradient-to-br from-neon-green/20 to-neon-cyan/20 flex items-center justify-center">
+        <i data-lucide="message-circle" class="w-10 h-10 text-neon-green"></i>
+       </div>
+      </div>
+      <h2 class="font-orbitron font-bold text-3xl mb-4">Need Help Choosing a Service?</h2>
+      <p class="text-gray-400 mb-8 max-w-xl mx-auto">Chat with our team on WhatsApp for personalized recommendations and quick order placement</p><a href="https://wa.me/254798692443?text=Hi%20Cyber%20Donuts%21%20I%20need%20information%20about%20your%20services." target="_blank" rel="noopener noreferrer" class="btn-neon inline-flex items-center gap-2 bg-gradient-to-r from-neon-green to-neon-cyan px-8 py-3 rounded-full font-orbitron font-semibold text-sm tracking-wider text-cyber-dark hover:shadow-lg hover:shadow-neon-green/30 transition-all"> <i data-lucide="send" class="w-5 h-5"></i>Message on WhatsApp </a>
+     </div>
+    </div>
+   </div>
+  </section><!-- FOOTER -->
+  <footer class="border-t border-neon-cyan/10 py-12 px-4 mt-12">
+   <div class="max-w-6xl mx-auto">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-10 mb-10">
+     <div>
+      <div class="flex items-center gap-2 mb-4">
+       <span class="text-2xl">🍩</span> <span class="font-orbitron font-bold text-lg neon-glow">Cyber Donuts</span>
+      </div>
+      <p class="text-gray-500 text-sm mb-4">Eat. Earn. Connect. — Where flavor meets the future.</p>
+      <div class="flex gap-3">
+       <a href="https://chat.whatsapp.com/HyNNfNplBLM409sYzcyIEs" target="_blank" rel="noopener noreferrer" class="w-9 h-9 rounded-full bg-neon-cyan/10 flex items-center justify-center hover:bg-neon-cyan/20 transition-colors"> <i data-lucide="message-circle" class="w-4 h-4 text-neon-cyan"></i> </a> <a href="https://cyber-donuts.github.io/" target="_blank" rel="noopener noreferrer" class="w-9 h-9 rounded-full bg-neon-cyan/10 flex items-center justify-center hover:bg-neon-cyan/20 transition-colors"> <i data-lucide="globe" class="w-4 h-4 text-neon-cyan"></i> </a>
+      </div>
+     </div>
+     <div>
+      <h4 class="font-orbitron font-bold text-sm mb-4 text-neon-cyan">Pages</h4>
+      <div class="flex flex-col gap-2">
+       <a href="/" class="text-gray-500 text-sm hover:text-neon-cyan transition-colors">Home</a> <a href="/pages/earn.html" class="text-gray-500 text-sm hover:text-neon-cyan transition-colors">Earn</a> <a href="/pages/services.html" class="text-gray-500 text-sm hover:text-neon-cyan transition-colors">Services</a> <a href="/pages/missions.html" target="_blank" rel="noopener noreferrer" class="text-gray-500 text-sm hover:text-neon-cyan transition-colors">Missions</a>
+      </div>
+     </div>
+     <div>
+      <h4 class="font-orbitron font-bold text-sm mb-4 text-neon-cyan">Contact</h4>
+      <div class="flex flex-col gap-3">
+       <a href="tel:+254798692443" class="flex items-center gap-2 text-gray-500 text-sm hover:text-neon-cyan transition-colors"> <i data-lucide="phone" class="w-4 h-4"></i> +254 798 692 443 </a> <a href="https://wa.me/254798692443" target="_blank" rel="noopener noreferrer" class="flex items-center gap-2 text-gray-500 text-sm hover:text-neon-green transition-colors"> <i data-lucide="message-circle" class="w-4 h-4"></i> WhatsApp Us </a> <a href="https://cyber-donuts.github.io/" target="_blank" rel="noopener noreferrer" class="flex items-center gap-2 text-gray-500 text-sm hover:text-neon-cyan transition-colors"> <i data-lucide="globe" class="w-4 h-4"></i> cyber-donuts.github.io </a>
+      </div>
+     </div>
+    </div>
+    <div class="border-t border-gray-800 pt-6 flex flex-col sm:flex-row items-center justify-between gap-4">
+     <p class="text-gray-600 text-xs">© 2025 Cyber Donuts. All rights reserved.</p>
+     <p class="text-gray-700 text-xs">Built with 🍩 and code</p>
+    </div>
+   </div>
+  </footer>
+  <script>
+    // Initialize Lucide icons
+    lucide.createIcons();
+
+    // Mobile menu toggle
+    const menuBtn = document.getElementById('mobile-menu-btn');
+    const mobileMenu = document.getElementById('mobile-menu');
+    let menuOpen = false;
+    menuBtn.addEventListener('click', () => {
+      menuOpen = !menuOpen;
+      mobileMenu.classList.toggle('hidden', !menuOpen);
+    });
+
+    // Search and Filter Functionality
+    const searchInput = document.getElementById('search-input');
+    const filterBtns = document.querySelectorAll('.filter-btn');
+    let currentFilter = 'all';
+
+    function filterServices() {
+      const searchTerm = searchInput.value.toLowerCase();
+      const allCards = document.querySelectorAll('[data-service]');
+
+      allCards.forEach(card => {
+        const category = card.dataset.service;
+        const title = card.querySelector('h3').textContent.toLowerCase();
+        const description = card.querySelector('p').textContent.toLowerCase();
+
+        const matchesFilter = currentFilter === 'all' || category === currentFilter;
+        const matchesSearch = title.includes(searchTerm) || description.includes(searchTerm);
+
+        card.style.display = matchesFilter && matchesSearch ? 'block' : 'none';
+      });
+    }
+
+    searchInput.addEventListener('input', filterServices);
+
+    filterBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        filterBtns.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        currentFilter = btn.dataset.filter;
+        filterServices();
+      });
+    });
+
+    // WhatsApp CTA buttons
+    const ctaBtns = document.querySelectorAll('.cta-btn');
+    ctaBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const serviceName = btn.dataset.serviceName;
+        const message = `Hi Cyber Donuts! I'm interested in: ${serviceName}`;
+        const encodedMessage = encodeURIComponent(message);
+        window.open(`https://wa.me/254798692443?text=${encodedMessage}`, '_blank');
+      });
+    });
+
+    // Element SDK
+    const defaultConfig = {
+      page_title: 'Our Services',
+      page_subtitle: 'Government, Digital, and Business Solutions',
+      govt_services_title: 'Government Services',
+      printing_services_title: 'Printing & Documents',
+      digital_services_title: 'Digital Services',
+      business_services_title: 'Business Support',
+      cta_text: 'Request Service',
+      background_color: '#0a0a1a',
+      surface_color: '#12122a',
+      text_color: '#ffffff',
+      primary_action_color: '#00f0ff',
+      secondary_action_color: '#39ff14',
+      font_family: 'Exo 2',
+      font_size: 16,
+    };
+
+    function applyConfig(config) {
+      const c = { ...defaultConfig, ...config };
+
+      document.getElementById('page-title').textContent = c.page_title;
+      document.getElementById('page-subtitle').textContent = c.page_subtitle;
+      document.getElementById('govt-services-title').textContent = c.govt_services_title;
+      document.getElementById('printing-services-title').textContent = c.printing_services_title;
+      document.getElementById('digital-services-title').textContent = c.digital_services_title;
+      document.getElementById('business-services-title').textContent = c.business_services_title;
+
+      const wrapper = document.getElementById('app-wrapper');
+      wrapper.style.backgroundColor = c.background_color;
+
+      document.querySelectorAll('.glass-card').forEach(el => {
+        el.style.backgroundColor = c.surface_color + '99';
+      });
+
+      const fontStack = `${c.font_family}, Exo 2, sans-serif`;
+      document.body.style.fontFamily = fontStack;
+    }
+
+    if (window.elementSdk) {
+      window.elementSdk.init({
+        defaultConfig,
+        onConfigChange: async (config) => {
+          applyConfig(config);
+        },
+        mapToCapabilities: (config) => {
+          const c = { ...defaultConfig, ...config };
+          return {
+            recolorables: [
+              {
+                get: () => c.background_color,
+                set: (v) => { c.background_color = v; window.elementSdk.setConfig({ background_color: v }); }
+              },
+              {
+                get: () => c.surface_color,
+                set: (v) => { c.surface_color = v; window.elementSdk.setConfig({ surface_color: v }); }
+              },
+              {
+                get: () => c.text_color,
+                set: (v) => { c.text_color = v; window.elementSdk.setConfig({ text_color: v }); }
+              },
+              {
+                get: () => c.primary_action_color,
+                set: (v) => { c.primary_action_color = v; window.elementSdk.setConfig({ primary_action_color: v }); }
+              },
+              {
+                get: () => c.secondary_action_color,
+                set: (v) => { c.secondary_action_color = v; window.elementSdk.setConfig({ secondary_action_color: v }); }
+              }
+            ],
+            borderables: [],
+            fontEditable: {
+              get: () => c.font_family,
+              set: (v) => { c.font_family = v; window.elementSdk.setConfig({ font_family: v }); }
+            },
+            fontSizeable: {
+              get: () => c.font_size,
+              set: (v) => { c.font_size = v; window.elementSdk.setConfig({ font_size: v }); }
+            }
+          };
+        },
+        mapToEditPanelValues: (config) => {
+          const c = { ...defaultConfig, ...config };
+          return new Map([
+            ['page_title', c.page_title],
+            ['page_subtitle', c.page_subtitle],
+            ['govt_services_title', c.govt_services_title],
+            ['printing_services_title', c.printing_services_title],
+            ['digital_services_title', c.digital_services_title],
+            ['business_services_title', c.business_services_title],
+            ['cta_text', c.cta_text],
+          ]);
+        }
+      });
+    }
+  </script>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9de1677be7438a5e',t:'MTc3MzgwNzIwMC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+                                                                                                                                                                                                                                                                                                                             </html>
